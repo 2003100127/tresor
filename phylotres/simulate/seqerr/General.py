@@ -5,7 +5,7 @@ __lab__ = "cribbslab"
 
 import sys
 import numpy as np
-from phylotres.simulate.seqerr.Subsampling import general as simugeneral
+from phylotres.pcr.Subsampling import general as simugeneral
 from phylotres.path import to
 
 

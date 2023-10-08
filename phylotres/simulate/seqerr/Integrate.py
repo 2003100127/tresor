@@ -7,12 +7,12 @@ import numpy as np
 from phylotres.library import FromSimulation as simuip
 from phylotres.pcr.Amplify import Amplify as pcr
 from phylotres.seq.Calling import Calling as seq
-from phylotres.simulate.seqerr.Subsampling import Subsampling
+from phylotres.pcr.Subsampling import Subsampling
 from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.Console import Console
 
 
-class SequencingError:
+class Integrate:
 
     def __init__(
             self,
@@ -202,7 +202,7 @@ if __name__ == "__main__":
             'fastq_fn': '',
         }
     }
-    p = SequencingError(
+    p = Integrate(
         # initial sequence generation
         seq_num=50,
         umi_unit_pattern=1,

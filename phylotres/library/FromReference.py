@@ -10,9 +10,12 @@ from phylotres.util.random.Number import Number as rannum
 from phylotres.util.file.write.Writer import Writer as pfwriter
 from phylotres.util.file.create.Folder import Folder as crtfolder
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
-from phylotres.read.umi.Design import Design as dumi
 from phylotres.util.similarity.distance.Hamming import hamming
+from phylotres.read.umi.Design import Design as dumi
 from phylotres.read.seq.Design import Design as dseq
+from phylotres.read.primer.Design import Design as dprimer
+from phylotres.read.adapter.Design import Design as dadapter
+from phylotres.read.spacer.Design import Design as dspacer
 from phylotres.util.Console import Console
 from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6
@@ -27,12 +30,15 @@ class general:
             seq_num=50,
             is_seed=False,
 
-            is_sv_umi_lib=True,
-            is_sv_seq_lib=True,
             working_dir='./simu/',
             condis=['umi'],
-            sim_thres=2,
+            sim_thres=3,
             permutation=0,
+            is_sv_umi_lib=True,
+            is_sv_seq_lib=True,
+            is_sv_primer_lib=True,
+            is_sv_adapter_lib=True,
+            is_sv_spacer_lib=True,
             verbose=True,
     ):
         self.pfwriter = pfwriter()
@@ -42,12 +48,18 @@ class general:
         self.crtfolder = crtfolder()
         self.dumi = dumi
         self.dseq = dseq
+        self.dprimer = dprimer
+        self.dadapter = dadapter
+        self.dspacer = dspacer
         self.working_dir = working_dir
         self.len_params = len_params
         self.is_seed = is_seed
-        self.is_sv_umi_lib = is_sv_umi_lib
         self.fasta_cdna_fpn = fasta_cdna_fpn
+        self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
+        self.is_sv_primer_lib = is_sv_primer_lib
+        self.is_sv_adapter_lib = is_sv_adapter_lib
+        self.is_sv_spacer_lib = is_sv_spacer_lib
         self.seq_num = seq_num
         self.condis = condis
         self.sim_thres = sim_thres
@@ -63,8 +75,8 @@ class general:
         seqs = []
         umi_pool = []
         umi_cnt = 0
-        condi_map = {}
 
+        condi_map = {}
         for condi in self.condis:
             condi_arr = condi.split("_")
             condi_map[condi_arr[0]] = []
@@ -74,7 +86,7 @@ class general:
                 condi_map[condi_arr[0]].append('alone')
             else:
                 condi_map[condi_arr[0]].append(condi_arr[1])
-        print()
+        print(condi_map)
         condi_keys = condi_map.keys()
 
         cdna_seqs_sel_maps = {}
@@ -123,12 +135,13 @@ class general:
                         if len(edh[edh < self.sim_thres]) == 0:
                             # print(len(edh[edh < self.sim_thres]))
                             umi_pool.append(umi_i)
-                            read_struct_ref['umi'] = umi_i
+                            read_struct_ref['umi' + umi_mark] = umi_i
                             umi_flag = True
                             umip.write(res=umi_i, lib_fpn=self.working_dir + 'umi' + umi_mark + '.txt', is_sv=self.is_sv_umi_lib)
                         else:
                             # print(id)
                             umi_cnt += 1
+
             if 'seq' in condi_keys:
                 for _, seq_mark_suffix in enumerate(condi_map['seq']):
                     seq_mark = '_' + seq_mark_suffix if seq_mark_suffix != 'alone' else ''
@@ -136,6 +149,51 @@ class general:
                         cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
                     ).cdna(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
                     read_struct_ref['seq' + seq_mark] = seq_i
+
+            if 'primer' in condi_keys:
+                for primer_mark_id, primer_mark_suffix in enumerate(condi_map['primer']):
+                    primer_mark = '_' + primer_mark_suffix if primer_mark_suffix != 'alone' else ''
+                    primer_i = self.dprimer(
+                        dna_map=self.dna_map,
+                        pseudorandom_num=self.rannum.uniform(
+                            low=0,
+                            high=4,
+                            num=self.len_params['primer' + primer_mark],
+                            use_seed=self.is_seed,
+                            seed=id + self.permutation * self.seq_num + 8000000 + primer_mark_id*1000000,
+                        ),
+                    ).general(lib_fpn=self.working_dir + 'primer' + primer_mark + '.txt', is_sv=self.is_sv_primer_lib)
+                    read_struct_ref['primer' + primer_mark] = primer_i
+
+            if 'adapter' in condi_keys:
+                for adapter_mark_id, adapter_mark_suffix in enumerate(condi_map['adapter']):
+                    adapter_mark = '_' + adapter_mark_suffix if adapter_mark_suffix != 'alone' else ''
+                    adapter_i = self.dadapter(
+                        dna_map=self.dna_map,
+                        pseudorandom_num=self.rannum.uniform(
+                            low=0,
+                            high=4,
+                            num=self.len_params['adapter' + adapter_mark],
+                            use_seed=self.is_seed,
+                            seed=id + self.permutation * self.seq_num + 8000000 + adapter_mark_id*1000000,
+                        ),
+                    ).general(lib_fpn=self.working_dir + 'adapter' + adapter_mark + '.txt', is_sv=self.is_sv_adapter_lib)
+                    read_struct_ref['adapter' + adapter_mark] = adapter_i
+
+            if 'spacer' in condi_keys:
+                for spacer_mark_id, spacer_mark_suffix in enumerate(condi_map['spacer']):
+                    spacer_mark = '_' + spacer_mark_suffix if spacer_mark_suffix != 'alone' else ''
+                    spacer_i = self.dspacer(
+                        dna_map=self.dna_map,
+                        pseudorandom_num=self.rannum.uniform(
+                            low=0,
+                            high=4,
+                            num=self.len_params['spacer' + spacer_mark],
+                            use_seed=self.is_seed,
+                            seed=id + self.permutation * self.seq_num + 8000000 + spacer_mark_id*1000000,
+                        ),
+                    ).general(lib_fpn=self.working_dir + 'spacer' + spacer_mark + '.txt', is_sv=self.is_sv_spacer_lib)
+                    read_struct_ref['spacer' + spacer_mark] = spacer_i
 
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
             seqs.append([self.paste([*read_struct_pfd_order.values()]), str(id), 'init'])
@@ -160,26 +218,27 @@ if __name__ == "__main__":
                 'umi_unit_pattern': 3,
                 'umi_unit_len': 12,
             },
-            'adapter': {
-                1: 10,
+            'umi_1': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
             },
-            'primer': {
-                1: 10,
-            },
-            'spacer': {
-                1: 10,
-            },
+            'adapter': 10,
+            'adapter_1': 10,
+            'primer': 10,
+            'primer_1': 10,
+            'spacer': 10,
+            'spacer_1': 10,
         },
         is_seed=True,
         is_sv_umi_lib=True,
         is_sv_seq_lib=True,
 
         working_dir=to('data/simu/'),
-        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'), # False
+        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
         # condis=['umi', 'seq'],
-        condis=['umi', 'seq', 'seq_2'],
+        condis=['umi', 'umi_1', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2'],
         sim_thres=3,
         permutation=0,
     )

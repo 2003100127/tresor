@@ -14,14 +14,14 @@ class Design(seqpseudo):
         self.args = args
         self.kwargs = kwargs
 
-    @liblogginger()
+    @liblogginger(method='default')
     def general(self, lib_fpn='./primer.txt', is_sv=True):
         return ''.join([
             self.kwargs['dna_map'][i] for i in
             self.kwargs['pseudorandom_num']
         ])
 
-    @liblogginger()
+    @liblogginger(method='default')
     def tsoatdbio(self, lib_fpn='./primer.txt', is_sv=True):
         return 'AAGCAGTGGTATCAACGCAGAGTAC'
         # return 'AAGCAGTGGTATCAACGCAGAGTGAAT'

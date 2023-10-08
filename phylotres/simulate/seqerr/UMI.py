@@ -4,7 +4,7 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import numpy as np
-from phylotres.simulate.seqerr.Subsampling import general as simugeneral
+from phylotres.pcr.Subsampling import general as simugeneral
 
 
 class umi:
