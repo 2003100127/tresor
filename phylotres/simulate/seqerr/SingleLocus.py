@@ -7,7 +7,7 @@ __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
 import numpy as np
-from phylotres.library import FromSimulation as simuip
+from phylotres.library.SingleLocus import SingleLocus as simuip
 from phylotres.pcr.Amplify import Amplify as pcr
 from phylotres.seq.Calling import Calling as seq
 from phylotres.pcr.Subsampling import Subsampling
@@ -15,20 +15,19 @@ from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.Console import Console
 
 
-class Integrate:
+class SingleLocus:
 
     def __init__(
             self,
+            len_params,
             seq_num,
-            umi_unit_pattern,
-            umi_unit_len,
             seq_len,
             is_seed,
             is_sv_umi_lib,
             is_sv_seq_lib,
-            umi_lib_fpn,
-            seq_lib_fpn,
-            read_lib_fpn,
+            is_sv_primer_lib,
+            is_sv_adapter_lib,
+            is_sv_spacer_lib,
             fasta_cdna_fpn,
             working_dir,
             condis,
@@ -51,24 +50,18 @@ class Integrate:
             verbose=True,
     ):
         self.seq_num = seq_num
-        self.umi_unit_pattern = umi_unit_pattern
-        self.umi_unit_len = umi_unit_len
         self.seq_len = seq_len
         self.is_seed = is_seed
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
         self.working_dir = working_dir
-        self.seq_lib_fpn = seq_lib_fpn
-        self.umi_lib_fpn = umi_lib_fpn
-        self.read_lib_fpn = read_lib_fpn
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.condis = condis
         self.sim_thres = sim_thres
         self.permutation = permutation
 
-
-        self.ampl_rate = ampl_rate
         self.err_route = err_route
+        self.ampl_rate = ampl_rate
         self.pcr_error = pcr_error
         self.pcr_num = pcr_num
         self.err_num_met = err_num_met
@@ -88,36 +81,32 @@ class Integrate:
 
         # ### /*** block. Init a pool of sequences ***/
         self.console.print('===>Generating an init pool of sequences starts...')
-        self.init_seqs = simuip(
-            seq_num=self.seq_num,
-            seq_len=self.seq_len,
-            umi_unit_pattern=self.umi_unit_pattern,
-            umi_unit_len=self.umi_unit_len,
-            is_seed=self.is_seed,
-            is_sv_umi_lib=self.is_sv_umi_lib,
-            is_sv_seq_lib=self.is_sv_seq_lib,
-            seq_lib_fpn=self.seq_lib_fpn,
-            umi_lib_fpn=self.umi_lib_fpn,
-            working_dir=self.working_dir,
-            sim_thres=self.sim_thres,
-            condis=self.condis,
-            permutation=self.permutation,
+        self.sequencing_library = simuip(
+            len_params=len_params,
+            fasta_cdna_fpn=fasta_cdna_fpn,
+            seq_num=seq_num,
+            is_seed=is_seed,
+            working_dir=working_dir,
+            condis=condis,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            verbose=True,
         ).pooling()
         self.console.print('===>Init pool of sequences has completed')
-        print(self.init_seqs)
-        for sequence in self.init_seqs:
-            with open(self.read_lib_fpn, 'a') as file:
-                file.write(sequence[0] + "\n")
 
     def generate(self, ):
         # ### /*** block 1. PCR amplification: Preparation ***/
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
         pcr_ampl_params = {
-            'umi_lib_fpn': self.umi_lib_fpn,
-            'read_lib_fpn': self.read_lib_fpn,
+            'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
 
-            'data': np.array(self.init_seqs),
+            'data': np.array(self.sequencing_library),
             'ampl_rate': self.ampl_rate,
             'pcr_error': self.pcr_error,
             'pcr_num': self.pcr_num,
@@ -199,31 +188,31 @@ class Integrate:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    simu_params = {
-        'write': {
-            'fastq_fp': to('data/simu/'),
-            'fastq_fn': '',
-        }
-    }
-    p = Integrate(
+    p = SingleLocus(
         # initial sequence generation
+        len_params={
+            'umi': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'seq': 100,
+        },
         seq_num=50,
-        umi_unit_pattern=1,
-        umi_unit_len=12,
         seq_len=100,
         is_seed=True,
         working_dir=to('data/simu/'),
-        seq_lib_fpn=to('data/simu/seq.txt'),
-        umi_lib_fpn=to('data/simu/umi.txt'),
-        read_lib_fpn=to('data/simu/read.txt'),
-        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # False
+        fasta_cdna_fpn=False,
+        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         is_sv_umi_lib=True,
         is_sv_seq_lib=True,
+        is_sv_primer_lib=True,
+        is_sv_adapter_lib=True,
+        is_sv_spacer_lib=True,
         condis=['umi'],
         # condis=['umi', 'seq'],
         sim_thres=3,
-        permutation=1,
+        permutation=0,
 
         # PCR amplification
         ampl_rate=0.85,

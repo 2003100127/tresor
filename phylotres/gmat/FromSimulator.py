@@ -6,12 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-import os
-# os.environ['R_HOME'] = 'D:/Programming/anaconda3/envs/umi/Lib/R'
-os.environ['R_HOME'] = 'D:/Programming/R/R-4.3.1/'
-import rpy2.robjects as rob
-from rpy2.robjects import pandas2ri
-from rpy2.robjects.conversion import localconverter
+from phylotres.util.Console import Console
 
 
 class fromSimulator:
@@ -19,28 +14,26 @@ class fromSimulator:
     def __init__(
             self,
             simulator,
+            R_root,
             num_cells=10,
             num_genes=10,
+            verbose=True,
     ):
         self.simulator = simulator
         self.num_cells = num_cells
         self.num_genes = num_genes
+        self.R_root = R_root
 
-    def ifinstalled(self, ):
-        from rpy2.robjects.packages import importr
-        # try:
-        #     utils = importr("SPsimSeq")
-        #     print(utils)
-        # except Exception:
-        #     base = importr('base')
-        #     print(base.source("http://www.bioconductor.org/biocLite.R"))
-        #     # biocinstaller = importr("BiocInstaller")
-        #     # biocinstaller.biocLite("SPsimSeq")
-        #     print(1)
-        return 1
+        self.console = Console()
+        self.console.verbose = verbose
 
     def SPsimSeqFixSM(self, ):
-        self.ifinstalled()
+        import os
+        os.environ['R_HOME'] = self.R_root
+        import rpy2.robjects as rob
+        from rpy2.robjects import pandas2ri
+        from rpy2.robjects.conversion import localconverter
+        self.console.print('=========>SPsimSeqFixSM is being used')
         res = rob.r(
             """
             suppressPackageStartupMessages(library(SPsimSeq))
@@ -78,6 +71,7 @@ class fromSimulator:
             return (dd)
             """
         )
+        self.console.print('=========>SPsimSeqFixSM completes simulation')
         a, b, c = res
         with localconverter(rob.default_converter + pandas2ri.converter):
             df = rob.conversion.rpy2py(a)

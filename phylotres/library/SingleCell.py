@@ -31,6 +31,7 @@ class SingleCell:
     def __init__(
             self,
             len_params,
+            R_root,
             num_genes=10,
             num_cells=10,
             simulator='SPsimSeqFixSM',
@@ -59,6 +60,7 @@ class SingleCell:
         self.dprimer = dprimer
         self.dadapter = dadapter
         self.dspacer = dspacer
+        self.R_root = R_root
         self.working_dir = working_dir
         self.len_params = len_params
         self.simulator = simulator
@@ -79,6 +81,7 @@ class SingleCell:
 
         gbycell, _, _ = fromSimulator(
             simulator=simulator,
+            R_root=R_root,
             num_cells=self.num_cells,
             num_genes=self.num_genes,
         ).run()
@@ -352,6 +355,7 @@ if __name__ == "__main__":
     from phylotres.path import to
 
     p = SingleCell(
+        R_root='D:/Programming/R/R-4.3.1/',
         num_genes=10,
         num_cells=10,
         len_params={

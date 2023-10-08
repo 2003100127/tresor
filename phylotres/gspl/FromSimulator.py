@@ -6,12 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-import os
-# os.environ['R_HOME'] = 'D:/Programming/anaconda3/envs/umi/Lib/R'
-os.environ['R_HOME'] = 'D:/Programming/R/R-4.3.1/'
-import rpy2.robjects as rob
-from rpy2.robjects import pandas2ri
-from rpy2.robjects.conversion import localconverter
+from phylotres.util.Console import Console
 
 
 class fromSimulator:
@@ -19,14 +14,26 @@ class fromSimulator:
     def __init__(
             self,
             simulator,
+            R_root,
             num_samples=2,
             num_genes=20,
+            verbose=True,
     ):
         self.simulator = simulator
         self.num_samples = num_samples
         self.num_genes = num_genes
+        self.R_root = R_root
+
+        self.console = Console()
+        self.console.verbose = verbose
 
     def SPsimSeqFixSM(self, ):
+        import os
+        os.environ['R_HOME'] = self.R_root
+        import rpy2.robjects as rob
+        from rpy2.robjects import pandas2ri
+        from rpy2.robjects.conversion import localconverter
+        self.console.print('=========>SPsimSeqFixSM is being used')
         res = rob.r(
             """
             suppressPackageStartupMessages(library(SPsimSeq))
@@ -52,6 +59,7 @@ class fromSimulator:
             return (data.frame(sim.data.bulk1$counts))
             """
         )
+        self.console.print('=========>SPsimSeqFixSM completes simulation')
         with localconverter(rob.default_converter + pandas2ri.converter):
             df = rob.conversion.rpy2py(res)
         return df.T
