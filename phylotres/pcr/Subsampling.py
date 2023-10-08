@@ -34,7 +34,7 @@ class Subsampling:
         # print(umi_map)
         nn = pcr_dict['data'].shape[0]
         spl_ids = rannum().uniform(
-            low=0, high=nn, num=250, use_seed=False, seed=1
+            low=0, high=nn, num=9000, use_seed=False, seed=1
         )
         # print(spl_ids)
         # print(pcr_dict['data'])
@@ -42,11 +42,11 @@ class Subsampling:
         # print(spl_id_map)
         # print(len(spl_id_map))
         spl_mut_info = pcr_dict['mut_info'][spl_ids]
-        print(pcr_dict['mut_info'].shape)
-        print(spl_mut_info)
-        print(len(spl_mut_info))
+        # print(pcr_dict['mut_info'].shape)
+        # print(spl_mut_info)
+        # print(len(spl_mut_info))
         keys = spl_mut_info[:, 2]
-        print(len(keys))
+        # print(len(keys))
         pos_dict = tactic6(pcr_dict['mut_info'][:, [2, 0]])
         base_dict = tactic6(pcr_dict['mut_info'][:, [2, 1]])
         # print(pos_dict)
@@ -56,14 +56,14 @@ class Subsampling:
         for key in keys:
             mol_id = key.split('_')[0]
             k = key.split('_')[1:]
-            print('kkk', key, k)
+            # print('kkk', key, k)
             read = umi_map[int(mol_id)]
-            print(read)
+            # print(read)
             for i in range(len(k)):
-                print('id', i)
+                # print('id', i)
                 sub_k = mol_id + '_' + '_'.join(k[: i+1]) if k != [] else mol_id
-                print(sub_k)
-                print(pos_dict[sub_k], base_dict[sub_k])
+                # print(sub_k)
+                # print(pos_dict[sub_k], base_dict[sub_k])
                 read = self.change(read, pos_list=pos_dict[sub_k], base_list=base_dict[sub_k])
             #     print(read)
             # print(read)
@@ -73,7 +73,7 @@ class Subsampling:
                 spl_id_map[str(mol_id) + '_' + '_'.join(k)] if k != [] else 'init',  # source
             ])
             # print(read)
-        print(np.array(res_data).shape)
+        # print(np.array(res_data).shape)
         return np.array(res_data)
 
     def pcrtree(self, pcr_dict):
@@ -271,14 +271,14 @@ class Subsampling:
                                     pcr_error=pcr_dict['pcr_error'],
                                 )
                                 read_cache_table[ii].append(r1)
-            print('read_cache_table {}'.format(read_cache_table))
+            # print('read_cache_table {}'.format(read_cache_table))
 
             for ii, u in enumerate(trees_np):
                 for jj, v in enumerate(u):
                     if v != '0':
                         trees_ori[ii].append(trees_np[ii][jj])
             # print(trees_ori)
-            print('trees_ori {}'.format(trees_ori))
+            # print('trees_ori {}'.format(trees_ori))
 
 
             for i, tree in enumerate(trees_ori):

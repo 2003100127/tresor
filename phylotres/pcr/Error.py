@@ -197,13 +197,13 @@ class Error:
         data_pcr = np.array(data_pcr[['read_pcr', 'sam_id', 'source']])
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
-        print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
-        print('======>Summary report:')
-        print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
-        print('=========>the dimensions of the data: number of reads: {}'.format(res2p['data'].shape))
-        print('=========>the number of reads at this PCR: {}, '.format(res2p['recorder_pcr_read_num']))
-        print('=========>the number of nucleotides at this PCR: {}, '.format(res2p['recorder_nucleotide_num']))
-        print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
+        self.console.print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
+        self.console.print('======>Summary report:')
+        self.console.print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
+        self.console.print('=========>the dimensions of the data: number of reads: {}'.format(res2p['data'].shape))
+        self.console.print('=========>the number of reads at this PCR: {}, '.format(res2p['recorder_pcr_read_num']))
+        self.console.print('=========>the number of nucleotides at this PCR: {}, '.format(res2p['recorder_nucleotide_num']))
+        self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
         return res2p
 
     def tableMinnow(self, res2p):

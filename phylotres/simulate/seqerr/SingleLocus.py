@@ -6,6 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
+import time
 import numpy as np
 from phylotres.library.SingleLocus import SingleLocus as simuip
 from phylotres.pcr.Amplify import Amplify as pcr
@@ -22,7 +23,6 @@ class SingleLocus:
             len_params,
             seq_num,
             seq_len,
-            is_seed,
             is_sv_umi_lib,
             is_sv_seq_lib,
             is_sv_primer_lib,
@@ -51,7 +51,6 @@ class SingleLocus:
     ):
         self.seq_num = seq_num
         self.seq_len = seq_len
-        self.is_seed = is_seed
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
         self.working_dir = working_dir
@@ -78,6 +77,7 @@ class SingleLocus:
         self.subsampling = Subsampling()
         self.console = Console()
         self.console.verbose = verbose
+        self.verbose = verbose
 
         # ### /*** block. Init a pool of sequences ***/
         self.console.print('===>Generating an init pool of sequences starts...')
@@ -85,7 +85,7 @@ class SingleLocus:
             len_params=len_params,
             fasta_cdna_fpn=fasta_cdna_fpn,
             seq_num=seq_num,
-            is_seed=is_seed,
+            is_seed=use_seed,
             working_dir=working_dir,
             condis=condis,
             sim_thres=sim_thres,
@@ -95,7 +95,7 @@ class SingleLocus:
             is_sv_primer_lib=is_sv_primer_lib,
             is_sv_adapter_lib=is_sv_adapter_lib,
             is_sv_spacer_lib=is_sv_spacer_lib,
-            verbose=True,
+            verbose=self.verbose,
         ).pooling()
         self.console.print('===>Init pool of sequences has completed')
 
@@ -119,7 +119,7 @@ class SingleLocus:
             'recorder_nucleotide_num': [],
             'recorder_pcr_err_num': [],
             'recorder_pcr_read_num': [],
-            'verbose': False,
+            'verbose': self.verbose,
 
         }
         # print(pcr_ampl_params['data'])
@@ -142,9 +142,10 @@ class SingleLocus:
             # print(pcr_ampl_params['mut_info'])
 
         # ### /*** block 2. PCR amplification: simulation ***/
+        pcr_stime = time.time()
         pcr = self.pcr(pcr_params=pcr_ampl_params).np()
         # print(pcr.keys())
-        self.console.print('======>PCR amplification has completed')
+        self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
         # ### /*** block 3. Subsampling: sequencing depth or rate ***/
         # print(pcr['data'])
@@ -199,7 +200,6 @@ if __name__ == "__main__":
         },
         seq_num=50,
         seq_len=100,
-        is_seed=True,
         working_dir=to('data/simu/'),
         fasta_cdna_fpn=False,
         # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
@@ -216,16 +216,16 @@ if __name__ == "__main__":
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='tree', # tree minnow default err2d
-        pcr_error=1e-3,
-        pcr_num=8,
+        err_route='minnow', # tree minnow default err2d
+        pcr_error=1e-4,
+        pcr_num=14,
         err_num_met='nbinomial',
         seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
         seq_sub_spl_rate=0.333,
-        use_seed=False,
+        use_seed=True,
         seed=None,
 
-        verbose=False,
+        verbose=True,
 
         sv_fastq_fp=to('data/simu/'),
     )
