@@ -135,8 +135,6 @@ class general:
                 self.console.print("=========>UMI generation start")
                 for umi_mark_id, umi_mark_suffix in enumerate(condi_map['umi']):
                     # print(umi_mark_id, id + self.permutation * self.seq_num + umi_cnt + umi_mark_id + 100000000)
-                    # print(umi_mark_id, id + self.permutation * self.seq_num + 1 + umi_mark_id * 100000000)
-                    print()
                     umi_mark = '_' + umi_mark_suffix if umi_mark_suffix != 'alone' else ''
                     self.console.print("============>UMI condition {}: {}".format(umi_mark_id, 'umi' + umi_mark))
                     umi_flag = False
@@ -149,7 +147,7 @@ class general:
                                 high=4,
                                 num=self.len_params['umi' + umi_mark]['umi_unit_len'],
                                 use_seed=self.is_seed,
-                                seed=id + self.permutation * self.seq_num + umi_cnt + umi_mark_id * 100000000,
+                                seed=id + self.permutation * self.seq_num + umi_cnt + (umi_mark_id+1) * 100000000,
                             ),
                         )
                         umi_i = umip.reoccur(is_sv=False)
@@ -185,7 +183,7 @@ class general:
                                 high=4,
                                 num=self.len_params['seq' + seq_mark],
                                 use_seed=self.is_seed,
-                                seed=id + self.permutation * self.seq_num + 8000000 + seq_mark_id * 200000000,
+                                seed=id + self.permutation * self.seq_num + 8000000 + (seq_mark_id+1) * 200000000,
                             ),
                         ).general(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
                     read_struct_ref['seq' + seq_mark] = seq_i
@@ -203,7 +201,7 @@ class general:
                             high=4,
                             num=self.len_params['primer' + primer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + primer_mark_id * 300000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + (primer_mark_id+1) * 300000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'primer' + primer_mark + '.txt', is_sv=self.is_sv_primer_lib)
                     read_struct_ref['primer' + primer_mark] = primer_i
@@ -221,7 +219,7 @@ class general:
                             high=4,
                             num=self.len_params['adapter' + adapter_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + adapter_mark_id * 400000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + (adapter_mark_id+1) * 400000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'adapter' + adapter_mark + '.txt', is_sv=self.is_sv_adapter_lib)
                     read_struct_ref['adapter' + adapter_mark] = adapter_i
@@ -239,7 +237,7 @@ class general:
                             high=4,
                             num=self.len_params['spacer' + spacer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + spacer_mark_id * 500000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + (spacer_mark_id+1) * 500000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'spacer' + spacer_mark + '.txt', is_sv=self.is_sv_spacer_lib)
                     read_struct_ref['spacer' + spacer_mark] = spacer_i
