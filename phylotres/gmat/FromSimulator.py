@@ -16,8 +16,15 @@ from rpy2.robjects.conversion import localconverter
 
 class fromSimulator:
 
-    def __init__(self, simulator):
+    def __init__(
+            self,
+            simulator,
+            num_cells=10,
+            num_genes=10,
+    ):
         self.simulator = simulator
+        self.num_cells = num_cells
+        self.num_genes = num_genes
 
     def ifinstalled(self, ):
         from rpy2.robjects.packages import importr
@@ -35,7 +42,7 @@ class fromSimulator:
     def SPsimSeqFixSM(self, ):
         self.ifinstalled()
         res = rob.r(
-            '''
+            """
             suppressPackageStartupMessages(library(SPsimSeq))
             cat("SPsimSeq package version", 
                 as.character(packageVersion("SPsimSeq")), "\n")
@@ -52,8 +59,11 @@ class fromSimulator:
             scNGP.data2 <- scNGP.data2[sample(nrow(scNGP.data2), 20), ]
             # simulate data (we simulate here only a single data, n.sim = 1)
             sim.data.sc <- SPsimSeq(n.sim = 1, s.data = scNGP.data2,
-                                    group = treatment, n.genes = 10, batch.config = 1,
-                                    group.config = c(0.5, 0.5), tot.samples = 10, 
+                                    group = treatment, n.genes = {}, 
+                                    """.format(self.num_genes)+"""
+                                    batch.config = 1,
+                                    group.config = c(0.5, 0.5), tot.samples = {},
+                                    """.format(self.num_cells)+"""
                                     pDE = 0.2, lfc.thrld = 0.5, model.zero.prob = TRUE,
                                     result.format = "SCE")
 
@@ -66,7 +76,7 @@ class fromSimulator:
                 "c"=data.frame(rowData(sim.data.sc1))
             )
             return (dd)
-            '''
+            """
         )
         a, b, c = res
         with localconverter(rob.default_converter + pandas2ri.converter):

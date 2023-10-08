@@ -23,16 +23,16 @@ from phylotres.read.spacer.Design import Design as dspacer
 from phylotres.util.Console import Console
 from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6
-from phylotres.gmat.FromSimulator import fromSimulator
+from phylotres.gspl.FromSimulator import fromSimulator
 
 
-class SingleCell:
+class Gene:
 
     def __init__(
             self,
             len_params,
             num_genes=10,
-            num_cells=10,
+            num_samples=2,
             simulator='SPsimSeqFixSM',
 
             fasta_cdna_fpn=False,
@@ -63,7 +63,7 @@ class SingleCell:
         self.len_params = len_params
         self.simulator = simulator
         self.num_genes = num_genes
-        self.num_cells = num_cells
+        self.num_samples = num_samples
         self.is_seed = is_seed
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.is_sv_umi_lib = is_sv_umi_lib
@@ -77,25 +77,21 @@ class SingleCell:
         self.dna_map = self.dnasgl.todict(nucleotides=self.dnasgl.get(universal=True), reverse=True)
         self.crtfolder.osmkdir(working_dir)
 
-        gbycell, _, _ = fromSimulator(
-            simulator=simulator,
-            num_cells=self.num_cells,
+        self.gspl = fromSimulator(
+            simulator=self.simulator,
             num_genes=self.num_genes,
+            num_samples=self.num_samples,
         ).run()
-        self.gmat = gbycell
-        # print(self.gmat)
-        self.cell_map = {k: v for k, v in enumerate(self.gmat.columns)}
-        self.gene_map = {k: v for k, v in enumerate(self.gmat.index)}
-        # print(self.cell_map)
+        self.gene_map = {k: v for k, v in enumerate(self.gspl.index)}
         # print(self.gene_map)
-        csr_ = coo_matrix(self.gmat)
-        print(csr_)
-        self.gbyc_arr = np.transpose([
+        csr_ = coo_matrix(self.gspl)
+        self.gspl_arr = np.transpose([
             csr_.row.tolist(),
             csr_.col.tolist(),
             csr_.data.tolist(),
         ]).astype(int)
-        print(self.gbyc_arr)
+        self.gspl_arr = self.gspl_arr[self.gspl_arr[:, 0] == 0]
+        print(self.gspl_arr)
 
         self.console = Console()
         self.console.verbose = verbose
@@ -143,10 +139,10 @@ class SingleCell:
             cdna_ids = [*seq_cdna_map.keys()]
 
         ### +++++++++++++++ block: generate each read +++++++++++++++
-        for x, gc in enumerate(self.gbyc_arr):
-            cell = gc[0]
-            gene = gc[1]
-            seq_num = gc[2]
+        for x, gs in enumerate(self.gspl_arr):
+            sample = gs[0]
+            gene = gs[1]
+            seq_num = gs[2]
 
             if self.fasta_cdna_fpn:
                 cdna_seqs_sel_maps = {}
@@ -162,7 +158,7 @@ class SingleCell:
                     # print(cdna_seqs_sel)
                     self.pfwriter.generic(
                         df=cdna_ids_sel,
-                        sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                        sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                     )
 
             for id in np.arange(seq_num):
@@ -201,11 +197,11 @@ class SingleCell:
                                 umi_flag = True
                                 umip.write(
                                     res=umi_i,
-                                    lib_fpn=self.working_dir + 'umi' + umi_mark + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                                    lib_fpn=self.working_dir + 'umi' + umi_mark + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                                     is_sv=self.is_sv_umi_lib)
                                 umip.write(
                                     res=str(umi_seed),
-                                    lib_fpn=self.working_dir + 'umi' + umi_mark + '_c_' + str(cell) + '_g_' + str(gene) + '_seeds.txt',
+                                    lib_fpn=self.working_dir + 'umi' + umi_mark + '_s_' + str(sample) + '_g_' + str(gene) + '_seeds.txt',
                                     is_sv=self.is_sv_umi_lib,
                                 )
                             else:
@@ -222,7 +218,7 @@ class SingleCell:
                             seq_i = self.dseq(
                                 cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
                             ).cdna(
-                                lib_fpn=self.working_dir + 'seq' + seq_mark  + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                                lib_fpn=self.working_dir + 'seq' + seq_mark  + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                                 is_sv=self.is_sv_seq_lib,
                             )
                         else:
@@ -238,12 +234,12 @@ class SingleCell:
                                 ),
                             )
                             seq_i = pseq.general(
-                                lib_fpn=self.working_dir + 'seq' + seq_mark  + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                                lib_fpn=self.working_dir + 'seq' + seq_mark  + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                                 is_sv=self.is_sv_seq_lib,
                             )
                             pseq.write(
                                 res=str(seq_seed),
-                                lib_fpn=self.working_dir + 'seq' + seq_mark + '_c_' + str(cell) + '_g_' + str(gene) + '_seeds.txt',
+                                lib_fpn=self.working_dir + 'seq' + seq_mark + '_s_' + str(sample) + '_g_' + str(gene) + '_seeds.txt',
                                 is_sv=self.is_sv_seq_lib,
                             )
                         read_struct_ref['seq' + seq_mark] = seq_i
@@ -266,11 +262,11 @@ class SingleCell:
                             ),
                         )
                         primer_i = pprimer.general(
-                            lib_fpn=self.working_dir + 'primer' + primer_mark + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                            lib_fpn=self.working_dir + 'primer' + primer_mark + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                             is_sv=self.is_sv_primer_lib),
                         pprimer.write(
                             res=str(primer_seed),
-                            lib_fpn=self.working_dir + 'primer' + primer_mark + '_c_' + str(cell) + '_g_' + str(gene) + '_seeds.txt',
+                            lib_fpn=self.working_dir + 'primer' + primer_mark + '_s_' + str(sample) + '_g_' + str(gene) + '_seeds.txt',
                             is_sv=self.is_sv_primer_lib,
                         )
                         read_struct_ref['primer' + primer_mark] = primer_i
@@ -293,12 +289,12 @@ class SingleCell:
                             ),
                         )
                         adapter_i = padapter.general(
-                            lib_fpn=self.working_dir + 'adapter' + adapter_mark + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                            lib_fpn=self.working_dir + 'adapter' + adapter_mark + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                             is_sv=self.is_sv_adapter_lib,
                         )
                         padapter.write(
                             res=str(adapter_seed),
-                            lib_fpn=self.working_dir + 'adapter' + adapter_mark + '_c_' + str(cell) + '_g_' + str(gene) + '_seeds.txt',
+                            lib_fpn=self.working_dir + 'adapter' + adapter_mark + '_s_' + str(sample) + '_g_' + str(gene) + '_seeds.txt',
                             is_sv=self.is_sv_adapter_lib,
                         )
                         read_struct_ref['adapter' + adapter_mark] = adapter_i
@@ -321,12 +317,12 @@ class SingleCell:
                             ),
                         )
                         spacer_i = pspacer.general(
-                            lib_fpn=self.working_dir + 'spacer' + spacer_mark + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
+                            lib_fpn=self.working_dir + 'spacer' + spacer_mark + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                             is_sv=self.is_sv_spacer_lib,
                         )
                         pspacer.write(
                             res=str(spacer_seed),
-                            lib_fpn=self.working_dir + 'spacer' + spacer_mark + '_c_' + str(cell) + '_g_' + str(gene) + '_seeds.txt',
+                            lib_fpn=self.working_dir + 'spacer' + spacer_mark + '_s_' + str(sample) + '_g_' + str(gene) + '_seeds.txt',
                             is_sv=self.is_sv_spacer_lib,
                         )
                         read_struct_ref['spacer' + spacer_mark] = spacer_i
@@ -334,7 +330,7 @@ class SingleCell:
                 read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
                 sequencing_library.append([
                     self.paste([*read_struct_pfd_order.values()]),
-                    str(id) + '*c*' + str(cell) + '*g*' + str(gene) + '*',
+                    str(id) + '*s*' + str(sample) + '*g*' + str(gene) + '*',
                     'init',
                 ])
         # print(umi_cnt)
@@ -351,9 +347,11 @@ class SingleCell:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    p = SingleCell(
-        num_genes=10,
-        num_cells=10,
+    p = Gene(
+        num_samples=2,
+        num_genes=20,
+        simulator='SPsimSeqFixSM',
+
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,
