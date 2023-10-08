@@ -15,7 +15,7 @@ from phylotres.util.file.create.Folder import Folder as crtfolder
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
 from phylotres.read.barcode.Design import Design as dbc
 from phylotres.read.umi.Design import Design as dumi
-from phylotres.util.similarity.distance.Hamming import hamming
+from phylotres.util.similarity.distance.Hamming import Hamming
 from phylotres.read.seq.Design import Design as dseq
 from scipy.sparse import coo_matrix
 
@@ -106,7 +106,7 @@ class singleCell:
                             ),
                         )
                         umi_i = umip.reoccur(is_sv=False)
-                        edh = np.array([hamming().general(umi_i, j) for j in umi_pool])
+                        edh = np.array([Hamming().general(umi_i, j) for j in umi_pool])
                         # for j in umi_pool:
                         #     if hamming().general(umi_i, j) < self.sim_thres:
                         #         print(umi_i, j)
@@ -118,7 +118,8 @@ class singleCell:
                             umip.write(
                                 res=umi_i,
                                 lib_fpn=self.umi_lib_fpn + 'umi' + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
-                                is_sv=self.is_sv_umi_lib)
+                                is_sv=self.is_sv_umi_lib
+                            )
                         else:
                             # print(id)
                             umi_cnt += 1
