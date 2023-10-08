@@ -4,7 +4,7 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import numpy as np
-from phylotres.simulate.dispatcher.single.CDNA import cdna as simucdna
+from phylotres.simulate.seqerr.single.CDNA import cdna as simucdna
 from phylotres.path import to
 
 

@@ -3,17 +3,35 @@ __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 __lab__ = "cribbslab"
 
+print(1)
+import os
+# os.environ['R_HOME'] = 'D:/Programming/anaconda3/envs/umi/Lib/R'
+os.environ['R_HOME'] = 'D:/Programming/R/R-4.3.1/'
 import rpy2.robjects as rob
 from rpy2.robjects import pandas2ri
 from rpy2.robjects.conversion import localconverter
 
 
-class fromSimulator(object):
+class fromSimulator:
 
     def __init__(self, simulator):
         self.simulator = simulator
 
+    def ifinstalled(self, ):
+        from rpy2.robjects.packages import importr
+        # try:
+        #     utils = importr("SPsimSeq")
+        #     print(utils)
+        # except Exception:
+        #     base = importr('base')
+        #     print(base.source("http://www.bioconductor.org/biocLite.R"))
+        #     # biocinstaller = importr("BiocInstaller")
+        #     # biocinstaller.biocLite("SPsimSeq")
+        #     print(1)
+        return 1
+
     def SPsimSeqFixSM(self, ):
+        self.ifinstalled()
         res = rob.r(
             '''
             suppressPackageStartupMessages(library(SPsimSeq))

@@ -4,7 +4,7 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import numpy as np
-from phylotres.simulate.dispatcher.single.SingleCell import singleCell as simusc
+from phylotres.simulate.seqerr.single.SingleCell import singleCell as simusc
 from phylotres.gmat.FromSimulator import fromSimulator
 from phylotres.path import to
 

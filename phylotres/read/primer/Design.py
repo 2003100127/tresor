@@ -3,14 +3,14 @@ __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 __lab__ = "cribbslab"
 
-from phylotres.read.inf.Pseudo import pseudo as seqpseudo
-from phylotres.read.umi.Library import library as liblogginger
+from phylotres.read.inf.Pseudo import Pseudo as seqpseudo
+from phylotres.read.Library import Library as liblogginger
 
 
-class design(seqpseudo):
+class Design(seqpseudo):
 
     def __init__(self, *args, **kwargs):
-        super(design, self).__init__(*args, **kwargs)
+        super(Design, self).__init__(*args, **kwargs)
         self.args = args
         self.kwargs = kwargs
 

@@ -4,29 +4,32 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import numpy as np
-from phylotres.simulate.dispatcher.single.GeneralCondi import generalCondi as simugcondi
-from phylotres.path import to
+from phylotres.simulate.seqerr.Subsampling import general as simugeneral
 
 
-class generalCondi(object):
+class umi:
 
-    def __init__(self, ):
+    def __init__(self, working_dir):
+        self.working_dir = working_dir
         self.permutation_num = 10
 
         self.umi_unit_len_fixed = 10
-        self.spacer_len_fixed = 10
+        self.umi_unit_pattern = 2
         self.umi_num_fixed = 50
-        self.pcr_num_fixed = 10
+        self.pcr_num_fixed = 20
+        # self.pcr_err_fixed = 0.2
         self.pcr_err_fixed = 1e-3
         self.seq_err_fixed = 1e-3
         self.ampl_rate_fixed = 0.85
+        self.sim_thres_fixed = 3
+        self.seq_sub_spl_rate = 1
 
         self.ampl_rates = np.linspace(0.1, 1, 10)
         self.umi_unit_lens = np.arange(6, 36 + 1, 1)
         self.umi_nums = np.arange(20, 140 + 20, 20)
         self.pcr_nums = np.arange(1, 20 + 1, 1)
         self.pcr_errs, self.seq_errs = self.errors()
-        print(self.pcr_errs, self.seq_errs)
+        # print(self.pcr_errs, self.seq_errs)
 
         self.metrics = {
             'pcr_nums': self.pcr_nums,
@@ -67,52 +70,73 @@ class generalCondi(object):
         # print(seq_errs)
         return pcr_errs, seq_errs
 
-    def umiLens(self, ):
-        for id, umi_len in enumerate(self.umi_unit_lens):
+    def pcrNums(self, ):
+        pass
+
+    def pcrErrs(self, ):
+        pass
+
+    def seqErrs(self, ):
+        # sys.stdout = open(self.working_dir + 'log.txt', 'w')
+        for pn in range(self.permutation_num):
             simu_params = {
                 'init_seq_setting': {
                     'seq_num': self.umi_num_fixed,
-                    'umi_unit_pattern': 1,
-                    'umi_unit_len': umi_len,
+                    'umi_unit_pattern': self.umi_unit_pattern,
+                    'umi_unit_len': self.umi_unit_len_fixed,
+                    # 'seq_len': self.seq_len_fixed - self.umi_unit_len_fixed,
                     'is_seed': True,
-                    'seq_len': 100 - umi_len - self.spacer_len_fixed,
-                    'spacer_len': self.spacer_len_fixed,
+
+                    'working_dir': self.working_dir + 'seq_errs/permute_' + str(pn) + '/',
                     'is_sv_umi_lib': True,
-                    'is_sv_seq_lib': True,
-                    'is_sv_spacer_lib': True,
-                    'working_dir': to('data/simu/umi_lens/spacer/'),
-                    'umi_lib_fpn': to('data/simu/umi_lens/spacer/umi_') + str(umi_len) + '.txt',
-                    'seq_lib_fpn': to('data/simu/umi_lens/spacer/seq_') + str(umi_len) + '.txt',
-                    'spacer_lib_fpn': to('data/simu/umi_lens/spacer/spacer_') + str(umi_len) + '.txt',
-                    'condis': ['umi', 'spacer', 'seq'],
-                    'permutation': 0
+                    'umi_lib_fpn': self.working_dir + 'seq_errs/permute_' + str(pn) + '/umi.txt',
+
+                    'condis': ['umi'],
+                    'sim_thres': self.sim_thres_fixed,
+                    'permutation': pn,
                 },
                 'ampl_rate': self.ampl_rate_fixed,
                 'pcr_num': self.pcr_num_fixed,
-                'pcr_error': self.pcr_err_fixed,
-                'seq_error': self.seq_err_fixed,
+                'err_route': 'tree',  # err2d minnow tree
                 'err_num_met': 'nbinomial',
+                'pcr_error': self.pcr_err_fixed,
+                'seq_errors': self.seq_errs,
+                'seq_sub_spl_rate': self.seq_sub_spl_rate,
                 'use_seed': False,
                 'seed': None,
                 'write': {
-                    'fastq_fp': to('data/simu/umi_lens/spacer/'),
-                    'fastq_fn': 'umi_len_' + str(umi_len),
-                },
+                    'fastq_fp': self.working_dir + 'seq_errs/permute_' + str(pn) + '/',
+                    'fastq_fn': '',
+                }
             }
-            p = simugcondi(simu_params)
-            print(p.ondemand())
+            p = simugeneral(simu_params)
+            print(p.ondemandSeqErrs())
+        # sys.stdout.close()
         return
+
+    def umiLens(self, ):
+        pass
+
+    def amplRates(self, ):
+        pass
 
 
 if __name__ == "__main__":
-    p = generalCondi()
+    from phylotres.path import to
+
+    p = umi(
+        # working_dir=to('data/simu/monomer/treepcr22_250/'),
+        # working_dir=to('data/simu/dimer/treepcr22_250/'),
+        working_dir=to('data/simu/umi/seq_errs/monomer/'),
+        # working_dir=to('data/simu/trimer/treepcr22_250/'),
+    )
 
     # print(p.pcrNums())
 
     # print(p.pcrErrs())
 
-    # print(p.seqErrs())
+    print(p.seqErrs())
 
-    print(p.umiLens())
+    # print(p.umiLens())
 
     # print(p.amplRates())

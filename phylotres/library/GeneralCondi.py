@@ -8,16 +8,16 @@ import os, sys
 import numpy as np
 dis = '../../../'
 sys.path.append(os.path.abspath(dis))
-from phylotres.util.sequence.Fasta import read as sfasta
-from phylotres.util.random.Sampling import sampling as ranspl
-from phylotres.util.random.Number import number as rannum
-from phylotres.util.file.read.Reader import reader as pfreader
+from phylotres.util.sequence.Fasta import Read as sfasta
+from phylotres.util.random.Sampling import Sampling as ranspl
+from phylotres.util.random.Number import Number as rannum
+from phylotres.util.file.read.Reader import Reader as pfreader
 from phylotres.util.file.create.Folder import folder as crtfolder
-from phylotres.util.sequence.symbol.Single import single as dnasgl
-from phylotres.read.umi.Design import design as umi
-from phylotres.read.seq.Design import design as seq
-from phylotres.read.spacer.Design import design as spacer
-from phylotres.read.primer.Design import design as primer
+from phylotres.util.sequence.symbol.Single import Single as dnasgl
+from phylotres.read.umi.Design import Design as umi
+from phylotres.read.seq.Design import Design as seq
+from phylotres.read.spacer.Design import Design as spacer
+from phylotres.read.primer.Design import Design as primer
 
 
 class generalCondi(object):

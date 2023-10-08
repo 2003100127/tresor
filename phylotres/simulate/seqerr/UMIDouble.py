@@ -3,21 +3,23 @@ __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 __lab__ = "cribbslab"
 
+import sys
 import numpy as np
-from phylotres.simulate.dispatcher.Subsampling import general as simugeneral
+from phylotres.simulate.seqerr.single.UMIDouble import umiDouble as simugeneral
+from phylotres.path import to
 
 
-class umi:
+class umiDouble(object):
 
     def __init__(self, working_dir):
-        self.working_dir = working_dir
-        self.permutation_num = 10
+        # ### /*** block. general ***/
+        self.permutation_num = 1000
 
+        self.working_dir = working_dir
+        self.umi_unit_pattern = 3
         self.umi_unit_len_fixed = 10
-        self.umi_unit_pattern = 2
-        self.umi_num_fixed = 50
-        self.pcr_num_fixed = 20
-        # self.pcr_err_fixed = 0.2
+        self.umi_num_fixed = 100
+        self.pcr_num_fixed = 8
         self.pcr_err_fixed = 1e-3
         self.seq_err_fixed = 1e-3
         self.ampl_rate_fixed = 0.85
@@ -29,6 +31,28 @@ class umi:
         self.umi_nums = np.arange(20, 140 + 20, 20)
         self.pcr_nums = np.arange(1, 20 + 1, 1)
         self.pcr_errs, self.seq_errs = self.errors()
+        print(self.pcr_errs)
+        print(self.seq_errs)
+
+        # ### /*** block. bulk ***/
+        # self.permutation_num = 10
+
+        # self.umi_unit_pattern = 3
+        # self.umi_unit_len_fixed = 12
+        # self.umi_num_fixed = 100
+        # self.pcr_num_fixed = 8
+        # self.pcr_err_fixed = 1e-3
+        # self.seq_err_fixed = 1e-3
+        # self.ampl_rate_fixed = 0.85
+        # self.sim_thres_fixed = 3
+        # self.seq_sub_spl_rate = 1
+
+        # self.ampl_rates = np.linspace(0.1, 1, 10)
+        # self.umi_unit_lens = np.arange(6, 36 + 1, 1)
+        # self.umi_nums = np.arange(20, 140 + 20, 20)
+        # self.pcr_nums = np.arange(1, 20 + 1, 1)
+        # self.pcr_errs, self.seq_errs = self.errors()
+        # self.pcr_errs = [1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01]
         # print(self.pcr_errs, self.seq_errs)
 
         self.metrics = {
@@ -62,42 +86,50 @@ class umi:
 
                 seq_errs.append(7.5 * e)
             e = 10 * e
+        pcr_errs.append(0.125)
+        seq_errs.append(0.125)
+        pcr_errs.append(0.15)
+        seq_errs.append(0.15)
         pcr_errs.append(0.2)
         seq_errs.append(0.2)
+        pcr_errs.append(0.225)
+        seq_errs.append(0.225)
+        pcr_errs.append(0.25)
+        seq_errs.append(0.25)
         pcr_errs.append(0.3)
         seq_errs.append(0.3)
         # print(pcr_errs)
         # print(seq_errs)
         return pcr_errs, seq_errs
 
-    def pcrNums(self, ):
-        pass
-
-    def pcrErrs(self, ):
-        pass
-
     def seqErrs(self, ):
-        # sys.stdout = open(self.working_dir + 'log.txt', 'w')
+        sys.stdout = open(self.working_dir + 'log.txt', 'w')
         for pn in range(self.permutation_num):
+            print(pn)
             simu_params = {
                 'init_seq_setting': {
                     'seq_num': self.umi_num_fixed,
                     'umi_unit_pattern': self.umi_unit_pattern,
                     'umi_unit_len': self.umi_unit_len_fixed,
-                    # 'seq_len': self.seq_len_fixed - self.umi_unit_len_fixed,
                     'is_seed': True,
 
-                    'working_dir': self.working_dir + 'seq_errs/permute_' + str(pn) + '/',
+                    # # ### /*** block. trimer ***/
+                    # 'working_dir': to('data/simu/transloc/trimer/single_read/seq_errs/permute_') + str(pn) + '/',
+                    # 'is_sv_umi_lib': True,
+                    # 'umi_lib_fpn': to('data/simu/transloc/trimer/single_read/seq_errs/permute_') + str(pn) + '/umi.txt',
+
+                    # ### /*** block. trimer ***/
                     'is_sv_umi_lib': True,
+                    'working_dir': self.working_dir + 'seq_errs/permute_' + str(pn) + '/',
                     'umi_lib_fpn': self.working_dir + 'seq_errs/permute_' + str(pn) + '/umi.txt',
 
                     'condis': ['umi'],
                     'sim_thres': self.sim_thres_fixed,
                     'permutation': pn,
                 },
+                'transloc_rate': 0.02,
                 'ampl_rate': self.ampl_rate_fixed,
                 'pcr_num': self.pcr_num_fixed,
-                'err_route': 'tree',  # err2d minnow tree
                 'err_num_met': 'nbinomial',
                 'pcr_error': self.pcr_err_fixed,
                 'seq_errors': self.seq_errs,
@@ -111,24 +143,13 @@ class umi:
             }
             p = simugeneral(simu_params)
             print(p.ondemandSeqErrs())
-        # sys.stdout.close()
+        sys.stdout.close()
         return
-
-    def umiLens(self, ):
-        pass
-
-    def amplRates(self, ):
-        pass
 
 
 if __name__ == "__main__":
-    from phylotres.path import to
-
-    p = umi(
-        # working_dir=to('data/simu/monomer/treepcr22_250/'),
-        # working_dir=to('data/simu/dimer/treepcr22_250/'),
-        working_dir=to('data/simu/umi/seq_errs/monomer/'),
-        # working_dir=to('data/simu/trimer/treepcr22_250/'),
+    p = umiDouble(
+        working_dir=to('data/simu/transloc/trimer/single_read/1000/')
     )
 
     # print(p.pcrNums())

@@ -14,7 +14,7 @@ from phylotres.util.sequence.symbol.Single import Single as dnasgl
 from phylotres.read.barcode.Design import Design as dbc
 from phylotres.read.umi.Design import Design as dumi
 from phylotres.read.seq.Design import Design as dseq
-from phylotres.read.similarity.distance.Hamming import hamming
+from phylotres.util.similarity.distance.Hamming import hamming
 
 
 class Bulk:

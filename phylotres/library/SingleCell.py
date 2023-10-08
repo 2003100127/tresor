@@ -5,21 +5,36 @@ __lab__ = "cribbslab"
 
 import time
 import numpy as np
-from phylotres.util.random.Sampling import sampling as ranspl
-from phylotres.util.random.Number import number as rannum
-from phylotres.util.file.read.Reader import reader as pfreader
-from phylotres.util.file.create.Folder import folder as crtfolder
-from phylotres.util.sequence.symbol.Single import single as dnasgl
-from phylotres.read.barcode.Design import design as dbc
-from phylotres.read.umi.Design import design as dumi
-from phylotres.read.similarity.distance.Hamming import hamming
-from phylotres.read.seq.Design import design as dseq
+from phylotres.util.random.Sampling import Sampling as ranspl
+from phylotres.util.random.Number import Number as rannum
+from phylotres.util.file.read.Reader import Reader as pfreader
+from phylotres.util.file.create.Folder import Folder as crtfolder
+from phylotres.util.sequence.symbol.Single import Single as dnasgl
+from phylotres.read.barcode.Design import Design as dbc
+from phylotres.read.umi.Design import Design as dumi
+from phylotres.util.similarity.distance.Hamming import hamming
+from phylotres.read.seq.Design import Design as dseq
 from scipy.sparse import coo_matrix
 
 
 class singleCell:
 
-    def __init__(self, gmat, is_seed=False, umi_unit_pattern=3, umi_unit_len=12, seq_len=100, is_sv_umi_lib=True, is_sv_seq_lib=True, umi_lib_fpn='./umi.txt', seq_lib_fpn='./seq.txt', working_dir='./simu/', condis=['umi'], sim_thres=2, permutation=0):
+    def __init__(
+            self,
+            gmat,
+            is_seed=False,
+            umi_unit_pattern=3,
+            umi_unit_len=12,
+            seq_len=100,
+            is_sv_umi_lib=True,
+            is_sv_seq_lib=True,
+            umi_lib_fpn='./umi.txt',
+            seq_lib_fpn='./seq.txt',
+            working_dir='./simu/',
+            condis=['umi'],
+            sim_thres=2,
+            permutation=0,
+    ):
         self.pfreader = pfreader()
         self.ranspl = ranspl()
         self.rannum = rannum()
@@ -54,7 +69,7 @@ class singleCell:
             csr_.row.tolist(),
             csr_.col.tolist(),
             csr_.data.tolist(),
-        ]).astype(np.int)
+        ]).astype(int)
         print(self.gbyc_arr)
 
     @property
@@ -104,18 +119,18 @@ class singleCell:
                         else:
                             # print(id)
                             umi_cnt += 1
-                # if 'seq' in self.condis:
-                #     seq_i = self.dseq(
-                #         dna_map=self.dna_map,
-                #         pseudorandom_num=self.rannum.uniform(
-                #             low=0,
-                #             high=4,
-                #             num=self.seq_len,
-                #             use_seed=self.is_seed,
-                #             seed=id + self.permutation * seq_num + 5000000,
-                #         ),
-                #     ).general(lib_fpn=self.seq_lib_fpn, is_sv=self.is_sv_seq_lib)
-                #     read_struct_ref['seq'] = seq_i
+                if 'seq' in self.condis:
+                    seq_i = self.dseq(
+                        dna_map=self.dna_map,
+                        pseudorandom_num=self.rannum.uniform(
+                            low=0,
+                            high=4,
+                            num=self.seq_len,
+                            use_seed=self.is_seed,
+                            seed=id + self.permutation * seq_num + 5000000,
+                        ),
+                    ).general(lib_fpn=self.seq_lib_fpn, is_sv=self.is_sv_seq_lib)
+                    read_struct_ref['seq'] = seq_i
                 read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
                 seqs.append(
                     [self.paste(read_struct=[*read_struct_pfd_order.values()]),
@@ -141,7 +156,8 @@ if __name__ == "__main__":
 
     from phylotres.gmat.FromSimulator import fromSimulator
 
-    gbycell, _, _ = fromSimulator(simulator='SPsimSeq').run()
+    gbycell, _, _ = fromSimulator(simulator='SPsimSeqFixSM').run()
+    print(gbycell)
 
     p = singleCell(
         gmat=gbycell,
@@ -151,10 +167,10 @@ if __name__ == "__main__":
         is_seed=True,
 
         is_sv_umi_lib=True,
-        umi_lib_fpn=to('data/simu/umi_seq/permute_1/'),
+        umi_lib_fpn=to('data/simu/'),
         is_sv_seq_lib=True,
-        seq_lib_fpn=to('data/simu/umi_seq/permute_1/seq.txt'),
-        working_dir=to('data/simu/umi_seq/permute_1/'),
+        seq_lib_fpn=to('data/simu/seq.txt'),
+        working_dir=to('data/simu/'),
 
         condis=['umi'],
         sim_thres=3,

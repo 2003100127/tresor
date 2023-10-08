@@ -3,7 +3,7 @@ __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 __lab__ = "cribbslab"
 
-from phylotres.read.umi.Library import Library as liblogginger
+from phylotres.read.Library import Library as liblogginger
 from phylotres.read.inf.Pseudo import Pseudo as seqpseudo
 
 

@@ -4,10 +4,10 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import numpy as np
-from phylotres.simulate.initiator.General import General as simuip
+from phylotres.library import FromSimulation as simuip
 from phylotres.pcr.Amplify import Amplify as pcr
 from phylotres.seq.Calling import Calling as seq
-from phylotres.simulate.dispatcher.Subsampling import Subsampling
+from phylotres.simulate.seqerr.Subsampling import Subsampling
 from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.Console import Console
 

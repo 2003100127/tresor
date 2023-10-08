@@ -4,17 +4,20 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import time
+import os, sys
 import numpy as np
+dis = '../../../'
+sys.path.append(os.path.abspath(dis))
 from phylotres.util.random.Sampling import sampling as ranspl
 from phylotres.util.random.Number import number as rannum
 from phylotres.util.file.read.Reader import reader as pfreader
 from phylotres.util.file.create.Folder import folder as crtfolder
 from phylotres.util.sequence.symbol.Single import single as dnasgl
 from phylotres.read.umi.Design import design as dumi
-from phylotres.read.similarity.distance.Hamming import hamming
+from phylotres.util.similarity.distance.Hamming import hamming
 
 
-class umiDouble(object):
+class umi(object):
 
     def __init__(self, seq_num, is_seed=False, umi_unit_pattern=3, umi_unit_len=12, is_sv_umi_lib=True, umi_lib_fpn='./umi.txt', working_dir='./simu/', condis=['umi'], sim_thres=2, permutation=0):
         self.pfreader = pfreader()
@@ -75,22 +78,12 @@ class umiDouble(object):
                         # print(id)
                         umi_cnt += 1
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
-            seqs.append([self.paste([*read_struct_pfd_order.values()]), id])
+            seqs.append([self.paste([*read_struct_pfd_order.values()]), id, 'init'])
         print(umi_cnt)
         # print(umi_pool)
-
         etime = time.time()
         print("===>time for generating initial pool of sequences: {:.3f}s".format(etime-stime))
-        print(seqs)
-        reads = list(np.reshape(seqs, (int(self.seq_num / 2), 4)))
-        c = []
-        pos_transloc = np.random.choice(int(self.seq_num / 2), int(0.1 * self.seq_num), replace=False)
-        print(pos_transloc)
-        for i, r in enumerate(reads):
-            mark = 'real_yes' if i in pos_transloc else 'real_no'
-            # ===> 'read', 'r1_id', 'r2_id', 'transloc_stat', 'transloc_side', 'sam_id', 'source'
-            c.append([r[0] + r[2], r[1], r[3], mark, 'none', i, 'init'])
-        return c
+        return seqs
 
     def paste(self, read_struct=[]):
         return ''.join(read_struct)
@@ -102,15 +95,15 @@ if __name__ == "__main__":
         '': '',
     }
     # print(DEFINE['cand_pool_fpn'])
-    p = umiDouble(
-        seq_num=50,
-        umi_unit_pattern=3,
+    p = umi(
+        seq_num=1000,
+        umi_unit_pattern=1,
         umi_unit_len=12,
         is_seed=True,
 
-        is_sv_umi_lib=False,
-        umi_lib_fpn=to('data/simu/transloc/trimer/umi.txt'),
-        working_dir=to('data/simu/transloc/trimer/'),
+        is_sv_umi_lib=True,
+        umi_lib_fpn=to('data/simu/umi/umi-plot.txt'),
+        working_dir=to('data/simu/umi/'),
 
         condis=['umi'],
         sim_thres=3,

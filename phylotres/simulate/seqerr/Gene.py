@@ -3,55 +3,35 @@ __copyright__ = "Copyright 2023"
 __license__ = "MIT"
 __lab__ = "cribbslab"
 
-import sys
 import numpy as np
-from phylotres.simulate.dispatcher.Subsampling import general as simugeneral
+from phylotres.simulate.seqerr.single.Bulk import bulk as simubulk
+from phylotres.gspl.FromSimulator import fromSimulator
 from phylotres.path import to
 
 
-class general(object):
+class Bulk:
 
-    def __init__(self, working_dir):
-        # ### /*** block. general ***/
-        # self.permutation_num = 10
-        #
-        # self.umi_unit_len_fixed = 10
+    def __init__(self, ):
+        self.permutation_num = 1
+
+        self.umi_unit_len_fixed = 10
+        # self.seq_len_fixed = 100
         # self.umi_num_fixed = 50
-        # self.pcr_num_fixed = 10
-        # self.pcr_err_fixed = 1e-3
-        # self.seq_err_fixed = 1e-3
-        # self.ampl_rate_fixed = 0.85
-        # self.sim_thres_fixed = 3
-        # self.seq_sub_spl_rate = 1
-        #
-        # self.ampl_rates = np.linspace(0.1, 1, 10)
-        # self.umi_unit_lens = np.arange(6, 36 + 1, 1)
-        # self.umi_nums = np.arange(20, 140 + 20, 20)
-        # self.pcr_nums = np.arange(1, 20 + 1, 1)
-        # self.pcr_errs, self.seq_errs = self.errors()
-        # print(self.pcr_errs, self.seq_errs)
-
-        # ### /*** block. bulk ***/
-        self.permutation_num = 10
-        self.umi_unit_pattern = 1
-        self.umi_unit_len_fixed = 36
-        self.umi_num_fixed = 50
-        self.pcr_num_fixed = 8
-        self.pcr_err_fixed = 1e-3
-        self.seq_err_fixed = 1e-3
-        self.ampl_rate_fixed = 0.85
+        self.pcr_num_fixed = 12
+        self.pcr_err_fixed = 1e-4
+        self.seq_err_fixed = 1e-2
+        self.ampl_rate_fixed = 0.80
         self.sim_thres_fixed = 3
-        self.seq_sub_spl_rate = 1
-        self.working_dir = working_dir
+        self.seq_sub_spl_rate = 0.3333
+
+        self.gspl = fromSimulator(simulator='SPsimSeqFixSM').run()
 
         self.ampl_rates = np.linspace(0.1, 1, 10)
-        self.umi_unit_lens = np.arange(6, 36 + 1, 1)
+        self.umi_unit_lens = np.arange(8, 36 + 1, 1)
         self.umi_nums = np.arange(20, 140 + 20, 20)
-        self.pcr_nums = np.arange(1, 20 + 1, 1)
+        self.pcr_nums = np.arange(1, 14 + 1, 1)
         self.pcr_errs, self.seq_errs = self.errors()
-        # self.pcr_errs = [1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01]
-        print(self.pcr_errs)
-        print(self.seq_errs)
+        print(self.pcr_errs, self.seq_errs)
 
         self.metrics = {
             'pcr_nums': self.pcr_nums,
@@ -104,16 +84,16 @@ class general(object):
         for pn in range(self.permutation_num):
             simu_params = {
                 'init_seq_setting': {
-                    'seq_num': self.umi_num_fixed,
+                    'gspl': self.gspl,
                     'umi_unit_pattern': 1,
                     'umi_unit_len': self.umi_unit_len_fixed,
                     # 'seq_len': self.seq_len_fixed - self.umi_unit_len_fixed,
                     'is_seed': True,
-                    'working_dir': to('data/simu/monomer/general/1/pcr_num/permute_') + str(pn) + '/',
+                    'working_dir': to('data/simu/monomer/bulk/pcr_num/permute_') + str(pn) + '/',
                     'is_sv_umi_lib': True,
-                    'umi_lib_fpn': to('data/simu/monomer/general/1/pcr_num/permute_') + str(pn) + '/umi.txt',
+                    'umi_lib_fpn': to('data/simu/monomer/bulk/pcr_num/permute_') + str(pn) + '/',
                     # 'is_sv_seq_lib': True,
-                    # 'seq_lib_fpn': to('data/simu/monomer/general/1/pcr_num/permute_') + str(pn) + '/seq.txt',
+                    # 'seq_lib_fpn': to('data/simu/monomer/bulk/pcr_num/permute_') + str(pn) + '/seq.txt',
                     'condis': ['umi'],
                     'sim_thres': self.sim_thres_fixed,
                     'permutation': pn,
@@ -127,11 +107,11 @@ class general(object):
                 'use_seed': False,
                 'seed': None,
                 'write': {
-                    'fastq_fp': to('data/simu/monomer/general/1/pcr_num/permute_') + str(pn) + '/',
+                    'fastq_fp': to('data/simu/monomer/bulk/pcr_num/permute_') + str(pn) + '/',
                     'fastq_fn': '',
                 }
             }
-            p = simugeneral(simu_params)
+            p = simubulk(simu_params)
             print(p.ondemandPCRNums())
         return
 
@@ -139,26 +119,16 @@ class general(object):
         for pn in range(self.permutation_num):
             simu_params = {
                 'init_seq_setting': {
-                    'seq_num': self.umi_num_fixed,
-                    'umi_unit_pattern': 3,
+                    'gspl': self.gspl,
+                    'umi_unit_pattern': 1,
                     'umi_unit_len': self.umi_unit_len_fixed,
                     # 'seq_len': self.seq_len_fixed - self.umi_unit_len_fixed,
                     'is_seed': True,
-                    # ### /*** block. general ***/
-                    # 'working_dir': to('data/simu/monomer/general/1/pcr_err/permute_') + str(pn) + '/',
-                    # 'is_sv_umi_lib': True,
-                    # 'umi_lib_fpn': to('data/simu/monomer/general/1/pcr_err/permute_') + str(pn) + '/umi.txt',
-
-                    # # ### /*** block. dimer ***/
-                    # 'working_dir': to('data/simu/dimer/pcr_err/permute_') + str(pn) + '/',
-                    # 'is_sv_umi_lib': True,
-                    # 'umi_lib_fpn': to('data/simu/dimer/pcr_err/permute_') + str(pn) + '/umi.txt',
-
-                    # ### /*** block. trimer ***/
-                    'working_dir': to('data/simu/trimer/pcr_err/permute_') + str(pn) + '/',
+                    'working_dir': to('data/simu/monomer/bulk/pcr_err/permute_') + str(pn) + '/',
                     'is_sv_umi_lib': True,
-                    'umi_lib_fpn': to('data/simu/trimer/pcr_err/permute_') + str(pn) + '/umi.txt',
-
+                    'umi_lib_fpn': to('data/simu/monomer/bulk/pcr_err/permute_') + str(pn) + '/',
+                    # 'is_sv_seq_lib': True,
+                    # 'seq_lib_fpn': to('data/simu/monomer/bulk/pcr_err/permute_') + str(pn) + '/seq.txt',
                     'condis': ['umi'],
                     'sim_thres': self.sim_thres_fixed,
                     'permutation': pn,
@@ -172,29 +142,28 @@ class general(object):
                 'use_seed': False,
                 'seed': None,
                 'write': {
-                    'fastq_fp': to('data/simu/trimer/pcr_err/permute_') + str(pn) + '/',
+                    'fastq_fp': to('data/simu/monomer/bulk/pcr_err/permute_') + str(pn) + '/',
                     'fastq_fn': '',
                 }
             }
-            p = simugeneral(simu_params)
+            p = simubulk(simu_params)
             print(p.ondemandPCRErrs())
         return
 
     def seqErrs(self, ):
-        sys.stdout = open(self.working_dir + 'log.txt', 'w')
         for pn in range(self.permutation_num):
             simu_params = {
                 'init_seq_setting': {
-                    'seq_num': self.umi_num_fixed,
-                    'umi_unit_pattern': self.umi_unit_pattern,
+                    'gspl': self.gspl,
+                    'umi_unit_pattern': 1,
                     'umi_unit_len': self.umi_unit_len_fixed,
                     # 'seq_len': self.seq_len_fixed - self.umi_unit_len_fixed,
                     'is_seed': True,
-
-                    'working_dir': self.working_dir + 'seq_errs/permute_' + str(pn) + '/',
-                    'is_sv_umi_lib': True,
-                    'umi_lib_fpn': self.working_dir + 'seq_errs/permute_' + str(pn) + '/umi.txt',
-
+                    'working_dir': to('data/simu/monomer/bulk/seq_err/permute_') + str(pn) + '/',
+                    'is_sv_umi_lib':True,
+                    'umi_lib_fpn':to('data/simu/monomer/bulk/seq_err/permute_') + str(pn) + '/',
+                    # 'is_sv_seq_lib':True,
+                    # 'seq_lib_fpn':to('data/simu/monomer/bulk/seq_err/permute_') + str(pn) + '/seq.txt',
                     'condis': ['umi'],
                     'sim_thres': self.sim_thres_fixed,
                     'permutation': pn,
@@ -208,31 +177,31 @@ class general(object):
                 'use_seed': False,
                 'seed': None,
                 'write': {
-                    'fastq_fp': self.working_dir + 'seq_errs/permute_' + str(pn) + '/',
+                    'fastq_fp': to('data/simu/monomer/bulk/seq_err/permute_') + str(pn) + '/',
                     'fastq_fn': '',
                 }
             }
-            p = simugeneral(simu_params)
+            p = simubulk(simu_params)
             print(p.ondemandSeqErrs())
-        sys.stdout.close()
         return
 
     def umiLens(self, ):
         for pn in range(self.permutation_num):
             simu_params = {
                 'init_seq_setting': {
-                    'seq_num': self.umi_num_fixed,
+                    'gspl': self.gspl,
                     'umi_unit_pattern': 1,
                     'umi_unit_lens': self.umi_unit_lens,
                     # 'seq_len': self.seq_len_fixed,
                     'is_seed': True,
-                    'working_dir': to('data/simu/monomer/general/1/umi_len/permute_') + str(pn) + '/',
+                    'working_dir': to('data/simu/monomer/bulk/umi_len/permute_') + str(pn) + '/',
                     'is_sv_umi_lib': True,
-                    'umi_lib_fp': to('data/simu/monomer/general/1/umi_len/permute_') + str(pn) + '/',
+                    'umi_lib_fp': to('data/simu/monomer/bulk/umi_len/permute_') + str(pn) + '/',
                     # 'is_sv_seq_lib': True,
-                    # 'seq_lib_fpn': to('data/simu/monomer/general/1/umi_len/permute_') + str(pn) + '/',
+                    # 'seq_lib_fpn': to('data/simu/monomer/bulk/umi_len/permute_') + str(pn) + '/',
                     'condis': ['umi'],
-                    'sim_thres': self.sim_thres_fixed,
+                    'sim_thres': 1,
+                    # 'sim_thres': self.sim_thres_fixed,
                     'permutation': pn,
                 },
                 'ampl_rate': self.ampl_rate_fixed,
@@ -244,11 +213,11 @@ class general(object):
                 'use_seed': False,
                 'seed': None,
                 'write': {
-                    'fastq_fp': to('data/simu/monomer/general/1/umi_len/permute_') + str(pn) + '/',
+                    'fastq_fp': to('data/simu/monomer/bulk/umi_len/permute_') + str(pn) + '/',
                     'fastq_fn': '',
                 }
             }
-            p = simugeneral(simu_params)
+            p = simubulk(simu_params)
             print(p.ondemandUMILens())
         return
 
@@ -256,16 +225,16 @@ class general(object):
         for pn in range(self.permutation_num):
             simu_params = {
                 'init_seq_setting': {
-                    'seq_num': self.umi_num_fixed,
+                    'gspl': self.gspl,
                     'umi_unit_pattern': 1,
                     'umi_unit_len': self.umi_unit_len_fixed,
                     # 'seq_len': self.seq_len_fixed - self.umi_unit_len_fixed,
                     'is_seed': True,
-                    'working_dir': to('data/simu/monomer/general/1/ampl_rate/permute_') + str(pn) + '/',
+                    'working_dir': to('data/simu/monomer/bulk/ampl_rate/permute_') + str(pn) + '/',
                     'is_sv_umi_lib': True,
-                    'umi_lib_fpn': to('data/simu/monomer/general/1/ampl_rate/permute_') + str(pn) + '/umi.txt',
+                    'umi_lib_fpn': to('data/simu/monomer/bulk/ampl_rate/permute_') + str(pn) + '/',
                     # 'is_sv_seq_lib': True,
-                    # 'seq_lib_fpn': to('data/simu/monomer/general/1/ampl_rate/permute_') + str(pn) + '/seq.txt',
+                    # 'seq_lib_fpn': to('data/simu/monomer/bulk/ampl_rate/permute_') + str(pn) + '/seq.txt',
                     'condis': ['umi'],
                     'sim_thres': self.sim_thres_fixed,
                     'permutation': pn,
@@ -279,27 +248,24 @@ class general(object):
                 'use_seed': False,
                 'seed': None,
                 'write': {
-                    'fastq_fp': to('data/simu/monomer/general/1/ampl_rate/permute_') + str(pn) + '/',
+                    'fastq_fp': to('data/simu/monomer/bulk/ampl_rate/permute_') + str(pn) + '/',
                     'fastq_fn': '',
                 }
             }
-            p = simugeneral(simu_params)
+            p = simubulk(simu_params)
             print(p.ondemandAmplRates())
         return
 
 
 if __name__ == "__main__":
-    p = general(
-        working_dir=to('data/simu/trimer/pcr8/')
-        # working_dir=to('data/simu/trimer/pcr8_mono24/')
-    )
-
-    print(p.seqErrs())
+    p = Bulk()
 
     # print(p.pcrNums())
-
+    #
     # print(p.pcrErrs())
+    #
+    # print(p.seqErrs())
 
-    # print(p.umiLens())
+    print(p.umiLens())
 
     # print(p.amplRates())

@@ -4,39 +4,63 @@ __license__ = "MIT"
 __lab__ = "cribbslab"
 
 import time
-import os, sys
 import numpy as np
-dis = '../../../'
-sys.path.append(os.path.abspath(dis))
-from phylotres.util.random.Sampling import sampling as ranspl
-from phylotres.util.random.Number import number as rannum
-from phylotres.util.file.read.Reader import reader as pfreader
-from phylotres.util.file.create.Folder import folder as crtfolder
-from phylotres.util.sequence.symbol.Single import single as dnasgl
-from phylotres.read.umi.Design import design as dumi
-from phylotres.read.similarity.distance.Hamming import hamming
+from phylotres.util.random.Sampling import Sampling as ranspl
+from phylotres.util.random.Number import Number as rannum
+from phylotres.util.file.read.Reader import Reader as pfreader
+from phylotres.util.file.write.Writer import Writer as pfwriter
+from phylotres.util.file.create.Folder import Folder as crtfolder
+from phylotres.util.sequence.symbol.Single import Single as dnasgl
+from phylotres.read.umi.Design import Design as dumi
+from phylotres.util.similarity.distance.Hamming import hamming
+from phylotres.read.seq.Design import Design as dseq
+from phylotres.util.Console import Console
 
 
-class umi(object):
+class General:
 
-    def __init__(self, seq_num, is_seed=False, umi_unit_pattern=3, umi_unit_len=12, is_sv_umi_lib=True, umi_lib_fpn='./umi.txt', working_dir='./simu/', condis=['umi'], sim_thres=2, permutation=0):
+    def __init__(
+            self,
+            seq_num=50,
+            is_seed=False,
+            umi_unit_pattern=3,
+            umi_unit_len=12,
+            seq_len=100,
+            is_sv_umi_lib=True,
+            is_sv_seq_lib=True,
+            umi_lib_fpn='./umi.txt',
+            seq_lib_fpn='./seq.txt',
+            working_dir='./simu/',
+            condis=['umi'],
+            sim_thres=2,
+            permutation=0,
+            verbose=True,
+    ):
         self.pfreader = pfreader()
+        self.pfwriter = pfwriter()
         self.ranspl = ranspl()
         self.rannum = rannum()
         self.dnasgl = dnasgl()
         self.crtfolder = crtfolder()
         self.dumi = dumi
+        self.dseq = dseq
         self.is_seed = is_seed
         self.is_sv_umi_lib = is_sv_umi_lib
         self.umi_lib_fpn = umi_lib_fpn
+        self.is_sv_seq_lib = is_sv_seq_lib
+        self.seq_lib_fpn = seq_lib_fpn
         self.seq_num = seq_num
         self.umi_unit_pattern = umi_unit_pattern
         self.umi_unit_len = umi_unit_len
+        self.seq_len = seq_len
         self.condis = condis
         self.sim_thres = sim_thres
         self.permutation = permutation
         self.dna_map = self.dnasgl.todict(nucleotides=self.dnasgl.get(universal=True), reverse=True)
         self.crtfolder.osmkdir(working_dir)
+
+        self.console = Console()
+        self.console.verbose = verbose
 
     @property
     def umi_len(self, ):
@@ -77,12 +101,25 @@ class umi(object):
                     else:
                         # print(id)
                         umi_cnt += 1
+            if 'seq' in self.condis:
+                seq_i = self.dseq(
+                    dna_map=self.dna_map,
+                    pseudorandom_num=self.rannum.uniform(
+                        low=0,
+                        high=4,
+                        num=self.seq_len,
+                        use_seed=self.is_seed,
+                        seed=id + self.permutation * self.seq_num + 5000000,
+                    ),
+                ).general(lib_fpn=self.seq_lib_fpn, is_sv=self.is_sv_seq_lib)
+                read_struct_ref['seq'] = seq_i
+
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
-            seqs.append([self.paste([*read_struct_pfd_order.values()]), id, 'init'])
-        print(umi_cnt)
+            seqs.append([self.paste([*read_struct_pfd_order.values()]), str(id), 'init'])
+        # print(umi_cnt)
         # print(umi_pool)
         etime = time.time()
-        print("===>time for generating initial pool of sequences: {:.3f}s".format(etime-stime))
+        self.console.print("===>time for generating initial pool of sequences: {:.3f}s".format(etime-stime))
         return seqs
 
     def paste(self, read_struct=[]):
@@ -91,23 +128,23 @@ class umi(object):
 
 if __name__ == "__main__":
     from phylotres.path import to
-    DEFINE = {
-        '': '',
-    }
-    # print(DEFINE['cand_pool_fpn'])
-    p = umi(
-        seq_num=1000,
-        umi_unit_pattern=1,
+    p = General(
+        seq_num=50,
+        umi_unit_pattern=3,
         umi_unit_len=12,
+        seq_len=100,
         is_seed=True,
 
         is_sv_umi_lib=True,
-        umi_lib_fpn=to('data/simu/umi/umi-plot.txt'),
-        working_dir=to('data/simu/umi/'),
+        umi_lib_fpn=to('data/simu/umi.txt'),
+        is_sv_seq_lib=True,
+        seq_lib_fpn=to('data/simu/seq.txt'),
+        working_dir=to('data/simu/'),
 
-        condis=['umi'],
+        # condis=['umi'],
+        condis=['umi', 'seq'],
         sim_thres=3,
-        permutation=1,
+        permutation=0,
     )
 
     # print(p.umi_len)
