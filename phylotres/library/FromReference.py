@@ -105,25 +105,26 @@ class general:
         condi_keys = condi_map.keys()
 
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
-        cdna_seqs_sel_maps = {}
-        seq_cdna_map = tactic6(
-            arr_2d=sfasta().get_from_gz(
-                self.fasta_cdna_fpn,
+        if self.fasta_cdna_fpn:
+            cdna_seqs_sel_maps = {}
+            seq_cdna_map = tactic6(
+                arr_2d=sfasta().get_from_gz(
+                    self.fasta_cdna_fpn,
+                )
             )
-        )
-        cdna_ids = [*seq_cdna_map.keys()]
-        for i, seq_i in enumerate(condi_map['seq']):
-            cdna_ids_sel = self.ranspl.uniform(
-                data=cdna_ids,
-                num=self.seq_num,
-                use_seed=self.is_seed,
-                seed=i + 100000,
-                replace=True,
-            )
-            cdna_seqs_sel_maps[seq_i] = [seq_cdna_map[i] for i in cdna_ids_sel]
-            # print(cdna_seqs_sel)
-            self.pfwriter.generic(df=cdna_ids_sel, sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '.txt')
-        del seq_cdna_map
+            cdna_ids = [*seq_cdna_map.keys()]
+            for i, seq_i in enumerate(condi_map['seq']):
+                cdna_ids_sel = self.ranspl.uniform(
+                    data=cdna_ids,
+                    num=self.seq_num,
+                    use_seed=self.is_seed,
+                    seed=i + 100000,
+                    replace=True,
+                )
+                cdna_seqs_sel_maps[seq_i] = [seq_cdna_map[i] for i in cdna_ids_sel]
+                # print(cdna_seqs_sel)
+                self.pfwriter.generic(df=cdna_ids_sel, sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '.txt')
+            del seq_cdna_map
 
         ### +++++++++++++++ block: generate each read +++++++++++++++
         for id in np.arange(self.seq_num):
@@ -133,6 +134,9 @@ class general:
             if 'umi' in condi_keys:
                 self.console.print("=========>UMI generation start")
                 for umi_mark_id, umi_mark_suffix in enumerate(condi_map['umi']):
+                    # print(umi_mark_id, id + self.permutation * self.seq_num + umi_cnt + umi_mark_id + 100000000)
+                    # print(umi_mark_id, id + self.permutation * self.seq_num + 1 + umi_mark_id * 100000000)
+                    print()
                     umi_mark = '_' + umi_mark_suffix if umi_mark_suffix != 'alone' else ''
                     self.console.print("============>UMI condition {}: {}".format(umi_mark_id, 'umi' + umi_mark))
                     umi_flag = False
@@ -145,7 +149,7 @@ class general:
                                 high=4,
                                 num=self.len_params['umi' + umi_mark]['umi_unit_len'],
                                 use_seed=self.is_seed,
-                                seed=id + self.permutation * self.seq_num + umi_cnt + umi_mark_id + 100000000,
+                                seed=id + self.permutation * self.seq_num + umi_cnt + umi_mark_id * 100000000,
                             ),
                         )
                         umi_i = umip.reoccur(is_sv=False)
@@ -169,9 +173,21 @@ class general:
                 for seq_mark_id, seq_mark_suffix in enumerate(condi_map['seq']):
                     seq_mark = '_' + seq_mark_suffix if seq_mark_suffix != 'alone' else ''
                     self.console.print("============>Sequence condition {}: {}".format(seq_mark_id, 'seq' + seq_mark))
-                    seq_i = self.dseq(
-                        cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
-                    ).cdna(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
+                    if self.fasta_cdna_fpn:
+                        seq_i = self.dseq(
+                            cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
+                        ).cdna(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
+                    else:
+                        seq_i = self.dseq(
+                            dna_map=self.dna_map,
+                            pseudorandom_num=self.rannum.uniform(
+                                low=0,
+                                high=4,
+                                num=self.len_params['seq' + seq_mark],
+                                use_seed=self.is_seed,
+                                seed=id + self.permutation * self.seq_num + 8000000 + seq_mark_id * 200000000,
+                            ),
+                        ).general(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
                     read_struct_ref['seq' + seq_mark] = seq_i
 
             ### +++++++++++++++ block: generate primers +++++++++++++++
@@ -187,7 +203,7 @@ class general:
                             high=4,
                             num=self.len_params['primer' + primer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + primer_mark_id + 200000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + primer_mark_id * 300000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'primer' + primer_mark + '.txt', is_sv=self.is_sv_primer_lib)
                     read_struct_ref['primer' + primer_mark] = primer_i
@@ -205,7 +221,7 @@ class general:
                             high=4,
                             num=self.len_params['adapter' + adapter_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + adapter_mark_id + 300000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + adapter_mark_id * 400000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'adapter' + adapter_mark + '.txt', is_sv=self.is_sv_adapter_lib)
                     read_struct_ref['adapter' + adapter_mark] = adapter_i
@@ -223,7 +239,7 @@ class general:
                             high=4,
                             num=self.len_params['spacer' + spacer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + spacer_mark_id + 400000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + spacer_mark_id * 500000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'spacer' + spacer_mark + '.txt', is_sv=self.is_sv_spacer_lib)
                     read_struct_ref['spacer' + spacer_mark] = spacer_i
@@ -255,6 +271,8 @@ if __name__ == "__main__":
                 'umi_unit_pattern': 3,
                 'umi_unit_len': 12,
             },
+            'seq': 100,
+            'seq_2': 100,
             'adapter': 10,
             'adapter_1': 10,
             'primer': 10,
@@ -265,13 +283,15 @@ if __name__ == "__main__":
         is_seed=True,
 
         working_dir=to('data/simu/'),
-        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
+        fasta_cdna_fpn=False,
+        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
         # condis=['umi', 'seq'],
         condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
+        verbose=False,
     )
 
     # print(p.umi_len)
