@@ -24,7 +24,7 @@ from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6
 
 
-class general:
+class SingleLocus:
 
     def __init__(
             self,
@@ -85,6 +85,7 @@ class general:
         -------
 
         """
+        self.console.print("======>Sequencing library preparation starts")
         stime = time.time()
         sequencing_library = []
         umi_pool = []
@@ -106,6 +107,7 @@ class general:
 
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
         if self.fasta_cdna_fpn:
+            self.console.print("======>Read CDNAs from a reference ome")
             cdna_seqs_sel_maps = {}
             seq_cdna_map = tactic6(
                 arr_2d=sfasta().get_from_gz(
@@ -139,6 +141,7 @@ class general:
                     self.console.print("============>UMI condition {}: {}".format(umi_mark_id, 'umi' + umi_mark))
                     umi_flag = False
                     while not umi_flag:
+                        umi_seed = id + self.permutation * self.seq_num + umi_cnt + (umi_mark_id + 1) * 100000000
                         umip = self.dumi(
                             dna_map=self.dna_map,
                             umi_unit_pattern=self.len_params['umi' + umi_mark]['umi_unit_pattern'],
@@ -147,7 +150,7 @@ class general:
                                 high=4,
                                 num=self.len_params['umi' + umi_mark]['umi_unit_len'],
                                 use_seed=self.is_seed,
-                                seed=id + self.permutation * self.seq_num + umi_cnt + (umi_mark_id+1) * 100000000,
+                                seed=umi_seed,
                             ),
                         )
                         umi_i = umip.reoccur(is_sv=False)
@@ -161,6 +164,11 @@ class general:
                             read_struct_ref['umi' + umi_mark] = umi_i
                             umi_flag = True
                             umip.write(res=umi_i, lib_fpn=self.working_dir + 'umi' + umi_mark + '.txt', is_sv=self.is_sv_umi_lib)
+                            umip.write(
+                                res=str(umi_seed),
+                                lib_fpn=self.working_dir + 'umi' + umi_mark + '_seeds.txt',
+                                is_sv=self.is_sv_umi_lib,
+                            )
                         else:
                             # print(id)
                             umi_cnt += 1
@@ -176,16 +184,23 @@ class general:
                             cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
                         ).cdna(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
                     else:
-                        seq_i = self.dseq(
+                        seq_seed = id + self.permutation * self.seq_num + 8000000 + (seq_mark_id+1) * 200000000
+                        pseq = self.dseq(
                             dna_map=self.dna_map,
                             pseudorandom_num=self.rannum.uniform(
                                 low=0,
                                 high=4,
                                 num=self.len_params['seq' + seq_mark],
                                 use_seed=self.is_seed,
-                                seed=id + self.permutation * self.seq_num + 8000000 + (seq_mark_id+1) * 200000000,
+                                seed=seq_seed,
                             ),
-                        ).general(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
+                        )
+                        seq_i = pseq.general(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
+                        pseq.write(
+                            res=str(seq_seed),
+                            lib_fpn=self.working_dir + 'seq' + seq_mark + '_seeds.txt',
+                            is_sv=self.is_sv_seq_lib,
+                        )
                     read_struct_ref['seq' + seq_mark] = seq_i
 
             ### +++++++++++++++ block: generate primers +++++++++++++++
@@ -194,16 +209,23 @@ class general:
                 for primer_mark_id, primer_mark_suffix in enumerate(condi_map['primer']):
                     primer_mark = '_' + primer_mark_suffix if primer_mark_suffix != 'alone' else ''
                     self.console.print("============>Primer condition {}: {}".format(primer_mark_id, 'primer' + primer_mark))
-                    primer_i = self.dprimer(
+                    primer_seed = id + self.permutation * self.seq_num + 8000000 + (primer_mark_id + 1) * 300000000
+                    pprimer = self.dprimer(
                         dna_map=self.dna_map,
                         pseudorandom_num=self.rannum.uniform(
                             low=0,
                             high=4,
                             num=self.len_params['primer' + primer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + (primer_mark_id+1) * 300000000,
+                            seed=primer_seed,
                         ),
-                    ).general(lib_fpn=self.working_dir + 'primer' + primer_mark + '.txt', is_sv=self.is_sv_primer_lib)
+                    )
+                    primer_i = pprimer.general(lib_fpn=self.working_dir + 'primer' + primer_mark + '.txt', is_sv=self.is_sv_primer_lib)
+                    pprimer.write(
+                        res=str(primer_seed),
+                        lib_fpn=self.working_dir + 'primer' + primer_mark + '_seeds.txt',
+                        is_sv=self.is_sv_primer_lib,
+                    )
                     read_struct_ref['primer' + primer_mark] = primer_i
 
             ### +++++++++++++++ block: generate adapters +++++++++++++++
@@ -212,16 +234,23 @@ class general:
                 for adapter_mark_id, adapter_mark_suffix in enumerate(condi_map['adapter']):
                     adapter_mark = '_' + adapter_mark_suffix if adapter_mark_suffix != 'alone' else ''
                     self.console.print("============>Adapter condition {}: {}".format(adapter_mark_id, 'adapter' + adapter_mark))
-                    adapter_i = self.dadapter(
+                    adapter_seed = id + self.permutation * self.seq_num + 8000000 + (adapter_mark_id+1) * 400000000
+                    padapter = self.dadapter(
                         dna_map=self.dna_map,
                         pseudorandom_num=self.rannum.uniform(
                             low=0,
                             high=4,
                             num=self.len_params['adapter' + adapter_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + (adapter_mark_id+1) * 400000000,
+                            seed=adapter_seed,
                         ),
-                    ).general(lib_fpn=self.working_dir + 'adapter' + adapter_mark + '.txt', is_sv=self.is_sv_adapter_lib)
+                    )
+                    adapter_i = padapter.general(lib_fpn=self.working_dir + 'adapter' + adapter_mark + '.txt', is_sv=self.is_sv_adapter_lib)
+                    padapter.write(
+                        res=str(adapter_seed),
+                        lib_fpn=self.working_dir + 'adapter' + adapter_mark + '_seeds.txt',
+                        is_sv=self.is_sv_adapter_lib,
+                    )
                     read_struct_ref['adapter' + adapter_mark] = adapter_i
 
             ### +++++++++++++++ block: generate spacers +++++++++++++++
@@ -230,25 +259,32 @@ class general:
                 for spacer_mark_id, spacer_mark_suffix in enumerate(condi_map['spacer']):
                     spacer_mark = '_' + spacer_mark_suffix if spacer_mark_suffix != 'alone' else ''
                     self.console.print("============>Spacer condition {}: {}".format(spacer_mark_id, 'spacer' + spacer_mark))
-                    spacer_i = self.dspacer(
+                    spacer_seed = id + self.permutation * self.seq_num + 8000000 + (spacer_mark_id+1) * 500000000
+                    pspacer = self.dspacer(
                         dna_map=self.dna_map,
                         pseudorandom_num=self.rannum.uniform(
                             low=0,
                             high=4,
                             num=self.len_params['spacer' + spacer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + (spacer_mark_id+1) * 500000000,
+                            seed=spacer_seed,
                         ),
-                    ).general(lib_fpn=self.working_dir + 'spacer' + spacer_mark + '.txt', is_sv=self.is_sv_spacer_lib)
+                    )
+                    spacer_i = pspacer.general(lib_fpn=self.working_dir + 'spacer' + spacer_mark + '.txt', is_sv=self.is_sv_spacer_lib)
+                    pspacer.write(
+                        res=str(spacer_seed),
+                        lib_fpn=self.working_dir + 'spacer' + spacer_mark + '_seeds.txt',
+                        is_sv=self.is_sv_spacer_lib,
+                    )
                     read_struct_ref['spacer' + spacer_mark] = spacer_i
 
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
             sequencing_library.append([self.paste([*read_struct_pfd_order.values()]), str(id), 'init'])
         # print(umi_cnt)
         # print(umi_pool)
-        etime = time.time()
-        self.console.print("===>time for generating initial pool of sequences: {:.3f}s".format(etime-stime))
         self.pfwriter.generic(df=sequencing_library, sv_fpn=self.working_dir + 'sequencing_library.txt')
+        etime = time.time()
+        self.console.print("===>Time for sequencing library preparation: {:.3f}s".format(etime-stime))
         return sequencing_library
 
     def paste(self, read_struct=[]):
@@ -258,7 +294,7 @@ class general:
 if __name__ == "__main__":
     from phylotres.path import to
     # print(DEFINE['cand_pool_fpn'])
-    p = general(
+    p = SingleLocus(
         seq_num=50,
         len_params={
             'umi': {

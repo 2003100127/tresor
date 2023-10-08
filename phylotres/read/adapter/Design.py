@@ -23,3 +23,7 @@ class Design(seqpseudo):
             self.kwargs['dna_map'][i] for i in
             self.kwargs['pseudorandom_num']
         ])
+
+    @liblogginger(method='separate')
+    def write(self, **kwargs):
+        return 'written'

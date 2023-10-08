@@ -17,7 +17,7 @@ from phylotres.util.sequence.symbol.Single import Single as dnasgl
 from phylotres.read.barcode.Design import Design as dbc
 from phylotres.read.umi.Design import Design as dumi
 from phylotres.read.seq.Design import Design as dseq
-from phylotres.util.similarity.distance.Hamming import hamming
+from phylotres.util.similarity.distance.Hamming import Hamming
 
 
 class Bulk:
@@ -68,7 +68,7 @@ class Bulk:
             csr_.row.tolist(),
             csr_.col.tolist(),
             csr_.data.tolist(),
-        ]).astype(np.int)
+        ]).astype(int)
         self.gspl_arr = self.gspl_arr[self.gspl_arr[:, 0] == 0]
         print(self.gspl_arr)
 
@@ -102,7 +102,7 @@ class Bulk:
                             ),
                         )
                         umi_i = umip.reoccur(is_sv=False)
-                        edh = np.array([hamming().general(umi_i, j) for j in umi_pool])
+                        edh = np.array([Hamming().general(umi_i, j) for j in umi_pool])
                         # for j in umi_pool:
                         #     if hamming().general(umi_i, j) < self.sim_thres:
                         #         print(umi_i, j)

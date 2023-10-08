@@ -27,3 +27,7 @@ class Design(seqpseudo):
     @liblogginger(method='default')
     def cdna(self, lib_fpn='./seq.txt', is_sv=True):
         return self.kwargs['cdna_seq']
+
+    @liblogginger(method='separate')
+    def write(self, **kwargs):
+        return 'written'

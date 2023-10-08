@@ -28,3 +28,7 @@ class Design(seqpseudo):
     def tsoatdbio(self, lib_fpn='./primer.txt', is_sv=True):
         return 'AAGCAGTGGTATCAACGCAGAGTAC'
         # return 'AAGCAGTGGTATCAACGCAGAGTGAAT'
+
+    @liblogginger(method='separate')
+    def write(self, **kwargs):
+        return 'written'
