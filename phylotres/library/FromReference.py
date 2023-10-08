@@ -13,7 +13,7 @@ from phylotres.util.random.Number import Number as rannum
 from phylotres.util.file.write.Writer import Writer as pfwriter
 from phylotres.util.file.create.Folder import Folder as crtfolder
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
-from phylotres.util.similarity.distance.Hamming import hamming
+from phylotres.util.similarity.distance.Hamming import Hamming
 from phylotres.read.umi.Design import Design as dumi
 from phylotres.read.seq.Design import Design as dseq
 from phylotres.read.primer.Design import Design as dprimer
@@ -73,12 +73,24 @@ class general:
         self.console = Console()
         self.console.verbose = verbose
 
-    def pooling(self,):
+    def pooling(self, ):
+        """
+
+        Attributes
+        ----------
+        condi_map
+            {'umi': ['alone', '1'], 'primer': ['alone', '1'], 'spacer': ['alone', '1'], 'adapter': ['alone', '1'], 'seq': ['alone', '2']}
+
+        Returns
+        -------
+
+        """
         stime = time.time()
-        seqs = []
+        sequencing_library = []
         umi_pool = []
         umi_cnt = 0
 
+        ### +++++++++++++++ block: condition map +++++++++++++++
         condi_map = {}
         for condi in self.condis:
             condi_arr = condi.split("_")
@@ -89,9 +101,10 @@ class general:
                 condi_map[condi_arr[0]].append('alone')
             else:
                 condi_map[condi_arr[0]].append(condi_arr[1])
-        print(condi_map)
+        self.console.print("======>Condition map: {}".format(condi_map))
         condi_keys = condi_map.keys()
 
+        ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
         cdna_seqs_sel_maps = {}
         seq_cdna_map = tactic6(
             arr_2d=sfasta().get_from_gz(
@@ -104,7 +117,7 @@ class general:
                 data=cdna_ids,
                 num=self.seq_num,
                 use_seed=self.is_seed,
-                seed=i + 10000,
+                seed=i + 100000,
                 replace=True,
             )
             cdna_seqs_sel_maps[seq_i] = [seq_cdna_map[i] for i in cdna_ids_sel]
@@ -112,11 +125,16 @@ class general:
             self.pfwriter.generic(df=cdna_ids_sel, sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '.txt')
         del seq_cdna_map
 
+        ### +++++++++++++++ block: generate each read +++++++++++++++
         for id in np.arange(self.seq_num):
+            self.console.print("======>Read {} generation".format(id + 1))
             read_struct_ref = {}
+            ### +++++++++++++++ block: generate umis +++++++++++++++
             if 'umi' in condi_keys:
+                self.console.print("=========>UMI generation start")
                 for umi_mark_id, umi_mark_suffix in enumerate(condi_map['umi']):
                     umi_mark = '_' + umi_mark_suffix if umi_mark_suffix != 'alone' else ''
+                    self.console.print("============>UMI condition {}: {}".format(umi_mark_id, 'umi' + umi_mark))
                     umi_flag = False
                     while not umi_flag:
                         umip = self.dumi(
@@ -127,11 +145,11 @@ class general:
                                 high=4,
                                 num=self.len_params['umi' + umi_mark]['umi_unit_len'],
                                 use_seed=self.is_seed,
-                                seed=id + self.permutation * self.seq_num + umi_cnt + umi_mark_id*1000000,
+                                seed=id + self.permutation * self.seq_num + umi_cnt + umi_mark_id + 100000000,
                             ),
                         )
                         umi_i = umip.reoccur(is_sv=False)
-                        edh = np.array([hamming().general(umi_i, j) for j in umi_pool])
+                        edh = np.array([Hamming().general(umi_i, j) for j in umi_pool])
                         # for j in umi_pool:
                         #     if hamming().general(umi_i, j) < self.sim_thres:
                         #         print(umi_i, j)
@@ -145,17 +163,23 @@ class general:
                             # print(id)
                             umi_cnt += 1
 
+            ### +++++++++++++++ block: generate seqs +++++++++++++++
             if 'seq' in condi_keys:
-                for _, seq_mark_suffix in enumerate(condi_map['seq']):
+                self.console.print("=========>Sequence generation start")
+                for seq_mark_id, seq_mark_suffix in enumerate(condi_map['seq']):
                     seq_mark = '_' + seq_mark_suffix if seq_mark_suffix != 'alone' else ''
+                    self.console.print("============>Sequence condition {}: {}".format(seq_mark_id, 'seq' + seq_mark))
                     seq_i = self.dseq(
                         cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
                     ).cdna(lib_fpn=self.working_dir + 'seq' + seq_mark + '.txt', is_sv=self.is_sv_seq_lib)
                     read_struct_ref['seq' + seq_mark] = seq_i
 
+            ### +++++++++++++++ block: generate primers +++++++++++++++
             if 'primer' in condi_keys:
+                self.console.print("=========>Primer generation start")
                 for primer_mark_id, primer_mark_suffix in enumerate(condi_map['primer']):
                     primer_mark = '_' + primer_mark_suffix if primer_mark_suffix != 'alone' else ''
+                    self.console.print("============>Primer condition {}: {}".format(primer_mark_id, 'primer' + primer_mark))
                     primer_i = self.dprimer(
                         dna_map=self.dna_map,
                         pseudorandom_num=self.rannum.uniform(
@@ -163,14 +187,17 @@ class general:
                             high=4,
                             num=self.len_params['primer' + primer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + primer_mark_id*1000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + primer_mark_id + 200000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'primer' + primer_mark + '.txt', is_sv=self.is_sv_primer_lib)
                     read_struct_ref['primer' + primer_mark] = primer_i
 
+            ### +++++++++++++++ block: generate adapters +++++++++++++++
             if 'adapter' in condi_keys:
+                self.console.print("=========>Adapter generation start")
                 for adapter_mark_id, adapter_mark_suffix in enumerate(condi_map['adapter']):
                     adapter_mark = '_' + adapter_mark_suffix if adapter_mark_suffix != 'alone' else ''
+                    self.console.print("============>Adapter condition {}: {}".format(adapter_mark_id, 'adapter' + adapter_mark))
                     adapter_i = self.dadapter(
                         dna_map=self.dna_map,
                         pseudorandom_num=self.rannum.uniform(
@@ -178,14 +205,17 @@ class general:
                             high=4,
                             num=self.len_params['adapter' + adapter_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + adapter_mark_id*1000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + adapter_mark_id + 300000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'adapter' + adapter_mark + '.txt', is_sv=self.is_sv_adapter_lib)
                     read_struct_ref['adapter' + adapter_mark] = adapter_i
 
+            ### +++++++++++++++ block: generate spacers +++++++++++++++
             if 'spacer' in condi_keys:
+                self.console.print("=========>Spacer generation start")
                 for spacer_mark_id, spacer_mark_suffix in enumerate(condi_map['spacer']):
                     spacer_mark = '_' + spacer_mark_suffix if spacer_mark_suffix != 'alone' else ''
+                    self.console.print("============>Spacer condition {}: {}".format(spacer_mark_id, 'spacer' + spacer_mark))
                     spacer_i = self.dspacer(
                         dna_map=self.dna_map,
                         pseudorandom_num=self.rannum.uniform(
@@ -193,18 +223,19 @@ class general:
                             high=4,
                             num=self.len_params['spacer' + spacer_mark],
                             use_seed=self.is_seed,
-                            seed=id + self.permutation * self.seq_num + 8000000 + spacer_mark_id*1000000,
+                            seed=id + self.permutation * self.seq_num + 8000000 + spacer_mark_id + 400000000,
                         ),
                     ).general(lib_fpn=self.working_dir + 'spacer' + spacer_mark + '.txt', is_sv=self.is_sv_spacer_lib)
                     read_struct_ref['spacer' + spacer_mark] = spacer_i
 
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
-            seqs.append([self.paste([*read_struct_pfd_order.values()]), str(id), 'init'])
+            sequencing_library.append([self.paste([*read_struct_pfd_order.values()]), str(id), 'init'])
         # print(umi_cnt)
         # print(umi_pool)
         etime = time.time()
         self.console.print("===>time for generating initial pool of sequences: {:.3f}s".format(etime-stime))
-        return seqs
+        self.pfwriter.generic(df=sequencing_library, sv_fpn=self.working_dir + 'sequencing_library.txt')
+        return sequencing_library
 
     def paste(self, read_struct=[]):
         return ''.join(read_struct)
@@ -215,7 +246,6 @@ if __name__ == "__main__":
     # print(DEFINE['cand_pool_fpn'])
     p = general(
         seq_num=50,
-
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,
@@ -233,19 +263,16 @@ if __name__ == "__main__":
             'spacer_1': 10,
         },
         is_seed=True,
-        is_sv_umi_lib=True,
-        is_sv_seq_lib=True,
 
         working_dir=to('data/simu/'),
         fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
         # condis=['umi', 'seq'],
-        condis=['umi', 'umi_1', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2'],
+        condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
     )
 
     # print(p.umi_len)
-    res = p.pooling()
-    print(res)
+    p.pooling()
