@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 phylotres/data/
+phylotres/path.py
 
 __pycache__/
 *.py[cod]

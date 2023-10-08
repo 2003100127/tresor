@@ -1,14 +1,13 @@
 __version__ = "v1.0"
-__copyright__ = "Copyright 2023"
+__copyright__ = "Copyright 2024"
 __license__ = "MIT"
-__lab__ = "cribbslab"
+__developer__ = "Jianfeng Sun"
+__maintainer__ = "Jianfeng Sun"
+__email__="jianfeng.sunmt@gmail.com"
+__lab__ = "Cribbslab"
 
-import os, sys
-dis = os.path.abspath("../../../")
 import gzip
-sys.path.append(dis)
 from Bio import SeqIO
-from phylotres.path import to
 import pyfastx
 
 
