@@ -17,6 +17,7 @@ from phylotres.util.sequence.symbol.Single import Single as dnasgl
 from phylotres.util.similarity.distance.Hamming import Hamming
 from phylotres.read.umi.Design import Design as dumi
 from phylotres.read.seq.Design import Design as dseq
+from phylotres.read.barcode.Design import Design as dbarcode
 from phylotres.read.primer.Design import Design as dprimer
 from phylotres.read.adapter.Design import Design as dadapter
 from phylotres.read.spacer.Design import Design as dspacer
@@ -45,6 +46,7 @@ class SingleCell:
             permutation=0,
             is_sv_umi_lib=True,
             is_sv_seq_lib=True,
+            is_sv_barcode_lib=True,
             is_sv_primer_lib=True,
             is_sv_adapter_lib=True,
             is_sv_spacer_lib=True,
@@ -57,6 +59,7 @@ class SingleCell:
         self.crtfolder = crtfolder()
         self.dumi = dumi
         self.dseq = dseq
+        self.dbarcode = dbarcode
         self.dprimer = dprimer
         self.dadapter = dadapter
         self.dspacer = dspacer
@@ -70,6 +73,7 @@ class SingleCell:
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
+        self.is_sv_barcode_lib = is_sv_barcode_lib
         self.is_sv_primer_lib = is_sv_primer_lib
         self.is_sv_adapter_lib = is_sv_adapter_lib
         self.is_sv_spacer_lib = is_sv_spacer_lib
@@ -135,6 +139,27 @@ class SingleCell:
         self.console.print("======>Condition map: {}".format(condi_map))
         condi_keys = condi_map.keys()
 
+        ### +++++++++++++++ block: generate barcodes +++++++++++++++
+        barcode_map = {}
+        for cell_i in range(self.num_cells):
+            barcode_seed = cell_i + self.permutation * cell_i * 80 + (cell_i + 1) * 10000000
+            pbarcode = self.dbarcode(
+                dna_map=self.dna_map,
+                pseudorandom_num=self.rannum.uniform(
+                    low=0,
+                    high=4,
+                    num=self.len_params['barcode'],
+                    use_seed=self.is_seed,
+                    seed=barcode_seed,
+                ),
+            )
+            barcode_i = pbarcode.general(
+                lib_fpn=self.working_dir + 'barcode.txt',
+                is_sv=self.is_sv_barcode_lib,
+            )
+            print(barcode_i)
+            barcode_map[cell_i] = barcode_i
+
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
         if self.fasta_cdna_fpn:
             self.console.print("======>Read CDNAs from a reference ome")
@@ -171,6 +196,7 @@ class SingleCell:
             for id in np.arange(seq_num):
                 self.console.print("======>Read {} generation".format(id + 1))
                 read_struct_ref = {}
+                read_struct_ref['barcode'] = barcode_map[cell]
                 ### +++++++++++++++ block: generate umis +++++++++++++++
                 if 'umi' in condi_keys:
                     self.console.print("=========>UMI generation start")
@@ -367,6 +393,7 @@ if __name__ == "__main__":
                 'umi_unit_pattern': 3,
                 'umi_unit_len': 12,
             },
+            'barcode': 16,
             'seq': 100,
             'seq_2': 100,
             'adapter': 10,
@@ -379,11 +406,12 @@ if __name__ == "__main__":
         is_seed=True,
 
         working_dir=to('data/simu/'),
-        # fasta_cdna_fpn=False,
-        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
+        fasta_cdna_fpn=False,
+        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
-        condis=['umi', 'seq'],
+        condis=['barcode', 'umi'],
+        # condis=['umi', 'seq'],
         # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
