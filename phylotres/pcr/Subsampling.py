@@ -401,7 +401,6 @@ class Subsampling:
         ### len(spl_data)
         # num_reads_for_sequencing
         spl_id_map = tactic6(spl_data)
-        print(len(spl_id_map))
         ### spl_id_map
         # {'1_1_2_3_4_6_8': 'pcr-8', '2_3_5': 'pcr-5', ..., '1_1_2_3_4_7_8_9': 'pcr-9', '1_1_4_6_10': 'pcr-10'}
         ### len(spl_id_map)
@@ -412,6 +411,8 @@ class Subsampling:
         # ['2_1_4_10', '1_2_3_4_7_9_10', '2_1_7_10', ... '2_1_6_8_9', '2_2_4_5_7_10', '2_3_5_7_8_9']
         ### len(trees)
         # num_reads_for_sequencing
+        self.console.print('=========>Sampled reads contain {} unrepeated PCR amplified molecules'.format(np.unique(trees).size))
+
 
         res_data = []
         mol_map_to_all_its_pcr_trees = {}
@@ -421,33 +422,37 @@ class Subsampling:
         for tree in trees:
             mol_map_to_all_its_pcr_trees[tree.split('_')[0]].append(tree.split('_')[1:])
         ### mol_map_to_all_its_pcr_trees
-        # {'29': [['3', '4', '6', '7', '9'], ['1', '2', '4', '6', '8', '9'],
-        # ['1', '4', '5', '7', '8', '9', '10'], ['6', '7'], ['3', '6', '8', '10'],
-        # ['3', '4', '5', '6', '7', '8', '10']], '36': [['2', '6', '9'], ['4', '9'],
-        # ['1', '2', '6', '7', '8'], ['1', '3', '5', '9', '10']],
-        # '15': [['3', '5', '7', '9', '10'], ['2', '3', '5'], ['1', '3'],
-        # ['1', '4', '5', '7', '10'], ['1', '3', '6', '7', '9', '10'], ['1', '8', '10']],
-        # '24': [['1', '9'], ['1', '5', '7', '10'], ['2', '3', '5', '7'],
-        # ['10'], ['3', '5', '6', '7', '8', '9'], ['3', '5', '6', '7', '8', '9']],
-        # '31': [['5', '7'], ['3', '6', '10']]}
-        print(len(mol_map_to_all_its_pcr_trees))
+        # {'23': [['1', '2', '5', '6', '8'], ['1', '3', '4', '8', '9', '10'],
+        # ['1', '4', '7', '9'], ['2', '3', '4', '5', '7', '9'], ['1', '3', '6'],
+        # ['1', '2', '4', '7', '8']], '6': [['3', '4', '5', '8'],
+        # ['2', '3', '4', '5', '6', '10'], ['5', '6', '7'], ['1', '2', '4', '6', '7', '9'],
+        # ['1', '2', '9']], '13': [['1', '2', '5', '7'], ['1', '4', '7', '8', '10'],
+        # ['1', '4', '8', '9'], ['6', '7', '9']],
+        # ...
+        # '48': [['1'], ['3', '4', '5', '8', '9', '10'], ['1', '9', '10'],
+        # ['3', '4', '5', '7', '9', '10']], '11': [['1', '3', '5', '6', '7'],
+        # ['2', '3', '4', '7', '8', '10'], ['1', '2', '3', '6', '9']],
+        # '29': [['2', '5', '9', '10'], ['1', '2', '3', '5', '6', '8', '10'],
+        # ['3', '4', '7', '9', '10']], '39': [['6', '7', '9']]}
+        self.console.print('=========>Sampled reads cover {} initial molecules'.format(len(mol_map_to_all_its_pcr_trees)))
         ### len(mol_map_to_all_its_pcr_trees)
         # 50
-        self.console.print('=========>{} reads selected for sequencing'.format(num_reads_for_sequencing))
 
         for k, trees in mol_map_to_all_its_pcr_trees.items():
-            # print(k, trees)
             # k, trees
-            # 23, [['2', '7', '8', '9'], ['2', '3', '5', '6', '8', '10'], ['2', '6', '7'],
-            # ['2', '4', '7', '9', '10'], ['3', '6', '9', '10'], ['2', '3', '4', '5', '6', '7', '9'],
-            # ['1', '2', '6', '7', '8', '9', '10'], ['2', '6', '8', '10']]
-            # 1, [['1', '2', '3', '5', '7', '8'], ['1', '3', '4', '5', '6', '7', '9'], ['4', '9']]
+            # 23 [['1', '2', '5', '6', '8'], ['1', '3', '4', '8', '9', '10'], ['1', '4', '7', '9'],
+            # ['2', '3', '4', '5', '7', '9'], ['1', '3', '6'], ['1', '2', '4', '7', '8']]
+            # 6 [['3', '4', '5', '8'], ['2', '3', '4', '5', '6', '10'], ['5', '6', '7'],
+            # ['1', '2', '4', '6', '7', '9'], ['1', '2', '9']]
+            # 13 [['1', '2', '5', '7'], ['1', '4', '7', '8', '10'], ['1', '4', '8', '9'], ['6', '7', '9']
+            # ...
+            # 29 [['2', '5', '9', '10'], ['1', '2', '3', '5', '6', '8', '10'], ['3', '4', '7', '9', '10']]
+            # 39 [['6', '7', '9']]
             read = umi_map[int(k)]
             # read
-            # CCCGGGGGGAAAAAACCCTTTCCCGGGCCCTTTAAA
+            # CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC
             read_cache_table = [[] for _ in range(len(trees))]
             bool_flag_table = [[True] for _ in range(len(trees))]
-            # print('asdasdasdsa {}'.format(bool_flag_table))
             # realvalued_flag_table = [[] for _ in range(len(trees))]
             trees_ori = [[] for _ in range(len(trees))]
             max_len_pcr_tree = max([len(tree) for tree in trees])
@@ -456,42 +461,48 @@ class Subsampling:
                 if len(tree) < max_len_pcr_tree:
                     tree += ['0' for _ in range(max_len_pcr_tree - len(tree))]
                 # k, tree
-                # 24 ['6', '8', '10', '0', '0', '0']
-                # 24 ['1', '5', '0', '0', '0', '0']
-                # 24 ['3', '4', '7', '9', '0', '0']
-                # 24 ['3', '4', '7', '9', '0', '0']
-                # 24 ['2', '4', '5', '9', '0', '0']
-                # 24 ['2', '3', '5', '6', '8', '10']
-                # 24 ['2', '3', '5', '8', '9', '10']
-                # 24 ['1', '7', '8', '0', '0', '0']
-                # 24 ['9', '0', '0', '0', '0', '0']
-                # 49 ['2', '3', '5', '8', '9']
-                # 49 ['3', '6', '8', '0', '0']
-                # 49 ['7', '8', '9', '10', '0']
-                # 49 ['3', '6', '8', '10', '0']
-                # 49 ['1', '6', '7', '10', '0']
-                # 49 ['1', '4', '0', '0', '0']
-                # 49 ['4', '5', '7', '0', '0']
-                # 49 ['4', '6', '7', '0', '0']
+                # 23 ['1', '2', '5', '6', '8', '0']
+                # 23 ['1', '3', '4', '8', '9', '10']
+                # 23 ['1', '4', '7', '9', '0', '0']
+                # 23 ['2', '3', '4', '5', '7', '9']
+                # 23 ['1', '3', '6', '0', '0', '0']
+                # 23 ['1', '2', '4', '7', '8', '0']
+                # 6 ['3', '4', '5', '8', '0', '0']
+                # 6 ['2', '3', '4', '5', '6', '10']
+                # 6 ['5', '6', '7', '0', '0', '0']
+                # 6 ['1', '2', '4', '6', '7', '9']
+                # 6 ['1', '2', '9', '0', '0', '0']
+                # 13 ['1', '2', '5', '7', '0']
+                # 13 ['1', '4', '7', '8', '10']
+                # 13 ['1', '4', '8', '9', '0']
+                # 13 ['6', '7', '9', '0', '0']
                 # ...
-                # 4 ['7', '9', '0', '0', '0', '0']
-                # 4 ['1', '3', '5', '7', '0', '0']
-                # 4 ['1', '3', '4', '6', '7', '8']
-                # 25 ['2', '4', '5', '7', '10', '0']
-                # 25 ['2', '3', '4', '5', '6', '8']
+                # 29 ['2', '5', '9', '10', '0', '0', '0']
+                # 29 ['1', '2', '3', '5', '6', '8', '10']
+                # 29 ['3', '4', '7', '9', '10', '0', '0']
+                # 39 ['6', '7', '9']
             trees_np = np.array(trees)
-            # print(k, trees_np)
-            # 13 [['2' '4' '8' '9' '10']]
-            # 2 [['1' '3' '5' '6' '7' '8' '9' '10']
-            #  ['5' '6' '7' '8' '10' '0' '0' '0']
-            #  ['7' '0' '0' '0' '0' '0' '0' '0']]
+            ### k, trees_np
+            # 23 [['1' '2' '5' '6' '8' '0']
+            #  ['1' '3' '4' '8' '9' '10']
+            #  ['1' '4' '7' '9' '0' '0']
+            #  ['2' '3' '4' '5' '7' '9']
+            #  ['1' '3' '6' '0' '0' '0']
+            #  ['1' '2' '4' '7' '8' '0']]
+            # 6 [['3' '4' '5' '8' '0' '0']
+            #  ['2' '3' '4' '5' '6' '10']
+            #  ['5' '6' '7' '0' '0' '0']
+            #  ['1' '2' '4' '6' '7' '9']
+            #  ['1' '2' '9' '0' '0' '0']]
+            # 13 [['1' '2' '5' '7' '0']
+            #  ['1' '4' '7' '8' '10']
+            #  ['1' '4' '8' '9' '0']
+            #  ['6' '7' '9' '0' '0']]
             # ...
-            # 39 [['3' '4' '6' '7' '8' '9' '10']]
-            # 36 [['1' '3' '9' '0' '0' '0' '0']
-            #  ['1' '2' '4' '5' '7' '9' '10']
-            #  ['1' '2' '3' '6' '8' '10' '0']
-            #  ['3' '8' '10' '0' '0' '0' '0']
-            #  ['1' '4' '7' '8' '10' '0' '0']]
+            # 29 [['2' '5' '9' '10' '0' '0' '0']
+            #  ['1' '2' '3' '5' '6' '8' '10']
+            #  ['3' '4' '7' '9' '10' '0' '0']]
+            # 39 [['6' '7' '9']]
 
             ### +++++++++++++++ block: Construct bool and real-valued flag tables +++++++++++++++
             #         trees (i.e., PCR tree)
@@ -526,9 +537,7 @@ class Subsampling:
                 for id_vert_across_trees, ele_in_a_col in enumerate(trees_np[:, id_horiz_in_a_tree]):
                     # print('ele_in_a_col {}'.format(ele_in_a_col))
                     if ele_in_a_col in repeat_in_a_col:
-                        ids_repeat_in_a_col = [i for i, value in
-                                               enumerate(trees_np[:, id_horiz_in_a_tree]) if
-                                               value == ele_in_a_col]
+                        ids_repeat_in_a_col = [i for i, value in enumerate(trees_np[:, id_horiz_in_a_tree]) if value == ele_in_a_col]
                         # print('asds {}'.format(ids_repeat_in_a_col))
                         if bool_flag_table[id_vert_across_trees][id_horiz_in_a_tree] is False:
                             # print('repeated ele: {}'.format(ele_in_a_col))
@@ -549,10 +558,47 @@ class Subsampling:
                         # realvalued_flag_table[id_vert_across_trees].append(-1)
 
             bool_flag_table = np.array(bool_flag_table)[:, 1:]
-            # realvalued_flag_table = np.array(realvalued_flag_table)
-            # print(trees_np)
-            # print(bool_flag_table)
-            # print(realvalued_flag_table)
+            ### trees_np
+            ### bool_flag_table
+            # 23 [['1' '2' '5' '6' '8' '0']
+            #  ['1' '3' '4' '8' '9' '10']
+            #  ['1' '4' '7' '9' '0' '0']
+            #  ['2' '3' '4' '5' '7' '9']
+            #  ['1' '3' '6' '0' '0' '0']
+            #  ['1' '2' '4' '7' '8' '0']]
+            # [[ True  True False False False False]
+            #  [ True  True  True False False False]
+            #  [ True False False False False False]
+            #  [False False False False False False]
+            #  [ True  True False False False False]
+            #  [ True  True  True False False False]]
+            # 6 [['3' '4' '5' '8' '0' '0']
+            #  ['2' '3' '4' '5' '6' '10']
+            #  ['5' '6' '7' '0' '0' '0']
+            #  ['1' '2' '4' '6' '7' '9']
+            #  ['1' '2' '9' '0' '0' '0']]
+            # [[False False False False False False]
+            #  [False False False False False False]
+            #  [False False False False False False]
+            #  [ True  True False False False False]
+            #  [ True  True False False False False]]
+            # 13 [['1' '2' '5' '7' '0']
+            #  ['1' '4' '7' '8' '10']
+            #  ['1' '4' '8' '9' '0']
+            #  ['6' '7' '9' '0' '0']]
+            # [[ True False False False False]
+            #  [ True  True False False False]
+            #  [ True  True False False False]
+            #  [False False False False False]]
+            # ...
+            # 29 [['2' '5' '9' '10' '0' '0' '0']
+            #  ['1' '2' '3' '5' '6' '8' '10']
+            #  ['3' '4' '7' '9' '10' '0' '0']]
+            # [[False False False False False False False]
+            #  [False False False False False False False]
+            #  [False False False False False False False]]
+            # 39 [['6' '7' '9']]
+            # [[False False False]]
 
             for jj in range(trees_np.shape[1]):
                 read_for_repeat_tmp_per_col = {}
@@ -594,19 +640,27 @@ class Subsampling:
                                     pcr_error=pcr_dict['pcr_error'],
                                 )
                                 read_cache_table[ii].append(r1)
-            # print('read_cache_table {}'.format(read_cache_table))
+            ### k, read_cache_table
+            # 23 [['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC']]
+            # 6 [['AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT'], ['AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT'], ['AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT'], ['AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT'], ['AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT', 'AAACCCAAAAAACCCTTTCCCAAACCCGGGGGGTTT']]
+            # 13 [['CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG'], ['CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG'], ['CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG'], ['CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG', 'CCCAAATTTTTTAAAGGGTTTGGGCCCGGGGGGGGG']]
+            # ...
+            # 29 [['TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT'], ['TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT'], ['TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT', 'TTTCCCCCCAAACCCTTTGGGGGGGGGAAAGGGTTT']]
+            # 39 [['AAAGGGTTTAAACCCAAAGGGTTTGGGGGGAAAAAA', 'AAAGGGTTTAAACCCAAAGGGTTTGGGGGGAAAAAA', 'AAAGGGTTTAAACCCAAAGGGTTTGGGGGGAAAAAA']]
 
             for ii, u in enumerate(trees_np):
                 for jj, v in enumerate(u):
                     if v != '0':
                         trees_ori[ii].append(trees_np[ii][jj])
-            # print(trees_ori)
-            # print('trees_ori {}'.format(trees_ori))
-
+            ### k, trees_ori
+            # 23 [['1', '2', '5', '6', '8'], ['1', '3', '4', '8', '9', '10'], ['1', '4', '7', '9'], ['2', '3', '4', '5', '7', '9'], ['1', '3', '6'], ['1', '2', '4', '7', '8']]
+            # 6 [['3', '4', '5', '8'], ['2', '3', '4', '5', '6', '10'], ['5', '6', '7'], ['1', '2', '4', '6', '7', '9'], ['1', '2', '9']]
+            # 13 [['1', '2', '5', '7'], ['1', '4', '7', '8', '10'], ['1', '4', '8', '9'], ['6', '7', '9']]
+            # ...
+            # 29 [['2', '5', '9', '10'], ['1', '2', '3', '5', '6', '8', '10'], ['3', '4', '7', '9', '10']]
+            # 39 [['6', '7', '9']]
 
             for i, tree in enumerate(trees_ori):
-                # print(read_cache_table[i])
-                # print(read_cache_table[i][-1])
                 res_data.append([
                     read_cache_table[i][-1] if read_cache_table[i] != [] else read,  # read
                     str(k) + '_' + '_'.join(tree) if read_cache_table[i] != [] else str(k),  # sam id
