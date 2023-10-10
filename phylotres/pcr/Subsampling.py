@@ -696,7 +696,18 @@ class Subsampling:
             read_l[pos] = dna_map[base_list[i]]
         return ''.join(read_l)
 
-    def indel(self, read, pcr_error):
+    def deletion(self, read, del_rate):
+        num_err_per_read = rannum().binomial(
+            n=len(read), p=del_rate, use_seed=False, seed=False
+        )
+        pos_list = rannum().uniform(
+            low=0, high=len(read), num=num_err_per_read, use_seed=False, seed=False
+        )
+        for _, pos in enumerate(pos_list):
+            read = read[:pos] + read[pos + 1:]
+        return read
+
+    def insert(self, read, pcr_error):
         num_err_per_read = rannum().binomial(
             n=len(read), p=pcr_error, use_seed=False, seed=False
         )
@@ -717,6 +728,7 @@ class Subsampling:
             )
             read_l[pos] = dna_map[base_list[i]]
         return ''.join(read_l)
+
 
     def mutated(self, read, pcr_error):
         num_err_per_read = rannum().binomial(
