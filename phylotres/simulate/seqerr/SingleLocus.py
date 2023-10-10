@@ -79,8 +79,8 @@ class SingleLocus:
         self.console.verbose = verbose
         self.verbose = verbose
 
-        # ### /*** block. Init a pool of sequences ***/
-        self.console.print('===>Generating an init pool of sequences starts...')
+        ### +++++++++++++++ block: generate sequencing library +++++++++++++++
+        self.console.print('===>Sequencing library generation starts')
         self.sequencing_library = simuip(
             len_params=len_params,
             fasta_cdna_fpn=fasta_cdna_fpn,
@@ -97,10 +97,22 @@ class SingleLocus:
             is_sv_spacer_lib=is_sv_spacer_lib,
             verbose=self.verbose,
         ).pooling()
-        self.console.print('===>Init pool of sequences has completed')
+        self.console.print('===>Sequencing library has been generated')
 
     def generate(self, ):
-        # ### /*** block 1. PCR amplification: Preparation ***/
+        """
+
+        [['1' '1' '0']
+         ['1' '1' '1']
+         ['1' '1' '2']
+         ...
+         ['1' '1' '48']
+         ['1' '1' '49']]
+        Returns
+        -------
+
+        """
+        ### +++++++++++++++ block: PCR amplification: Preparation +++++++++++++++
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
         pcr_ampl_params = {
@@ -112,7 +124,6 @@ class SingleLocus:
             'pcr_num': self.pcr_num,
 
             'err_route': self.err_route,
-
             'err_num_met': self.err_num_met,
             'use_seed': self.use_seed,
             'seed': self.seed,
@@ -120,34 +131,57 @@ class SingleLocus:
             'recorder_pcr_err_num': [],
             'recorder_pcr_read_num': [],
             'verbose': self.verbose,
-
         }
-        # print(pcr_ampl_params['data'])
+        # pcr_ampl_params['data']
+        # [['GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC' '0' 'init']
+        #  ['GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT' '1' 'init']
+        #  ['AAATTTGGGCCCGGGAAAGGGCCCAAAAAAGGGAAA' '2' 'init']
+        #  ...
+        #  ['CCCAAAAAAGGGCCCAAAGGGCCCTTTGGGGGGCCC' '48' 'init']
+        #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
         if pcr_ampl_params['err_route'] == 'tree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'minnow':
-            def calclen(a):
+            print(pcr_ampl_params['data'][:, 0])
+            def calc_len(a):
                 return len(a)
-            vfunc = np.vectorize(calclen)
-            pcr_ampl_params['data'] = np.hstack((vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis], pcr_ampl_params['data'][:, 1:3]))
-            # print(pcr_ampl_params['data'])
+            vfunc = np.vectorize(calc_len)
+            # [[36] vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis]
+            #  [36]
+            #  [36]
+            #  ...
+            #  [36]
+            #  [36]]
+            pcr_ampl_params['data'] = np.hstack((
+                vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
+                pcr_ampl_params['data'][:, 1:3],
+            ))
+            print(pcr_ampl_params['data'])
+            # pcr_ampl_params['data']
+            # [['36' '0' 'init']
+            #  ['36' '1' 'init']
+            #  ['36' '2' 'init']
+            #  ...
+            #  ['36' '48' 'init']
+            #  ['36' '49' 'init']]
             col_0 = np.array([[1] for _ in range(pcr_ampl_params['data'].shape[0])])
-            cc = np.hstack((col_0, col_0))
+            mut_info_table = np.hstack((col_0, col_0))
             col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
-            # print(col_2)
-            cc = np.hstack((cc, col_2))
-            # print(cc)
-            pcr_ampl_params['mut_info'] = cc
+            mut_info_table = np.hstack((mut_info_table, col_2))
+            pcr_ampl_params['mut_info'] = mut_info_table
+            # print(mut_info_table)
             # pcr_ampl_params['mut_info'] = np.empty(shape=[0, 3])
             # print(pcr_ampl_params['mut_info'])
 
-        # ### /*** block 2. PCR amplification: simulation ***/
+        ### +++++++++++++++ block: PCR amplification: simulation +++++++++++++++
         pcr_stime = time.time()
         pcr = self.pcr(pcr_params=pcr_ampl_params).np()
-        # print(pcr.keys())
+        print(pcr.keys())
+        print(pcr['mut_info'])
+        print(pcr['mut_info'].shape)
         self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
-        # ### /*** block 3. Subsampling: sequencing depth or rate ***/
+        ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
         # print(pcr['data'])
         # print(pcr['data'].shape)
         if pcr_ampl_params['err_route'] == 'tree':
@@ -159,13 +193,14 @@ class SingleLocus:
         if pcr_ampl_params['err_route'] == 'minnow':
             pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
 
-        # ### /*** block 4. Sequencing: parameters ***/
-        self.console.print('======>Sequencing has started...')
-        for id, iseq_err in enumerate(self.seq_errors):
+        ### +++++++++++++++ block: Sequencing: parameters +++++++++++++++
+        self.console.print('======>Sequencing starts')
+        for i, seq_err_i in enumerate(self.seq_errors):
+            self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
             seq_params = {
                 'data': pcr['data'],
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
-                'seq_error': iseq_err,
+                'seq_error': seq_err_i,
                 'err_num_met': self.err_num_met,
                 'use_seed': self.use_seed,
                 'seed': self.seed,
@@ -173,16 +208,16 @@ class SingleLocus:
             }
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
-            self.console.print('=========>Write seqs in fastq format')
+            self.console.print('=========>Reads write to files in FastQ format')
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,
-                fn='seq_err_' + str(id),
+                fn='seq_err_' + str(i),
                 symbol='-',
             )
             del seq
-            self.console.print('=========>Write seqs finished')
-        self.console.print('======>Simulation ends...')
+            self.console.print('=========>FastQ file is saved')
+        self.console.print('======>Simulation completes')
         return
 
 

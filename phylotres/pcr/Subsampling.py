@@ -39,12 +39,64 @@ class Subsampling:
         # print(spl_ids)
         # print(pcr_dict['data'])
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
+        # print(pcr_dict['data'])
+        # print(spl_id_map)
+        # print(len(spl_id_map))
+        spl_mut_info = pcr_dict['mut_info']
+        # print(pcr_dict['mut_info'].shape)
+        # print(spl_mut_info)
+        # print(len(spl_mut_info))
+        # keys = spl_mut_info[:, 2]
+        keys = pcr_dict['data'][spl_ids][:, 1]
+        # print(keys)
+        # print(np.sort(keys) == np.sort(spl_mut_info[:, 2]))
+        # print(len(keys))
+        pos_dict = tactic6(pcr_dict['mut_info'][:, [2, 0]])
+        base_dict = tactic6(pcr_dict['mut_info'][:, [2, 1]])
+        # print(pos_dict)
+        # print(base_dict)
+        # print(tactic6(base_np))
+        res_data = []
+        for key in keys:
+            mol_id = key.split('_')[0]
+            k = key.split('_')[1:]
+            # print('kkk', key, k)
+            read = umi_map[int(mol_id)]
+            # print(read)
+            for i in range(len(k)):
+                # print('id', i)
+                sub_k = mol_id + '_' + '_'.join(k[: i+1]) if k != [] else mol_id
+                # print(sub_k)
+                # print(pos_dict[sub_k], base_dict[sub_k])
+                if sub_k in pos_dict.keys():
+                    read = self.change(read, pos_list=pos_dict[sub_k], base_list=base_dict[sub_k])
+            #     print(read)
+            # print(read)
+            res_data.append([
+                read,  # read
+                str(mol_id) + '_' + '_'.join(k) if k != [] else str(mol_id),  # sam id
+                spl_id_map[str(mol_id) + '_' + '_'.join(k)] if k != [] else 'init',  # source
+            ])
+            # print(read)
+        # print(np.array(res_data).shape)
+        return np.array(res_data)
+
+    def minnow_ori(self, pcr_dict):
+        umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
+        # print(umi_map)
+        nn = pcr_dict['data'].shape[0]
+        spl_ids = rannum().uniform(
+            low=0, high=nn, num=9000, use_seed=False, seed=1
+        )
+        # print(spl_ids)
+        # print(pcr_dict['data'])
+        spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
         # print(spl_id_map)
         # print(len(spl_id_map))
         spl_mut_info = pcr_dict['mut_info'][spl_ids]
         # print(pcr_dict['mut_info'].shape)
-        # print(spl_mut_info)
-        # print(len(spl_mut_info))
+        print(spl_mut_info)
+        print(len(spl_mut_info))
         keys = spl_mut_info[:, 2]
         # print(len(keys))
         pos_dict = tactic6(pcr_dict['mut_info'][:, [2, 0]])
