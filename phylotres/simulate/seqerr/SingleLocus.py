@@ -42,10 +42,11 @@ class SingleLocus:
             use_seed,
             seed,
 
-            seq_errors,
-            seq_sub_spl_rate,
-
             sv_fastq_fp,
+
+            seq_errors,
+            seq_sub_spl_number=None,
+            seq_sub_spl_rate=1/3,
 
             verbose=True,
     ):
@@ -68,6 +69,7 @@ class SingleLocus:
         self.seed = seed
 
         self.seq_errors = seq_errors
+        self.seq_sub_spl_number = seq_sub_spl_number
         self.seq_sub_spl_rate = seq_sub_spl_rate
         self.sv_fastq_fp = sv_fastq_fp
 
@@ -115,6 +117,7 @@ class SingleLocus:
         ### +++++++++++++++ block: PCR amplification: Preparation +++++++++++++++
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
+        # print(np.array(self.sequencing_library))
         pcr_ampl_params = {
             'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
 
@@ -130,6 +133,10 @@ class SingleLocus:
             'recorder_nucleotide_num': [],
             'recorder_pcr_err_num': [],
             'recorder_pcr_read_num': [],
+
+            'seq_sub_spl_number': self.seq_sub_spl_number,
+            'seq_sub_spl_rate': self.seq_sub_spl_rate,
+
             'verbose': self.verbose,
         }
         # pcr_ampl_params['data']
@@ -139,10 +146,14 @@ class SingleLocus:
         #  ...
         #  ['CCCAAAAAAGGGCCCAAAGGGCCCTTTGGGGGGCCC' '48' 'init']
         #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
+        # print(pcr_ampl_params['data'][:, 1:3])
+        # print(pcr_ampl_params)
         if pcr_ampl_params['err_route'] == 'tree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'minnow':
-            print(pcr_ampl_params['data'][:, 0])
+            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
+        if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
+            # print(pcr_ampl_params['data'][:, 0])
             def calc_len(a):
                 return len(a)
             vfunc = np.vectorize(calc_len)
@@ -176,9 +187,7 @@ class SingleLocus:
         ### +++++++++++++++ block: PCR amplification: simulation +++++++++++++++
         pcr_stime = time.time()
         pcr = self.pcr(pcr_params=pcr_ampl_params).np()
-        print(pcr.keys())
-        print(pcr['mut_info'])
-        print(pcr['mut_info'].shape)
+        # print(pcr.keys())
         self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
@@ -186,37 +195,42 @@ class SingleLocus:
         # print(pcr['data'].shape)
         if pcr_ampl_params['err_route'] == 'tree':
             pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
-
         # print(pcr['data'])
         # print(pcr['data'].shape)
 
         if pcr_ampl_params['err_route'] == 'minnow':
             pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
 
+        if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
+            pcr['data'] = self.subsampling.mutation_table_minimum(pcr_dict=pcr)
+
+        if pcr_ampl_params['err_route'] == 'mutation_table_complete':
+            pcr['data'] = self.subsampling.mutation_table_complete(pcr_dict=pcr)
+
         ### +++++++++++++++ block: Sequencing: parameters +++++++++++++++
         self.console.print('======>Sequencing starts')
-        for i, seq_err_i in enumerate(self.seq_errors):
-            self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
-            seq_params = {
-                'data': pcr['data'],
-                'seq_sub_spl_rate': self.seq_sub_spl_rate,
-                'seq_error': seq_err_i,
-                'err_num_met': self.err_num_met,
-                'use_seed': self.use_seed,
-                'seed': self.seed,
-                'verbose': False,
-            }
-            seq = self.seq(seq_params=seq_params).np()
-            self.console.print('=========>Sequencing has completed')
-            self.console.print('=========>Reads write to files in FastQ format')
-            self.wfastq().togz(
-                list_2d=seq['data'],
-                sv_fp=self.sv_fastq_fp,
-                fn='seq_err_' + str(i),
-                symbol='-',
-            )
-            del seq
-            self.console.print('=========>FastQ file is saved')
+        # for i, seq_err_i in enumerate(self.seq_errors):
+        #     self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
+        #     seq_params = {
+        #         'data': pcr['data'],
+        #         'seq_sub_spl_rate': self.seq_sub_spl_rate,
+        #         'seq_error': seq_err_i,
+        #         'err_num_met': self.err_num_met,
+        #         'use_seed': self.use_seed,
+        #         'seed': self.seed,
+        #         'verbose': False,
+        #     }
+        #     seq = self.seq(seq_params=seq_params).np()
+        #     self.console.print('=========>Sequencing has completed')
+        #     self.console.print('=========>Reads write to files in FastQ format')
+        #     self.wfastq().togz(
+        #         list_2d=seq['data'],
+        #         sv_fp=self.sv_fastq_fp,
+        #         fn='seq_err_' + str(i),
+        #         symbol='-',
+        #     )
+        #     del seq
+        #     self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
         return
 
@@ -244,21 +258,22 @@ if __name__ == "__main__":
         is_sv_primer_lib=True,
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
-        condis=['umi'],
-        # condis=['umi', 'seq'],
+        # condis=['umi'],
+        condis=['umi', 'seq'],
         sim_thres=3,
         permutation=0,
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='minnow', # tree minnow default err2d
+        err_route='tree', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
-        pcr_num=14,
+        pcr_num=10,
         err_num_met='nbinomial',
         seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
+        seq_sub_spl_number=2000,
         seq_sub_spl_rate=0.333,
         use_seed=True,
-        seed=None,
+        seed=1,
 
         verbose=True,
 

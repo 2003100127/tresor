@@ -102,7 +102,14 @@ class Number:
                 size=num
             )
 
-    def choice(self, high, num, replace=False):
-        from numpy.random import default_rng
-        rng = default_rng()
-        return rng.choice(high, size=num, replace=replace)
+    # def choice(self, high, num, replace=False):
+    #     from numpy.random import default_rng
+    #     rng = default_rng()
+    #     return rng.choice(high, size=num, replace=replace)
+
+    def choice(self, high, num, use_seed=True, seed=1, replace=False):
+        if use_seed:
+            state = np.random.RandomState(seed)
+            return state.choice(high, num, replace=replace)
+        else:
+            return np.random.choice(high, num, replace=replace)

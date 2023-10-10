@@ -12,6 +12,7 @@ from phylotres.seq.Calling import Calling as seq
 from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.file.read.Reader import Reader as pfreader
 from phylotres.util.random.Number import Number as rannum
+from phylotres.util.random.Sampling import Sampling as ranspl
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
 from phylotres.util.Console import Console
 from phylotres.util.Kit import tactic6
@@ -21,20 +22,27 @@ class Subsampling:
 
     def __init__(
             self,
-
-            # verbose=False
+            verbose=True
     ):
         self.pcr = pcr
         self.seq = seq
         self.wfastq = wfastq
+        self.rannum = rannum
+        self.ranspl = ranspl
         self.console = Console()
-        # self.console.verbose = verbose
-    def minnow(self, pcr_dict):
+        self.console.verbose = verbose
+
+    def mutation_table_minimum(self, pcr_dict):
+        self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_minimum')
+        self.console.print('======>Read PCR amplified reads')
         umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
         # print(umi_map)
-        nn = pcr_dict['data'].shape[0]
+        num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
+        self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
+
         spl_ids = rannum().uniform(
-            low=0, high=nn, num=9000, use_seed=False, seed=1
+            low=0, high=num_all_pcr_ampl_reads, num=9000, use_seed=False, seed=1
         )
         # print(spl_ids)
         # print(pcr_dict['data'])
@@ -81,12 +89,17 @@ class Subsampling:
         # print(np.array(res_data).shape)
         return np.array(res_data)
 
-    def minnow_ori(self, pcr_dict):
+    def mutation_table_complete(self, pcr_dict):
+        self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_complete')
+        self.console.print('======>Read PCR amplified reads')
         umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
         # print(umi_map)
-        nn = pcr_dict['data'].shape[0]
+        num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
+        self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
+
         spl_ids = rannum().uniform(
-            low=0, high=nn, num=9000, use_seed=False, seed=1
+            low=0, high=num_all_pcr_ampl_reads, num=9000, use_seed=False, seed=1
         )
         # print(spl_ids)
         # print(pcr_dict['data'])
@@ -126,6 +139,176 @@ class Subsampling:
             ])
             # print(read)
         # print(np.array(res_data).shape)
+        return np.array(res_data)
+
+    def minnow(self, pcr_dict):
+        umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
+        # print(umi_map)
+
+        num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
+        # print(num_all_pcr_ampl_reads)
+        spl_ids = rannum().uniform(
+            low=0, high=num_all_pcr_ampl_reads, num=9000, use_seed=False, seed=1
+        )
+        # print(spl_ids)
+        spl_data = pcr_dict['data'][spl_ids]
+        # print(spl_data)
+        spl_id_map = tactic6(spl_data)
+        # print(spl_id_map)
+
+        trees = spl_data[:, 0].ravel().tolist()
+        # print(trees)
+        # print(len(trees))
+
+        res_data = []
+        mol_map_to_all_its_pcr_trees = {}
+        for tree in trees:
+            mol_map_to_all_its_pcr_trees[tree.split('_')[0]] = []
+        for tree in trees:
+            mol_map_to_all_its_pcr_trees[tree.split('_')[0]].append(tree.split('_')[1:])
+        # print(mol_map_to_all_its_pcr_trees)
+        # print(len(mol_map_to_all_its_pcr_trees))
+
+        for k, trees in mol_map_to_all_its_pcr_trees.items():
+            # print(k, trees)
+            read = umi_map[int(k)]
+            # print(read)
+            read_cache_table = [[] for _ in range(len(trees))]
+            bool_flag_table = [[True] for _ in range(len(trees))]
+            # print('asdasdasdsa {}'.format(bool_flag_table))
+            # realvalued_flag_table = [[] for _ in range(len(trees))]
+            trees_ori = [[] for _ in range(len(trees))]
+            max_len_pcr_tree = max([len(tree) for tree in trees])
+            # print(max_len_pcr_tree)
+            for _, tree in enumerate(trees):
+                if len(tree) < max_len_pcr_tree:
+                    tree += ['0' for _ in range(max_len_pcr_tree - len(tree))]
+                # print(k, tree)
+            trees_np = np.array(trees)
+
+            # ### /*** block. construct bool and real-valued flag tables ***/
+            #         trees (i.e., PCR tree)
+            #             [['2', '5', '6', '12', '13', '15'],
+            #              ['3', '4', '7', '9', '12'],
+            #              ['2', '6', '9', '10', '11', '12', '13', '15'],
+            #              ['2', '4', '6', '8', '11'],
+            #              ['3', '4', '7', '9', '13', '14']]
+            #         trees_np
+            #             [['2' '5' '6' '12' '13' '15' '0' '0']
+            #              ['3' '4' '7' '9' '12' '0' '0' '0']
+            #              ['2' '6' '9' '10' '11' '12' '13' '15']
+            #              ['2' '4' '6' '8' '11' '0' '0' '0']
+            #              ['3' '4' '7' '9' '13' '14' '0' '0']]
+            #         bool_flag_table
+            #             [[ True False False False False False False False]
+            #              [ True  True  True  True False False False False]
+            #              [ True False False False False False False False]
+            #              [ True  True False False False False False False]
+            #              [ True  True  True  True False False False False]]
+            #         realvalued_flag_table
+            #             [['2' '-1' '-1' '-1' '-1' '-1' '-1' '-1']
+            #              ['3' '4' '7' '9' '-1' '-1' '-1' '-1']
+            #              ['2' '-1' '-1' '-1' '-1' '-1' '-1' '-1']
+            #              ['2' '4' '-1' '-1' '-1' '-1' '-1' '-1']
+            #              ['3' '4' '7' '9' '-1' '-1' '-1' '-1']]
+            # ### /*** block. construct bool and real-valued flag tables ***/
+            for id_horiz_in_a_tree in range(trees_np.shape[1]):
+                repeat_in_a_col = self.findListDuplicates(trees_np[:, id_horiz_in_a_tree])
+                # print('repeated in a col', repeat_in_a_col)
+                # print(trees_np[:, id_horiz_in_a_tree])
+                for id_vert_across_trees, ele_in_a_col in enumerate(trees_np[:, id_horiz_in_a_tree]):
+                    # print('ele_in_a_col {}'.format(ele_in_a_col))
+                    if ele_in_a_col in repeat_in_a_col:
+                        ids_repeat_in_a_col = [i for i, value in
+                                               enumerate(trees_np[:, id_horiz_in_a_tree]) if
+                                               value == ele_in_a_col]
+                        # print('asds {}'.format(ids_repeat_in_a_col))
+                        if bool_flag_table[id_vert_across_trees][id_horiz_in_a_tree] is False:
+                            # print('repeated ele: {}'.format(ele_in_a_col))
+                            bool_flag_table[id_vert_across_trees].append(False)
+                            # realvalued_flag_table[id_vert_across_trees].append(-1)
+                        else:
+                            # print('non-repeated ele: {}'.format(ele_in_a_col))
+                            inspector_flags = [1 if bool_flag_table[i][id_horiz_in_a_tree] is True else 0 for i in
+                                               ids_repeat_in_a_col]
+                            # print('inspector_flags {}'.format(inspector_flags))
+                            if sum(inspector_flags) > 1:
+                                bool_flag_table[id_vert_across_trees].append(True)
+                            #                                 realvalued_flag_table[id_vert_across_trees].append(ele_in_a_col)
+                            else:
+                                bool_flag_table[id_vert_across_trees].append(False)
+                    #                                 realvalued_flag_table[id_vert_across_trees].append(-1)
+                    else:
+                        bool_flag_table[id_vert_across_trees].append(False)
+            #                         realvalued_flag_table[id_vert_across_trees].append(-1)
+
+            bool_flag_table = np.array(bool_flag_table)[:, 1:]
+            # realvalued_flag_table = np.array(realvalued_flag_table)
+            # print(trees_np)
+            # print(bool_flag_table)
+            # print(realvalued_flag_table)
+
+            for jj in range(trees_np.shape[1]):
+                read_for_repeat_tmp_per_col = {}
+                for ii, val_in_a_col in enumerate(trees_np[:, jj]):
+                    if val_in_a_col != '0':
+                        if jj == 0:
+                            # print(val_in_a_col, bool_flag_table[ii][jj])
+                            if bool_flag_table[ii][jj] == True:
+                                if val_in_a_col not in [*read_for_repeat_tmp_per_col.keys()]:
+                                    r1 = self.mutated(
+                                        read=read,
+                                        pcr_error=pcr_dict['pcr_error'],
+                                    )
+                                    read_for_repeat_tmp_per_col[val_in_a_col] = r1
+                                    read_cache_table[ii].append(r1)
+                                else:
+                                    read_cache_table[ii].append(read_for_repeat_tmp_per_col[val_in_a_col])
+                            else:
+                                r1 = self.mutated(
+                                    read=read,
+                                    pcr_error=pcr_dict['pcr_error'],
+                                )
+                                read_cache_table[ii].append(r1)
+                        if jj > 0:
+                            if bool_flag_table[ii][jj] == True:
+                                if val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj])) not in [
+                                    *read_for_repeat_tmp_per_col.keys()]:
+                                    r1 = self.mutated(
+                                        read=read_cache_table[ii][jj - 1],
+                                        pcr_error=pcr_dict['pcr_error'],
+                                    )
+                                    read_for_repeat_tmp_per_col[val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj]))] = r1
+                                    read_cache_table[ii].append(r1)
+                                else:
+                                    read_cache_table[ii].append(read_for_repeat_tmp_per_col[val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj]))])
+                                # print('id', [i for i, value in enumerate(trees_np[:, jj]) if value == val_in_a_col])
+                            else:
+                                r1 = self.mutated(
+                                    read=read_cache_table[ii][jj - 1],
+                                    pcr_error=pcr_dict['pcr_error'],
+                                )
+                                read_cache_table[ii].append(r1)
+            # print('read_cache_table {}'.format(read_cache_table))
+
+            for ii, u in enumerate(trees_np):
+                for jj, v in enumerate(u):
+                    if v != '0':
+                        trees_ori[ii].append(trees_np[ii][jj])
+            # print(trees_ori)
+            # print('trees_ori {}'.format(trees_ori))
+
+            for i, tree in enumerate(trees_ori):
+                # print(read_cache_table[i])
+                # print(read_cache_table[i][-1])
+                res_data.append([
+                    read_cache_table[i][-1] if read_cache_table[i] != [] else read,  # read
+                    str(k) + '_' + '_'.join(tree) if read_cache_table[i] != [] else str(k),  # sam id
+                    spl_id_map[str(k) + '_' + '_'.join(tree)] if read_cache_table[i] != [] else 'init',  # source
+                ])
+            # print('res_data {}'.format(res_data))
+        # print(res_data)
+        # print(len(res_data))
         return np.array(res_data)
 
     def pcrtree(self, pcr_dict):
@@ -177,51 +360,140 @@ class Subsampling:
         -------
 
         """
+        self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        self.console.print('======>Substitutions of nucleotides by PCR errors using the PCR tree')
+        self.console.print('======>Read PCR amplified reads')
         umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
         # print(umi_map)
 
-        nn = pcr_dict['data'].shape[0]
-        # print(nn)
-        spl_ids = rannum().uniform(
-            low=0, high=nn, num=9000, use_seed=False, seed=1
+        self.console.print('======>Sampling reads to be sequenced')
+        num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
+        self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
+        # print(num_all_pcr_ampl_reads)
+        # print(pcr_dict.keys())
+        if pcr_dict['seq_sub_spl_number'] is not None:
+            num_reads_for_sequencing = pcr_dict['seq_sub_spl_number']
+        else:
+            num_reads_for_sequencing = pcr_dict['seq_sub_spl_rate'] * num_all_pcr_ampl_reads
+        spl_ids = rannum().choice(
+            # low=0,
+            high=num_all_pcr_ampl_reads,
+            num=num_reads_for_sequencing,
+            use_seed=pcr_dict['use_seed'],
+            seed=pcr_dict['seed'],
+            replace=False,
         )
-        # print(spl_ids)
-        spl_data = pcr_dict['data'][spl_ids]
-        # print(spl_data)
-        spl_id_map = tactic6(spl_data)
-        # print(spl_id_map)
+        ### spl_ids
+        # [13588 22505 21882 ... 11019 13050  2311]
+        # len(spl_ids)
+        # num_reads_for_sequencing
 
+        spl_data = pcr_dict['data'][spl_ids]
+        self.console.print('=========>{} reads selected for sequencing'.format(num_reads_for_sequencing))
+        ### spl_data
+        # [['1_7' 'pcr-7']
+        #  ['2_1_5_7' 'pcr-7']
+        #  ['1_2_3_4_5_9' 'pcr-9']
+        #  ...
+        #  ['2_5_10' 'pcr-10']
+        #  ['2_4_6_7_9' 'pcr-9']
+        #  ['1_2_3_9_10' 'pcr-10']]
+        ### len(spl_data)
+        # num_reads_for_sequencing
+        spl_id_map = tactic6(spl_data)
+        print(len(spl_id_map))
+        ### spl_id_map
+        # {'1_1_2_3_4_6_8': 'pcr-8', '2_3_5': 'pcr-5', ..., '1_1_2_3_4_7_8_9': 'pcr-9', '1_1_4_6_10': 'pcr-10'}
+        ### len(spl_id_map)
+        # num_reads_for_sequencing
         trees = spl_data[:, 0].ravel().tolist()
         # print(trees)
-        # print(len(trees))
+        ### trees
+        # ['2_1_4_10', '1_2_3_4_7_9_10', '2_1_7_10', ... '2_1_6_8_9', '2_2_4_5_7_10', '2_3_5_7_8_9']
+        ### len(trees)
+        # num_reads_for_sequencing
 
         res_data = []
         mol_map_to_all_its_pcr_trees = {}
         for tree in trees:
             mol_map_to_all_its_pcr_trees[tree.split('_')[0]] = []
+            # print(tree, tree.split('_')[0])
         for tree in trees:
             mol_map_to_all_its_pcr_trees[tree.split('_')[0]].append(tree.split('_')[1:])
-        # print(mol_map_to_all_its_pcr_trees)
-        # print(len(mol_map_to_all_its_pcr_trees))
+        ### mol_map_to_all_its_pcr_trees
+        # {'29': [['3', '4', '6', '7', '9'], ['1', '2', '4', '6', '8', '9'],
+        # ['1', '4', '5', '7', '8', '9', '10'], ['6', '7'], ['3', '6', '8', '10'],
+        # ['3', '4', '5', '6', '7', '8', '10']], '36': [['2', '6', '9'], ['4', '9'],
+        # ['1', '2', '6', '7', '8'], ['1', '3', '5', '9', '10']],
+        # '15': [['3', '5', '7', '9', '10'], ['2', '3', '5'], ['1', '3'],
+        # ['1', '4', '5', '7', '10'], ['1', '3', '6', '7', '9', '10'], ['1', '8', '10']],
+        # '24': [['1', '9'], ['1', '5', '7', '10'], ['2', '3', '5', '7'],
+        # ['10'], ['3', '5', '6', '7', '8', '9'], ['3', '5', '6', '7', '8', '9']],
+        # '31': [['5', '7'], ['3', '6', '10']]}
+        print(len(mol_map_to_all_its_pcr_trees))
+        ### len(mol_map_to_all_its_pcr_trees)
+        # 50
+        self.console.print('=========>{} reads selected for sequencing'.format(num_reads_for_sequencing))
 
         for k, trees in mol_map_to_all_its_pcr_trees.items():
             # print(k, trees)
+            # k, trees
+            # 23, [['2', '7', '8', '9'], ['2', '3', '5', '6', '8', '10'], ['2', '6', '7'],
+            # ['2', '4', '7', '9', '10'], ['3', '6', '9', '10'], ['2', '3', '4', '5', '6', '7', '9'],
+            # ['1', '2', '6', '7', '8', '9', '10'], ['2', '6', '8', '10']]
+            # 1, [['1', '2', '3', '5', '7', '8'], ['1', '3', '4', '5', '6', '7', '9'], ['4', '9']]
             read = umi_map[int(k)]
-            # print(read)
+            # read
+            # CCCGGGGGGAAAAAACCCTTTCCCGGGCCCTTTAAA
             read_cache_table = [[] for _ in range(len(trees))]
             bool_flag_table = [[True] for _ in range(len(trees))]
             # print('asdasdasdsa {}'.format(bool_flag_table))
-            realvalued_flag_table = [[] for _ in range(len(trees))]
+            # realvalued_flag_table = [[] for _ in range(len(trees))]
             trees_ori = [[] for _ in range(len(trees))]
             max_len_pcr_tree = max([len(tree) for tree in trees])
             # print(max_len_pcr_tree)
             for _, tree in enumerate(trees):
                 if len(tree) < max_len_pcr_tree:
                     tree += ['0' for _ in range(max_len_pcr_tree - len(tree))]
-                # print(k, tree)
+                # k, tree
+                # 24 ['6', '8', '10', '0', '0', '0']
+                # 24 ['1', '5', '0', '0', '0', '0']
+                # 24 ['3', '4', '7', '9', '0', '0']
+                # 24 ['3', '4', '7', '9', '0', '0']
+                # 24 ['2', '4', '5', '9', '0', '0']
+                # 24 ['2', '3', '5', '6', '8', '10']
+                # 24 ['2', '3', '5', '8', '9', '10']
+                # 24 ['1', '7', '8', '0', '0', '0']
+                # 24 ['9', '0', '0', '0', '0', '0']
+                # 49 ['2', '3', '5', '8', '9']
+                # 49 ['3', '6', '8', '0', '0']
+                # 49 ['7', '8', '9', '10', '0']
+                # 49 ['3', '6', '8', '10', '0']
+                # 49 ['1', '6', '7', '10', '0']
+                # 49 ['1', '4', '0', '0', '0']
+                # 49 ['4', '5', '7', '0', '0']
+                # 49 ['4', '6', '7', '0', '0']
+                # ...
+                # 4 ['7', '9', '0', '0', '0', '0']
+                # 4 ['1', '3', '5', '7', '0', '0']
+                # 4 ['1', '3', '4', '6', '7', '8']
+                # 25 ['2', '4', '5', '7', '10', '0']
+                # 25 ['2', '3', '4', '5', '6', '8']
             trees_np = np.array(trees)
+            # print(k, trees_np)
+            # 13 [['2' '4' '8' '9' '10']]
+            # 2 [['1' '3' '5' '6' '7' '8' '9' '10']
+            #  ['5' '6' '7' '8' '10' '0' '0' '0']
+            #  ['7' '0' '0' '0' '0' '0' '0' '0']]
+            # ...
+            # 39 [['3' '4' '6' '7' '8' '9' '10']]
+            # 36 [['1' '3' '9' '0' '0' '0' '0']
+            #  ['1' '2' '4' '5' '7' '9' '10']
+            #  ['1' '2' '3' '6' '8' '10' '0']
+            #  ['3' '8' '10' '0' '0' '0' '0']
+            #  ['1' '4' '7' '8' '10' '0' '0']]
 
-            # ### /*** block. construct bool and real-valued flag tables ***/
+            ### +++++++++++++++ block: Construct bool and real-valued flag tables +++++++++++++++
             #         trees (i.e., PCR tree)
             #             [['2', '5', '6', '12', '13', '15'],
             #              ['3', '4', '7', '9', '12'],
@@ -246,7 +518,7 @@ class Subsampling:
             #              ['2' '-1' '-1' '-1' '-1' '-1' '-1' '-1']
             #              ['2' '4' '-1' '-1' '-1' '-1' '-1' '-1']
             #              ['3' '4' '7' '9' '-1' '-1' '-1' '-1']]
-            # ### /*** block. construct bool and real-valued flag tables ***/
+            ### +++++++++++++++ block: construct bool and real-valued flag tables +++++++++++++++
             for id_horiz_in_a_tree in range(trees_np.shape[1]):
                 repeat_in_a_col = self.findListDuplicates(trees_np[:, id_horiz_in_a_tree])
                 # print('repeated in a col', repeat_in_a_col)
@@ -261,24 +533,23 @@ class Subsampling:
                         if bool_flag_table[id_vert_across_trees][id_horiz_in_a_tree] is False:
                             # print('repeated ele: {}'.format(ele_in_a_col))
                             bool_flag_table[id_vert_across_trees].append(False)
-                            realvalued_flag_table[id_vert_across_trees].append(-1)
+                            # realvalued_flag_table[id_vert_across_trees].append(-1)
                         else:
                             # print('non-repeated ele: {}'.format(ele_in_a_col))
-                            inspector_flags = [1 if bool_flag_table[i][id_horiz_in_a_tree] is True else 0 for i in
-                                               ids_repeat_in_a_col]
+                            inspector_flags = [1 if bool_flag_table[i][id_horiz_in_a_tree] is True else 0 for i in ids_repeat_in_a_col]
                             # print('inspector_flags {}'.format(inspector_flags))
                             if sum(inspector_flags) > 1:
                                 bool_flag_table[id_vert_across_trees].append(True)
-                                realvalued_flag_table[id_vert_across_trees].append(ele_in_a_col)
+                                # realvalued_flag_table[id_vert_across_trees].append(ele_in_a_col)
                             else:
                                 bool_flag_table[id_vert_across_trees].append(False)
-                                realvalued_flag_table[id_vert_across_trees].append(-1)
+                                # realvalued_flag_table[id_vert_across_trees].append(-1)
                     else:
                         bool_flag_table[id_vert_across_trees].append(False)
-                        realvalued_flag_table[id_vert_across_trees].append(-1)
+                        # realvalued_flag_table[id_vert_across_trees].append(-1)
 
             bool_flag_table = np.array(bool_flag_table)[:, 1:]
-            realvalued_flag_table = np.array(realvalued_flag_table)
+            # realvalued_flag_table = np.array(realvalued_flag_table)
             # print(trees_np)
             # print(bool_flag_table)
             # print(realvalued_flag_table)

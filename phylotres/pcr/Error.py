@@ -34,18 +34,27 @@ class Error:
 
             self.console.print('======>Generate PCR errors...')
 
-            if self.method == 'err2d':
+            if self.method == 'err1d':
+                self.console.print('=========>The error 2D method is being used')
+                func = self.table1D
+            elif self.method == 'err2d':
                 self.console.print('=========>The error 2D method is being used')
                 func = self.table2D
             elif self.method == 'tree':
                 self.console.print('=========>The PCR tree method is being used')
-                func = self.tableTree
+                func = self.table_tree
             elif self.method == 'minnow':
                 self.console.print('=========>The Minnow method is being used')
-                func = self.tableMinnow
-            else:
+                func = self.table_tree
+            elif self.method == 'mutation_table_minimum':
+                self.console.print('=========>The mutation_table_minimum method is being used')
+                func = self.table_mutation_minimum
+            elif self.method == 'mutation_table_complete':
+                self.console.print('=========>The mutation_table_complete method is being used')
+                func = self.table_mutation_complete
+            else: # default
                 self.console.print('=========>The ResimPy method is being used')
-                func = self.table1D
+                func = self.table_tree
             return func(res2p)
         return indexing
 
@@ -206,7 +215,7 @@ class Error:
         self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
         return res2p
 
-    def tableMinnow(self, res2p):
+    def table_mutation_minimum(self, res2p):
         """
 
         Notes
@@ -285,7 +294,7 @@ class Error:
         self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
         return res2p
 
-    def tableMinnow1(self, res2p):
+    def table_mutation_complete(self, res2p):
         """
 
         Notes
@@ -360,7 +369,7 @@ class Error:
         self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
         return res2p
 
-    def tableTree(self, res2p):
+    def table_tree(self, res2p):
         pcr_stime = time.time()
         data_pcr = pd.DataFrame(
             res2p['data_spl'],
