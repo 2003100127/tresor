@@ -312,9 +312,9 @@ class Subsampling:
                             pcr_error=pcr_dict['pcr_error'],
                         )
                     if pcr_dict['pcr_deletion']:
-                        read = self.deletion(read=read, del_rate=pcr_dict['del_rate'])
-                    if pcr_dict['pcr_deletion']:
-                        read = self.insertion(read=read, ins_rate=pcr_dict['ins_rate'])
+                        read = self.deletion(read=read, del_rate=pcr_dict['pcr_del_rate'])
+                    if pcr_dict['pcr_insertion']:
+                        read = self.insertion(read=read, ins_rate=pcr_dict['pcr_ins_rate'])
                     read_cache[k_] = read
                 # print(read_cache)
                 res_data.append([

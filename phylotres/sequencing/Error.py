@@ -45,9 +45,10 @@ class Error:
         data_seq = pd.DataFrame(res2p['data_spl'], columns=['read', 'sam_id', 'source'])
         del res2p['data']
         del res2p['data_spl']
-        self.console.print('=========>{} reads to be sequenced'.format(data_seq.shape[0]))
-        self.console.print('=========>constructing the position table starts...')
+        self.console.print('=========>There are {} reads to be sequenced'.format(data_seq.shape[0]))
+        self.console.print('=========>The position table construction starts')
         pcr_postable_stime = time.time()
+        print(data_seq['read'][0])
         if kind == 'index_by_same_len':
             seq_pos_ids, seq_ids = self.postableIndexBySameLen(
                 seq_len=len(data_seq['read'][0]),
@@ -64,11 +65,12 @@ class Error:
             )
         pos_table = {'seq_ids': seq_ids, 'seq_pos_ids': seq_pos_ids}
         # print(pos_table)
+        # print(len(seq_ids))
         pcr_postable_etime = time.time()
-        self.console.print('=========>time for constructing the position table  {time:.3f}s'.format(time=pcr_postable_etime - pcr_postable_stime))
+        self.console.print('=========>Time for constructing the position table: {time:.3f}s'.format(time=pcr_postable_etime - pcr_postable_stime))
         seq_nt_num = len(seq_ids)
-        self.console.print('=========>{} nucleotides to be sequenced'.format(seq_nt_num))
-        self.console.print('=========>determining PCR error numbers starts...')
+        self.console.print('=========>There are {} nucleotides to be sequenced'.format(seq_nt_num))
+        self.console.print('=========>Determination of number of sequencing errors start')
         seq_err_num_simu_stime = time.time()
         if res2p['err_num_met'] == 'binomial':
             seq_err_num = rannum().binomial(n=seq_nt_num, p=res2p['seq_error'], use_seed=True, seed=1)
@@ -81,7 +83,7 @@ class Error:
             )
         else:
             seq_err_num = rannum().binomial(n=seq_nt_num, p=res2p['seq_error'], use_seed=True, seed=1)
-        self.console.print('=========>{} nucleotides to be erroneous in sequencing'.format(seq_err_num))
+        self.console.print('============>There are {} nucleotide errors during sequencing'.format(seq_err_num))
         err_lin_ids = rannum().uniform(low=0, high=seq_nt_num, num=seq_err_num, use_seed=True, seed=1)
         # print(err_lin_ids)
         arr_err_pos = []# [[row1, col1], [row2, col2], ...]
@@ -90,8 +92,8 @@ class Error:
         pseudo_nums = rannum().uniform(low=0, high=3, num=seq_err_num, use_seed=False)
         # print(pseudo_nums)
         seq_err_num_simu_etime = time.time()
-        self.console.print('=========>time for determining sequencing error numbers  {time:.3f}s'.format(time=seq_err_num_simu_etime - seq_err_num_simu_stime))
-        self.console.print('=========>assigning sequencing errors starts...')
+        self.console.print('=========>Time for determining sequencing errors: {time:.3f}s'.format(time=seq_err_num_simu_etime - seq_err_num_simu_stime))
+        self.console.print('=========>Sequencing error Assignment starts')
         seq_err_assign_stime = time.time()
         data_seq['read'] = data_seq.apply(lambda x: list(x['read']), axis=1)
         for pos_err, pseudo_num in zip(arr_err_pos, pseudo_nums):
@@ -109,13 +111,60 @@ class Error:
         del arr_err_pos
         del pseudo_nums
         seq_err_assign_etime = time.time()
-        self.console.print('=========>time for assigning sequencing errors {time:.2f}s'.format(time=seq_err_assign_etime - seq_err_assign_stime))
+        self.console.print('=========>Time for assigning sequencing errors: {time:.2f}s'.format(time=seq_err_assign_etime - seq_err_assign_stime))
         data_seq['read'] = data_seq.apply(lambda x: ''.join(x['read']), axis=1)
+        if res2p['seq_deletion']:
+            data_seq['read'] = data_seq['read'].apply(lambda x: self.deletion(read=x, del_rate=res2p['seq_del_rate']))
+        if res2p['seq_insertion']:
+            data_seq['read'] = data_seq['read'].apply(lambda x: self.deletion(read=x, del_rate=res2p['seq_ins_rate']))
         res2p['data'] = data_seq.values
         del data_seq
         seq_etime = time.time()
-        self.console.print('=========>sequencing time: {time:.2f}s'.format(time=seq_etime - seq_stime))
+        self.console.print('=========>Sequencing time: {time:.2f}s'.format(time=seq_etime - seq_stime))
         return res2p
+
+    def deletion(self, read, del_rate):
+        num_err_per_read = rannum().binomial(
+            n=len(read), p=del_rate, use_seed=False, seed=False
+        )
+        pos_list = rannum().choice(
+            high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
+        )
+        for _, pos in enumerate(pos_list):
+            read = read[:pos] + read[pos + 1:]
+        return read
+
+    def insertion(self, read, ins_rate):
+        num_err_per_read = rannum().binomial(
+            n=len(read), p=ins_rate, use_seed=False, seed=False
+        )
+        pos_list = rannum().choice(
+            high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
+        )
+        base_list = rannum().uniform(
+            low=0, high=4, num=num_err_per_read, use_seed=False
+        )
+        for i, pos in enumerate(pos_list):
+            dna_map = dnasgl().todict(
+                nucleotides=dnasgl().get(
+                    universal=True,
+                ),
+                reverse=True,
+            )
+            read = read[:pos] + dna_map[base_list[i]] + read[pos:]
+            ### read
+            ### pos, base_list[i], dna_map[base_list[i]], dna_map
+            ### read
+            # 5 3 G {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
+            # TTTTTTTTTGGGCCCGGGAAAAAACCCAAAGGGGGG
+            # TTTTTGTTTTGGGCCCGGGAAAAAACCCAAAGGGGGG
+            # 9 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
+            # CCCTTTCCCTTTGGGTTTGGGTTTCCCGGGAAACCC
+            # CCCTTTCCCATTTGGGTTTGGGTTTCCCGGGAAACCC
+            # 3 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
+            # AAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
+            # AAAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
+        return read
 
     def postableIndexBySameLen(self, seq_len, num_seq):
         nt_ids = [i for i in range(seq_len)]

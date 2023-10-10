@@ -137,10 +137,10 @@ class SingleLocus:
             'seq_sub_spl_number': self.seq_sub_spl_number,
             'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-            'pcr_deletion': True,
-            'pcr_insertion': True,
-            'del_rate': 2.4*10e-6,
-            'ins_rate': 7.1*10e-7,
+            'pcr_deletion': False,
+            'pcr_insertion': False, # False True
+            'pcr_del_rate': 2.4*10e-6,
+            'pcr_ins_rate': 7.1*10e-7,
 
             'verbose': self.verbose,
         }
@@ -214,28 +214,33 @@ class SingleLocus:
 
         ### +++++++++++++++ block: Sequencing: parameters +++++++++++++++
         self.console.print('======>Sequencing starts')
-        # for i, seq_err_i in enumerate(self.seq_errors):
-        #     self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
-        #     seq_params = {
-        #         'data': pcr['data'],
-        #         'seq_sub_spl_rate': self.seq_sub_spl_rate,
-        #         'seq_error': seq_err_i,
-        #         'err_num_met': self.err_num_met,
-        #         'use_seed': self.use_seed,
-        #         'seed': self.seed,
-        #         'verbose': False,
-        #     }
-        #     seq = self.seq(seq_params=seq_params).np()
-        #     self.console.print('=========>Sequencing has completed')
-        #     self.console.print('=========>Reads write to files in FastQ format')
-        #     self.wfastq().togz(
-        #         list_2d=seq['data'],
-        #         sv_fp=self.sv_fastq_fp,
-        #         fn='seq_err_' + str(i),
-        #         symbol='-',
-        #     )
-        #     del seq
-        #     self.console.print('=========>FastQ file is saved')
+        for i, seq_err_i in enumerate(self.seq_errors):
+            self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
+            seq_params = {
+                'data': pcr['data'],
+                'seq_sub_spl_rate': self.seq_sub_spl_rate,
+                'seq_error': seq_err_i,
+                'err_num_met': self.err_num_met,
+                'use_seed': self.use_seed,
+                'seed': self.seed,
+                'verbose': self.verbose,
+
+                'seq_deletion': False,
+                'seq_insertion': False,  # False True
+                'seq_del_rate': 2.4 * 10e-6,
+                'seq_ins_rate': 7.1 * 10e-7,
+            }
+            seq = self.seq(seq_params=seq_params).np()
+            self.console.print('=========>Sequencing has completed')
+            self.console.print('=========>Reads write to files in FastQ format')
+            self.wfastq().togz(
+                list_2d=seq['data'],
+                sv_fp=self.sv_fastq_fp,
+                fn='seq_err_' + str(i),
+                symbol='-',
+            )
+            del seq
+            self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
         return
 
