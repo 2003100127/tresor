@@ -10,7 +10,7 @@ import time
 import numpy as np
 from phylotres.library.SingleLocus import SingleLocus as simuip
 from phylotres.pcr.Amplify import Amplify as pcr
-from phylotres.seq.Calling import Calling as seq
+from phylotres.sequencing.Calling import Calling as seq
 from phylotres.pcr.Subsampling import Subsampling
 from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.Console import Console
@@ -136,6 +136,11 @@ class SingleLocus:
 
             'seq_sub_spl_number': self.seq_sub_spl_number,
             'seq_sub_spl_rate': self.seq_sub_spl_rate,
+
+            'pcr_deletion': True,
+            'pcr_insertion': True,
+            'del_rate': 2.4*10e-6,
+            'ins_rate': 7.1*10e-7,
 
             'verbose': self.verbose,
         }

@@ -8,7 +8,7 @@ __lab__ = "Cribbslab"
 
 import numpy as np
 from phylotres.pcr.Amplify import Amplify as pcr
-from phylotres.seq.Calling import Calling as seq
+from phylotres.sequencing.Calling import Calling as seq
 from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.file.read.Reader import Reader as pfreader
 from phylotres.util.random.Number import Number as rannum
@@ -311,7 +311,11 @@ class Subsampling:
                             read=read,
                             pcr_error=pcr_dict['pcr_error'],
                         )
-                        read_cache[k_] = read
+                    if pcr_dict['pcr_deletion']:
+                        read = self.deletion(read=read, del_rate=pcr_dict['del_rate'])
+                    if pcr_dict['pcr_deletion']:
+                        read = self.insertion(read=read, ins_rate=pcr_dict['ins_rate'])
+                    read_cache[k_] = read
                 # print(read_cache)
                 res_data.append([
                     read,
@@ -707,9 +711,9 @@ class Subsampling:
             read = read[:pos] + read[pos + 1:]
         return read
 
-    def insertion(self, read, pcr_error):
+    def insertion(self, read, ins_rate):
         num_err_per_read = rannum().binomial(
-            n=len(read), p=pcr_error, use_seed=False, seed=False
+            n=len(read), p=ins_rate, use_seed=False, seed=False
         )
         pos_list = rannum().choice(
             high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,

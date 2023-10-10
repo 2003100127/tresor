@@ -6,7 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-from phylotres.seq.Error import Error as seqerr
+from phylotres.sequencing.Error import Error as seqerr
 from phylotres.util.random.Sampling import Sampling as ranspl
 
 
