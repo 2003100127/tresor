@@ -49,6 +49,7 @@ class SingleLocus:
             seq_sub_spl_rate=1/3,
 
             verbose=True,
+            **kwargs,
     ):
         self.seq_num = seq_num
         self.seq_len = seq_len
@@ -77,6 +78,9 @@ class SingleLocus:
         self.seq = seq
         self.wfastq = wfastq
         self.subsampling = Subsampling()
+
+        self.kwargs = kwargs
+
         self.console = Console()
         self.console.verbose = verbose
         self.verbose = verbose
@@ -98,6 +102,7 @@ class SingleLocus:
             is_sv_adapter_lib=is_sv_adapter_lib,
             is_sv_spacer_lib=is_sv_spacer_lib,
             verbose=self.verbose,
+            seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
         self.console.print('===>Sequencing library has been generated')
 
@@ -260,11 +265,15 @@ if __name__ == "__main__":
             },
             'seq': 100,
         },
+        seq_params={
+            'custom': 'AAGC',
+            'custom_1': 'A',
+        },
         seq_num=50,
         seq_len=100,
         working_dir=to('data/simu/'),
-        # fasta_cdna_fpn=False,
-        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
+        fasta_cdna_fpn=False,
+        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         is_sv_umi_lib=True,
         is_sv_seq_lib=True,
@@ -272,7 +281,8 @@ if __name__ == "__main__":
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
         # condis=['umi'],
-        condis=['umi', 'seq'],
+        # condis=['umi', 'seq'],
+        condis=['umi', 'custom', 'seq', 'custom_1'],
         sim_thres=3,
         permutation=0,
 
@@ -283,12 +293,12 @@ if __name__ == "__main__":
         pcr_num=10,
         err_num_met='nbinomial',
         seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
-        seq_sub_spl_number=20000, # None
+        seq_sub_spl_number=200, # None
         seq_sub_spl_rate=0.333,
         use_seed=True,
         seed=1,
 
-        verbose=True,
+        verbose=False, # True
 
         sv_fastq_fp=to('data/simu/'),
     )
