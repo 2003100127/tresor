@@ -204,6 +204,8 @@ class SingleLocus:
         pcr = self.pcr(pcr_params=pcr_ampl_params).np()
         # print(pcr.keys())
         self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
+        print(pcr['data'])
+        print(pcr['data'].shape)
 
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
         # print(pcr['data'])

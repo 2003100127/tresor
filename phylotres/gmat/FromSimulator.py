@@ -78,7 +78,7 @@ class fromSimulator:
             df = rob.conversion.rpy2py(a)
             df_cells = rob.conversion.rpy2py(b)
             df_genes = rob.conversion.rpy2py(c)
-        df.columns = ['Cell_' + str(i) for i in range(10)]
+        df.columns = ['Cell_' + str(i) for i in range(self.num_cells)]
         df = df.T
         return df, df_cells, df_genes
 

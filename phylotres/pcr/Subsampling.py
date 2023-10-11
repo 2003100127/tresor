@@ -145,8 +145,11 @@ class Subsampling:
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using the PCR tree')
         self.console.print('======>Read PCR amplified reads')
-        umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
-        # print(umi_map)
+        df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
+        # umi_map = df_seq_lib[0].to_dict()
+        import pandas as pd
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
+        print(umi_map)
 
         self.console.print('======>Sampling reads to be sequenced')
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
@@ -182,12 +185,14 @@ class Subsampling:
         ### len(spl_data)
         # num_reads_for_sequencing
         spl_id_map = tactic6(spl_data)
+        # print(spl_id_map)
         ### spl_id_map
         # {'23_1_2_5_6_8': 'pcr-8', '6_3_4_5_8': 'pcr-8', '13_1_2_5_7': 'pcr-7', ..., '34_1_2_4': 'pcr-4', '43_1_8': 'pcr-8'}
         ### len(spl_id_map)
         # num_reads_for_sequencing
         trees = spl_data[:, 0].ravel().tolist()
         ### trees
+        # print(trees)
         # ['23_1_2_5_6_8', '6_3_4_5_8', '13_1_2_5_7', ... '34_1_2_4', '43_1_8']
         ### len(trees)
         # num_reads_for_sequencing
@@ -199,6 +204,7 @@ class Subsampling:
             # print(tree, tree.split('_')[0])
         for tree in trees:
             mol_map_to_all_its_pcr_trees[tree.split('_')[0]].append(tree.split('_')[1:])
+        # print(mol_map_to_all_its_pcr_trees)
         ### mol_map_to_all_its_pcr_trees
         # {'23': [['1', '2', '5', '6', '8'], ['1', '3', '4', '8', '9', '10'],
         # ['1', '4', '7', '9'], ['2', '3', '4', '5', '7', '9'], ['1', '3', '6'],
@@ -215,6 +221,7 @@ class Subsampling:
             mol_sub_tree_map[k] = []
             for j in v:
                 mol_sub_tree_map[k].append('_'.join(j))
+        # print(mol_sub_tree_map)
         ### mol_sub_tree_map
         # {'23': ['1_2_5_6_8', '1_3_4_8_9_10', '1_4_7_9', '2_3_4_5_7_9',
         # '1_3_6', '1_2_4_7_8'], '6': ['3_4_5_8', '2_3_4_5_6_10', '5_6_7',
@@ -230,7 +237,9 @@ class Subsampling:
             # ...
             # 29 ['2_5_9_10', '1_2_3_5_6_8_10', '3_4_7_9_10']
             # 39 ['6_7_9']
-            read = umi_map[int(k)]
+
+            read = umi_map[k]
+            # read = umi_map[int(k)]
             read_cache = {}
             for sub_tree in sub_trees:
                 ### k, sub_tree

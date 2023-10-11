@@ -118,6 +118,8 @@ class SingleCell:
             verbose=self.verbose,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
+        print(self.sequencing_library)
+        print(len(self.sequencing_library))
         self.console.print('===>Sequencing library has been generated')
 
     def generate(self, ):
@@ -215,8 +217,8 @@ class SingleCell:
         self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
-        # print(pcr['data'])
-        # print(pcr['data'].shape)
+        print(pcr['data'])
+        print(pcr['data'].shape)
         if pcr_ampl_params['err_route'] == 'tree':
             pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
         # print(pcr['data'])
@@ -302,8 +304,8 @@ if __name__ == "__main__":
         # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         R_root='D:/Programming/R/R-4.3.1/',
-        num_genes=10,
-        num_cells=10,
+        num_genes=6,
+        num_cells=6,
         simulator='SPsimSeqFixSM',
 
         is_sv_umi_lib=True,
@@ -313,7 +315,8 @@ if __name__ == "__main__":
         is_sv_spacer_lib=True,
         # condis=['umi'],
         # condis=['umi', 'seq'],
-        condis=['barcode', 'custom', 'umi', 'custom_1'],
+        condis=['barcode', 'umi'],
+        # condis=['barcode', 'custom', 'umi', 'custom_1'],
         sim_thres=3,
         permutation=0,
 
@@ -329,7 +332,7 @@ if __name__ == "__main__":
         use_seed=True,
         seed=1,
 
-        verbose=True, # True
+        verbose=False, # True False
 
         sv_fastq_fp=to('data/simu/'),
     )
