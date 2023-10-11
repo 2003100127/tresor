@@ -370,6 +370,7 @@ class SingleCell:
                         custom_mark = '_' + custom_mark_suffix if custom_mark_suffix != 'alone' else ''
                         self.console.print("============>Custom-designed condition {}: {}".format(custom_mark_id, 'custom' + custom_mark))
                         read_struct_ref['custom' + custom_mark] = self.kwargs['seq_params']['custom' + custom_mark]
+
                 read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
                 sequencing_library.append([
                     self.paste([*read_struct_pfd_order.values()]),

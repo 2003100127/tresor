@@ -49,6 +49,7 @@ class Gene:
             is_sv_adapter_lib=True,
             is_sv_spacer_lib=True,
             verbose=True,
+            **kwargs,
     ):
         self.pfwriter = pfwriter()
         self.ranspl = ranspl()
@@ -95,6 +96,9 @@ class Gene:
         ]).astype(int)
         self.gspl_arr = self.gspl_arr[self.gspl_arr[:, 0] == 0]
         print(self.gspl_arr)
+
+        self.kwargs = kwargs
+        print(self.kwargs)
 
         self.console = Console()
         self.console.verbose = verbose
@@ -330,6 +334,13 @@ class Gene:
                         )
                         read_struct_ref['spacer' + spacer_mark] = spacer_i
 
+                ### +++++++++++++++ block: Custom-designed sequences +++++++++++++++
+                if 'custom' in condi_keys:
+                    for custom_mark_id, custom_mark_suffix in enumerate(condi_map['custom']):
+                        custom_mark = '_' + custom_mark_suffix if custom_mark_suffix != 'alone' else ''
+                        self.console.print("============>Custom-designed condition {}: {}".format(custom_mark_id, 'custom' + custom_mark))
+                        read_struct_ref['custom' + custom_mark] = self.kwargs['seq_params']['custom' + custom_mark]
+
                 read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
                 sequencing_library.append([
                     self.paste([*read_struct_pfd_order.values()]),
@@ -374,14 +385,20 @@ if __name__ == "__main__":
             'spacer': 10,
             'spacer_1': 10,
         },
+        seq_params={
+            'custom': 'BAGC',
+            'custom_1': 'V',
+        },
         is_seed=True,
 
         working_dir=to('data/simu/'),
-        # fasta_cdna_fpn=False,
-        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
+        fasta_cdna_fpn=False,
+        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
-        condis=['umi', 'seq'],
+        # condis=['umi', 'seq'],
+        condis=['umi', 'custom', 'seq', 'custom_1'],
+
         # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
