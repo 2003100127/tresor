@@ -137,8 +137,8 @@ class SingleLocus:
             'seq_sub_spl_number': self.seq_sub_spl_number,
             'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-            'pcr_deletion': False,
-            'pcr_insertion': False, # False True
+            'pcr_deletion': True,
+            'pcr_insertion': True, # False True
             'pcr_del_rate': 2.4*10e-6,
             'pcr_ins_rate': 7.1*10e-7,
 
@@ -218,15 +218,18 @@ class SingleLocus:
             self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
             seq_params = {
                 'data': pcr['data'],
-                'seq_sub_spl_rate': self.seq_sub_spl_rate,
+
                 'seq_error': seq_err_i,
                 'err_num_met': self.err_num_met,
                 'use_seed': self.use_seed,
                 'seed': self.seed,
                 'verbose': self.verbose,
 
-                'seq_deletion': False,
-                'seq_insertion': False,  # False True
+                'seq_sub_spl_number': self.seq_sub_spl_number,
+                'seq_sub_spl_rate': self.seq_sub_spl_rate,
+
+                'seq_deletion': True,
+                'seq_insertion': True,  # False True
                 'seq_del_rate': 2.4 * 10e-6,
                 'seq_ins_rate': 7.1 * 10e-7,
             }
@@ -280,7 +283,7 @@ if __name__ == "__main__":
         pcr_num=10,
         err_num_met='nbinomial',
         seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
-        seq_sub_spl_number=300,
+        seq_sub_spl_number=20000, # None
         seq_sub_spl_rate=0.333,
         use_seed=True,
         seed=1,

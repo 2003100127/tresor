@@ -39,7 +39,7 @@ class Error:
             return func(res2p)
         return indexing
 
-    def postable(self, res2p, kind='index_by_same_len'):
+    def postable(self, res2p, kind='index_by_lambda'):
         # print(res2p.keys())
         seq_stime = time.time()
         data_seq = pd.DataFrame(res2p['data_spl'], columns=['read', 'sam_id', 'source'])
@@ -48,7 +48,7 @@ class Error:
         self.console.print('=========>There are {} reads to be sequenced'.format(data_seq.shape[0]))
         self.console.print('=========>The position table construction starts')
         pcr_postable_stime = time.time()
-        print(data_seq['read'][0])
+        # print(data_seq['read'][0])
         if kind == 'index_by_same_len':
             seq_pos_ids, seq_ids = self.postableIndexBySameLen(
                 seq_len=len(data_seq['read'][0]),
@@ -97,6 +97,8 @@ class Error:
         seq_err_assign_stime = time.time()
         data_seq['read'] = data_seq.apply(lambda x: list(x['read']), axis=1)
         for pos_err, pseudo_num in zip(arr_err_pos, pseudo_nums):
+            # print(pos_err[0])
+            # print(pos_err[1])
             pcr_err_base = data_seq.loc[pos_err[0], 'read'][pos_err[1]]
             dna_map = dnasgl().todict(
                 nucleotides=dnasgl().getEleTrimmed(
@@ -179,29 +181,6 @@ class Error:
         for i in [x.name] * l:
             ids.append(i)
         return ids, pos_ids
-
-    def epos(self, err_lin_ids, t):
-        pos_err = []
-        for i in err_lin_ids:
-            cc = 0
-            for id, j in enumerate(t):
-                cc += j
-                if cc >= i:
-                    # print(cc, i)
-                    pos_err.append([id, (j - 1) - (cc % i)])
-                    break
-        return pos_err
-
-    def tactic1(self, arr_2d):
-        result = {}
-        len_arr = len(arr_2d[0])
-        if len_arr == 2:
-            for item in arr_2d:
-                result[item[0]] = item[1]
-        else:
-            for item in arr_2d:
-                result[item[0]] = item[1:]
-        return result
 
     def todict(self, bases, reverse=False):
         aa_dict = {}

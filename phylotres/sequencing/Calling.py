@@ -16,7 +16,10 @@ class Calling:
         self.seq_params = seq_params
 
     def np(self, ):
-        self.seq_params['spl_num'] = int(self.seq_params['data'].shape[0] * self.seq_params['seq_sub_spl_rate'])
+        if self.seq_params['seq_sub_spl_number']:
+            self.seq_params['spl_num'] = self.seq_params['seq_sub_spl_number']
+        else:
+            self.seq_params['spl_num'] = int(self.seq_params['data'].shape[0] * self.seq_params['seq_sub_spl_rate'])
         res_flow = self.flow(params=self.seq_params)
         # print(res_flow)
         return res_flow
