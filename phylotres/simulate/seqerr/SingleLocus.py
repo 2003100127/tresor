@@ -51,10 +51,15 @@ class SingleLocus:
             verbose=True,
             **kwargs,
     ):
+        self.len_params = len_params
         self.seq_num = seq_num
         self.seq_len = seq_len
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
+        self.is_sv_primer_lib = is_sv_primer_lib
+        self.is_sv_adapter_lib = is_sv_adapter_lib
+        self.is_sv_spacer_lib = is_sv_spacer_lib
+
         self.working_dir = working_dir
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.condis = condis
@@ -88,19 +93,19 @@ class SingleLocus:
         ### +++++++++++++++ block: generate sequencing library +++++++++++++++
         self.console.print('===>Sequencing library generation starts')
         self.sequencing_library = simuip(
-            len_params=len_params,
-            fasta_cdna_fpn=fasta_cdna_fpn,
-            seq_num=seq_num,
-            is_seed=use_seed,
-            working_dir=working_dir,
-            condis=condis,
-            sim_thres=sim_thres,
-            permutation=permutation,
-            is_sv_umi_lib=is_sv_umi_lib,
-            is_sv_seq_lib=is_sv_seq_lib,
-            is_sv_primer_lib=is_sv_primer_lib,
-            is_sv_adapter_lib=is_sv_adapter_lib,
-            is_sv_spacer_lib=is_sv_spacer_lib,
+            len_params=self.len_params,
+            fasta_cdna_fpn=self.fasta_cdna_fpn,
+            seq_num=self.seq_num,
+            is_seed=self.use_seed,
+            working_dir=self.working_dir,
+            condis=self.condis,
+            sim_thres=self.sim_thres,
+            permutation=self.permutation,
+            is_sv_umi_lib=self.is_sv_umi_lib,
+            is_sv_seq_lib=self.is_sv_seq_lib,
+            is_sv_primer_lib=self.is_sv_primer_lib,
+            is_sv_adapter_lib=self.is_sv_adapter_lib,
+            is_sv_spacer_lib=self.is_sv_spacer_lib,
             verbose=self.verbose,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()

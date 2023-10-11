@@ -12,7 +12,7 @@ from phylotres.gspl.FromSimulator import fromSimulator
 from phylotres.path import to
 
 
-class Bulk:
+class Gene:
 
     def __init__(self, ):
         self.permutation_num = 1

@@ -32,7 +32,7 @@ class SingleCell:
     def __init__(
             self,
             len_params,
-            R_root,
+            R_root=None,
             num_genes=10,
             num_cells=10,
             simulator='SPsimSeqFixSM',
@@ -395,6 +395,8 @@ if __name__ == "__main__":
         R_root='D:/Programming/R/R-4.3.1/',
         num_genes=10,
         num_cells=10,
+        simulator='SPsimSeqFixSM',
+
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,
