@@ -36,8 +36,11 @@ class Subsampling:
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_minimum')
         self.console.print('======>Read PCR amplified reads')
-        umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
-        # print(umi_map)
+        df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
+        # umi_map = df_seq_lib[0].to_dict()
+        import pandas as pd
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
+        print(umi_map)
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
 
@@ -69,7 +72,7 @@ class Subsampling:
             mol_id = key.split('_')[0]
             k = key.split('_')[1:]
             # print('kkk', key, k)
-            read = umi_map[int(mol_id)]
+            read = umi_map[mol_id]
             # print(read)
             for i in range(len(k)):
                 # print('id', i)
@@ -93,8 +96,11 @@ class Subsampling:
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_complete')
         self.console.print('======>Read PCR amplified reads')
-        umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
-        # print(umi_map)
+        df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
+        # umi_map = df_seq_lib[0].to_dict()
+        import pandas as pd
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
+        print(umi_map)
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
 
@@ -122,7 +128,7 @@ class Subsampling:
             mol_id = key.split('_')[0]
             k = key.split('_')[1:]
             # print('kkk', key, k)
-            read = umi_map[int(mol_id)]
+            read = umi_map[mol_id]
             # print(read)
             for i in range(len(k)):
                 # print('id', i)
@@ -518,7 +524,10 @@ class Subsampling:
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using the PCR tree')
         self.console.print('======>Read PCR amplified reads')
-        umi_map = pfreader().generic(pcr_dict['read_lib_fpn'])[0].to_dict()
+        df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
+        # umi_map = df_seq_lib[0].to_dict()
+        import pandas as pd
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
         # print(umi_map)
 
         self.console.print('======>Sampling reads to be sequenced')
@@ -603,7 +612,7 @@ class Subsampling:
             # ...
             # 29 [['2', '5', '9', '10'], ['1', '2', '3', '5', '6', '8', '10'], ['3', '4', '7', '9', '10']]
             # 39 [['6', '7', '9']]
-            read = umi_map[int(k)]
+            read = umi_map[str(k)]
             # read
             # CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC
             read_cache_table = [[] for _ in range(len(trees))]
@@ -822,7 +831,7 @@ class Subsampling:
                     spl_id_map[str(k) + '_' + '_'.join(tree)] if read_cache_table[i] != [] else 'init',  # source
                 ])
             # print('res_data {}'.format(res_data))
-        print(res_data)
+        # print(res_data)
         # print(len(res_data))
         return np.array(res_data)
 
