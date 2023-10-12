@@ -16,14 +16,13 @@ from phylotres.util.sequence.fastq.Write import write as wfastq
 from phylotres.util.Console import Console
 
 
-class SingleCell:
+class Gene:
 
     def __init__(
             self,
+            gspl,
+
             len_params,
-            num_genes,
-            num_cells,
-            simulator,
             seq_num,
             seq_len,
             is_sv_umi_lib,
@@ -48,7 +47,6 @@ class SingleCell:
             sv_fastq_fp,
 
             seq_errors,
-            R_root=None,
             seq_sub_spl_number=None,
             seq_sub_spl_rate=1/3,
 
@@ -60,16 +58,17 @@ class SingleCell:
         self.seq_len = seq_len
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
+        self.is_sv_primer_lib = is_sv_primer_lib
+        self.is_sv_adapter_lib = is_sv_adapter_lib
+        self.is_sv_spacer_lib = is_sv_spacer_lib
+
         self.working_dir = working_dir
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.condis = condis
         self.sim_thres = sim_thres
         self.permutation = permutation
 
-        self.R_root = R_root
-        self.simulator = simulator
-        self.num_genes = num_genes
-        self.num_cells = num_cells
+        self.gspl = gspl
 
         self.err_route = err_route
         self.ampl_rate = ampl_rate
@@ -98,23 +97,20 @@ class SingleCell:
         ### +++++++++++++++ block: generate sequencing library +++++++++++++++
         self.console.print('===>Sequencing library generation starts')
         self.sequencing_library = bulksimulib(
-            len_params=len_params,
-            R_root=self.R_root,
-            num_genes=self.num_genes,
-            num_cells=self.num_cells,
-            simulator=self.simulator,
-            fasta_cdna_fpn=fasta_cdna_fpn,
-            seq_num=seq_num,
-            is_seed=use_seed,
-            working_dir=working_dir,
-            condis=condis,
-            sim_thres=sim_thres,
-            permutation=permutation,
-            is_sv_umi_lib=is_sv_umi_lib,
-            is_sv_seq_lib=is_sv_seq_lib,
-            is_sv_primer_lib=is_sv_primer_lib,
-            is_sv_adapter_lib=is_sv_adapter_lib,
-            is_sv_spacer_lib=is_sv_spacer_lib,
+            gspl=self.gspl,
+            len_params=self.len_params,
+            fasta_cdna_fpn=self.fasta_cdna_fpn,
+            seq_num=self.seq_num,
+            is_seed=self.use_seed,
+            working_dir=self.working_dir,
+            condis=self.condis,
+            sim_thres=self.sim_thres,
+            permutation=self.permutation,
+            is_sv_umi_lib=self.is_sv_umi_lib,
+            is_sv_seq_lib=self.is_sv_seq_lib,
+            is_sv_primer_lib=self.is_sv_primer_lib,
+            is_sv_adapter_lib=self.is_sv_adapter_lib,
+            is_sv_spacer_lib=self.is_sv_spacer_lib,
             verbose=self.verbose,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
@@ -272,8 +268,19 @@ class SingleCell:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    p = SingleCell(
+    from phylotres.gspl.FromSimulator import fromSimulator
+
+    gspl = fromSimulator(
+        R_root='D:/Programming/R/R-4.3.1/',
+        num_samples=2,
+        num_genes=20,
+        simulator='spsimseq',
+    ).run()
+
+    p = Gene(
         # initial sequence generation
+        gspl=gspl,
+
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,
@@ -303,20 +310,14 @@ if __name__ == "__main__":
         fasta_cdna_fpn=False,
         # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
-        R_root='D:/Programming/R/R-4.3.1/',
-        num_genes=6,
-        num_cells=6,
-        simulator='SPsimSeqFixSM',
-
         is_sv_umi_lib=True,
         is_sv_seq_lib=True,
         is_sv_primer_lib=True,
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
         # condis=['umi'],
-        # condis=['umi', 'seq'],
-        condis=['barcode', 'umi'],
-        # condis=['barcode', 'custom', 'umi', 'custom_1'],
+        condis=['umi', 'seq'],
+        # condis=['umi', 'custom', 'seq', 'custom_1'],
         sim_thres=3,
         permutation=0,
 

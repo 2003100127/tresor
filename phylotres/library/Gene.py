@@ -23,18 +23,14 @@ from phylotres.read.spacer.Design import Design as dspacer
 from phylotres.util.Console import Console
 from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6
-from phylotres.gspl.FromSimulator import fromSimulator
 
 
 class Gene:
 
     def __init__(
             self,
-            R_root,
+            gspl,
             len_params,
-            num_genes=10,
-            num_samples=2,
-            simulator='SPsimSeqFixSM',
 
             fasta_cdna_fpn=False,
             is_seed=False,
@@ -56,6 +52,7 @@ class Gene:
         self.rannum = rannum()
         self.dnasgl = dnasgl()
         self.crtfolder = crtfolder()
+        self.gspl = gspl
         self.dumi = dumi
         self.dseq = dseq
         self.dprimer = dprimer
@@ -63,11 +60,7 @@ class Gene:
         self.dspacer = dspacer
         self.working_dir = working_dir
         self.len_params = len_params
-        self.simulator = simulator
-        self.num_genes = num_genes
-        self.num_samples = num_samples
         self.is_seed = is_seed
-        self.R_root = R_root
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
@@ -80,12 +73,7 @@ class Gene:
         self.dna_map = self.dnasgl.todict(nucleotides=self.dnasgl.get(universal=True), reverse=True)
         self.crtfolder.osmkdir(working_dir)
 
-        self.gspl = fromSimulator(
-            R_root=self.R_root,
-            simulator=self.simulator,
-            num_genes=self.num_genes,
-            num_samples=self.num_samples,
-        ).run()
+
         self.gene_map = {k: v for k, v in enumerate(self.gspl.index)}
         # print(self.gene_map)
         csr_ = coo_matrix(self.gspl)
@@ -361,12 +349,17 @@ class Gene:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    p = Gene(
+    from phylotres.gspl.FromSimulator import fromSimulator
+
+    gspl = fromSimulator(
         R_root='D:/Programming/R/R-4.3.1/',
         num_samples=2,
         num_genes=20,
-        simulator='SPsimSeqFixSM',
+        simulator='spsimseq',
+    ).run()
 
+    p = Gene(
+        gspl=gspl,
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,

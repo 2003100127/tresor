@@ -27,13 +27,13 @@ class fromSimulator:
         self.console = Console()
         self.console.verbose = verbose
 
-    def SPsimSeqFixSM(self, ):
+    def spsimseq(self, ):
         import os
         os.environ['R_HOME'] = self.R_root
         import rpy2.robjects as rob
         from rpy2.robjects import pandas2ri
         from rpy2.robjects.conversion import localconverter
-        self.console.print('=========>SPsimSeqFixSM is being used')
+        self.console.print('=========>spsimseq is being used')
         res = rob.r(
             """
             suppressPackageStartupMessages(library(SPsimSeq))
@@ -59,14 +59,14 @@ class fromSimulator:
             return (data.frame(sim.data.bulk1$counts))
             """
         )
-        self.console.print('=========>SPsimSeqFixSM completes simulation')
+        self.console.print('=========>spsimseq completes simulation')
         with localconverter(rob.default_converter + pandas2ri.converter):
             df = rob.conversion.rpy2py(res)
         return df.T
 
     def tool(self, ):
         return {
-            'SPsimSeqFixSM': self.SPsimSeqFixSM()
+            'spsimseq': self.spsimseq()
         }
 
     def run(self, ):
