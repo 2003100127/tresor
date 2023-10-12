@@ -6,7 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-from phylotres.simulate.seqerr.SingleLocus import SingleLocus as seqerrsl
+from phylotres.scenario.seqerr.SingleLocus import SingleLocus as seqerrsl
 
 
 def simu_seq_err(

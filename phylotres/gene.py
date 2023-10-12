@@ -6,7 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-from phylotres.simulate.seqerr.Gene import Gene as seqerr
+from phylotres.scenario.seqerr.Gene import Gene as seqerr
 
 
 def simu_seq_err(
