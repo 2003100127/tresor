@@ -318,7 +318,7 @@ if __name__ == "__main__":
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='minnow', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        err_route='mutation_table_complete', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinomial',
