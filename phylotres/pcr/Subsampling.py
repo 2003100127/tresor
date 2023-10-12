@@ -39,7 +39,7 @@ class Subsampling:
         df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
-        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
         print(umi_map)
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
@@ -99,7 +99,7 @@ class Subsampling:
         df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
-        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
         print(umi_map)
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
@@ -154,8 +154,12 @@ class Subsampling:
         df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
-        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
-        # print(umi_map)
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
+        print(umi_map)
+        #@@ single locus
+        # {0: 'GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC', 1: 'GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT',
+        # 2: 'AAATTTGGGCCCGGGAAAGGGCCCAAAAAAGGGAAA', ...,
+        # 48: 'CCCAAAAAAGGGCCCAAAGGGCCCTTTGGGGGGCCC', 49: 'TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC'}
         #@@ single cell
         # {'0*c*0*g*1*': 'GAAATCATGTAGTTCGGGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG',
         # '0*c*0*g*4*': 'GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAAAAAAAA',
@@ -527,7 +531,7 @@ class Subsampling:
         df_seq_lib = pfreader().generic(pcr_dict['read_lib_fpn'])
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
-        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
+        umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
         # print(umi_map)
 
         self.console.print('======>Sampling reads to be sequenced')

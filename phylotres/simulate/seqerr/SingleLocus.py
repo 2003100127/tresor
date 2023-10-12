@@ -287,15 +287,15 @@ if __name__ == "__main__":
         is_sv_primer_lib=True,
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
-        # condis=['umi'],
+        condis=['umi'],
         # condis=['umi', 'seq'],
-        condis=['umi', 'custom', 'seq', 'custom_1'],
+        # condis=['umi', 'custom', 'seq', 'custom_1'],
         sim_thres=3,
         permutation=0,
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='minnow', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        err_route='err1d', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinomial',
