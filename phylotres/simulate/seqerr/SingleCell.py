@@ -109,8 +109,8 @@ class SingleCell:
             verbose=self.verbose,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
-        print(self.sequencing_library)
-        print(len(self.sequencing_library))
+        # print(self.sequencing_library)
+        # print(len(self.sequencing_library))
         self.console.print('===>Sequencing library has been generated')
 
     def generate(self, ):
@@ -157,14 +157,13 @@ class SingleCell:
             'verbose': self.verbose,
         }
         # pcr_ampl_params['data']
-        # [['GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC' '0' 'init']
-        #  ['GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT' '1' 'init']
-        #  ['AAATTTGGGCCCGGGAAAGGGCCCAAAAAAGGGAAA' '2' 'init']
-        #  ...
-        #  ['CCCAAAAAAGGGCCCAAAGGGCCCTTTGGGGGGCCC' '48' 'init']
-        #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
-        # print(pcr_ampl_params['data'][:, 1:3])
-        # print(pcr_ampl_params)
+        # single-cell
+        # [['GAAATCATGTAGTTCGGGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG' '0*c*0*g*1*' 'init']
+        #  ['GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAAAAAAAA' '0*c*0*g*4*' 'init']
+        #  ['GAAATCATGTAGTTCGAAACCCGGGGGGCCCTTTCCCTTTGGGAAATTTCCC' '1*c*0*g*4*' 'init']
+        # ...
+        # ['CGCGTTAGTAATTCATAAAGGGGGGCCCAAACCCGGGGGGGGGGGGTTTCCC' '221*c*1*g*4*' 'init']
+        #  ['CGCGTTAGTAATTCATAAATTTCCCGGGCCCCCCGGGAAAGGGCCCCCCTTT' '222*c*1*g*4*' 'init']]
         if pcr_ampl_params['err_route'] == 'tree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'minnow':
@@ -184,7 +183,7 @@ class SingleCell:
                 vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
                 pcr_ampl_params['data'][:, 1:3],
             ))
-            print(pcr_ampl_params['data'])
+            print('jfsun',pcr_ampl_params['data'])
             # pcr_ampl_params['data']
             # [['36' '0' 'init']
             #  ['36' '1' 'init']
@@ -208,8 +207,8 @@ class SingleCell:
         self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
-        print(pcr['data'])
-        print(pcr['data'].shape)
+        # print(pcr['data'])
+        # print(pcr['data'].shape)
         if pcr_ampl_params['err_route'] == 'tree':
             pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
         # print(pcr['data'])
@@ -268,8 +267,8 @@ if __name__ == "__main__":
     gmat, _, _ = fromSimulator(
         simulator='spsimseq',
         R_root='D:/Programming/R/R-4.3.1/',
-        num_genes=10,
-        num_cells=10,
+        num_genes=6,
+        num_cells=2,
     ).run()
 
     p = SingleCell(

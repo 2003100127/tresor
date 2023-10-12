@@ -149,7 +149,14 @@ class Subsampling:
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
         umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1]).to_dict()
-        print(umi_map)
+        # print(umi_map)
+        # single cell
+        # {'0*c*0*g*1*': 'GAAATCATGTAGTTCGGGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG',
+        # '0*c*0*g*4*': 'GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAAAAAAAA',
+        # '1*c*0*g*4*': 'GAAATCATGTAGTTCGAAACCCGGGGGGCCCTTTCCCTTTGGGAAATTTCCC',
+        # ...
+        # '221*c*1*g*4*': 'CGCGTTAGTAATTCATAAAGGGGGGCCCAAACCCGGGGGGGGGGGGTTTCCC',
+        # '222*c*1*g*4*': 'CGCGTTAGTAATTCATAAATTTCCCGGGCCCCCCGGGAAAGGGCCCCCCTTT'}
 
         self.console.print('======>Sampling reads to be sequenced')
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
@@ -168,13 +175,19 @@ class Subsampling:
             seed=pcr_dict['seed'],
             replace=False,
         )
+        # print(spl_ids)
         ### spl_ids
+        #@@ single locus
         # [ 5221 12317 12284 ...  3697  7994  7549]
+        #@@ single cell
+        # [  5587  59571  16821 ... 5900  75148]
         ### len(spl_ids)
         # num_reads_for_sequencing
         spl_data = pcr_dict['data'][spl_ids]
         self.console.print('=========>{} reads selected for sequencing'.format(num_reads_for_sequencing))
+        # print(spl_data)
         ### spl_data
+        #@@ single locus
         # [['23_1_2_5_6_8' 'pcr-8']
         #  ['6_3_4_5_8' 'pcr-8']
         #  ['13_1_2_5_7' 'pcr-7']
@@ -182,18 +195,31 @@ class Subsampling:
         #  ['13_3_4_5_7_9' 'pcr-9']
         #  ['4_3_7_9' 'pcr-9']
         #  ['47_2_5_6_7_9' 'pcr-9']]
+        #@@ single cell
+        # [['77*c*1*g*4*_2_4_5_6_7' 'pcr-7']
+        #  ['32*c*1*g*4*_1_2_4_7' 'pcr-7']
+        #  ['196*c*1*g*4*_1' 'pcr-1']
+        # ...
+        #  ['159*c*1*g*4*_1_2_4_5_9' 'pcr-9']
+        #  ['49*c*1*g*4*_2_3_4_5_6_7' 'pcr-7']]
         ### len(spl_data)
         # num_reads_for_sequencing
         spl_id_map = tactic6(spl_data)
         # print(spl_id_map)
         ### spl_id_map
+        #@@ single locus
         # {'23_1_2_5_6_8': 'pcr-8', '6_3_4_5_8': 'pcr-8', '13_1_2_5_7': 'pcr-7', ..., '34_1_2_4': 'pcr-4', '43_1_8': 'pcr-8'}
+        #@@ single cell
+        # {'77*c*1*g*4*_2_4_5_6_7': 'pcr-7', '32*c*1*g*4*_1_2_4_7': 'pcr-7', '196*c*1*g*4*_1': 'pcr-1', ..., '159*c*1*g*4*_1_2_4_5_9': 'pcr-9', '49*c*1*g*4*_2_3_4_5_6_7': 'pcr-7'}
         ### len(spl_id_map)
         # num_reads_for_sequencing
         trees = spl_data[:, 0].ravel().tolist()
         ### trees
         # print(trees)
-        # ['23_1_2_5_6_8', '6_3_4_5_8', '13_1_2_5_7', ... '34_1_2_4', '43_1_8']
+        #@@ single locus
+        # ['23_1_2_5_6_8', '6_3_4_5_8', '13_1_2_5_7', ..., '34_1_2_4', '43_1_8']
+        # @@ single cell
+        # ['77*c*1*g*4*_2_4_5_6_7', '32*c*1*g*4*_1_2_4_7', '196*c*1*g*4*_1', ..., '159*c*1*g*4*_1_2_4_5_9', '49*c*1*g*4*_2_3_4_5_6_7']
         ### len(trees)
         # num_reads_for_sequencing
         self.console.print('=========>Sampled reads contain {} unrepeated PCR amplified molecules'.format(np.unique(trees).size))
@@ -206,6 +232,7 @@ class Subsampling:
             mol_map_to_all_its_pcr_trees[tree.split('_')[0]].append(tree.split('_')[1:])
         # print(mol_map_to_all_its_pcr_trees)
         ### mol_map_to_all_its_pcr_trees
+        #@@ single locus
         # {'23': [['1', '2', '5', '6', '8'], ['1', '3', '4', '8', '9', '10'],
         # ['1', '4', '7', '9'], ['2', '3', '4', '5', '7', '9'], ['1', '3', '6'],
         # ['1', '2', '4', '7', '8']], '6': [['3', '4', '5', '8'], ['2', '3', '4', '5', '6', '10'],
@@ -213,6 +240,11 @@ class Subsampling:
         # ['1', '4', '7', '8', '10'], ['1', '4', '8', '9'], ['6', '7', '9']], ...,
         # '29': [['2', '5', '9', '10'], ['1', '2', '3', '5', '6', '8', '10'],
         # ['3', '4', '7', '9', '10']], '39': [['6', '7', '9']]}
+        # @@ single cell
+        # {'77*c*1*g*4*': [['2', '4', '5', '6', '7'], ['1', '3', '4', '7', '8', '10'],
+        # ['3', '5', '9', '10'], ['1', '2', '3', '5', '6', '7', '10']], '32*c*1*g*4*': [['1', '2', '4', '7'],
+        # ['7', '8', '9', '10']], '196*c*1*g*4*': [['1']], ..., '55*c*1*g*4*': [['2', '3', '8', '9']],
+        # '49*c*1*g*4*': [['2', '3', '4', '5', '6', '7']]}
         ### len(mol_map_to_all_its_pcr_trees)
         # number of unique molecules
 
@@ -223,26 +255,42 @@ class Subsampling:
                 mol_sub_tree_map[k].append('_'.join(j))
         # print(mol_sub_tree_map)
         ### mol_sub_tree_map
+        # @@ single locus
         # {'23': ['1_2_5_6_8', '1_3_4_8_9_10', '1_4_7_9', '2_3_4_5_7_9',
         # '1_3_6', '1_2_4_7_8'], '6': ['3_4_5_8', '2_3_4_5_6_10', '5_6_7',
         # '1_2_4_6_7_9', '1_2_9'], '13': ['1_2_5_7', '1_4_7_8_10', '1_4_8_9',
         # '6_7_9'], ..., '29': ['2_5_9_10', '1_2_3_5_6_8_10', '3_4_7_9_10'], '39': ['6_7_9']}
+        # @@ single cell
+        # {'77*c*1*g*4*': ['2_4_5_6_7', '1_3_4_7_8_10', '3_5_9_10', '1_2_3_5_6_7_10'],
+        #  '32*c*1*g*4*': ['1_2_4_7', '7_8_9_10'], '196*c*1*g*4*': ['1'], ...,
+        #  '55*c*1*g*4*': ['2_3_8_9'], '49*c*1*g*4*': ['2_3_4_5_6_7']}
 
         res_data = []
         for k, sub_trees in mol_sub_tree_map.items():
+            # print(k, sub_trees)
             ### k, sub_trees
+            #@@ single locus
             # 23 ['1_2_5_6_8', '1_3_4_8_9_10', '1_4_7_9', '2_3_4_5_7_9', '1_3_6', '1_2_4_7_8']
             # 6 ['3_4_5_8', '2_3_4_5_6_10', '5_6_7', '1_2_4_6_7_9', '1_2_9']
             # 13 ['1_2_5_7', '1_4_7_8_10', '1_4_8_9', '6_7_9']
             # ...
             # 29 ['2_5_9_10', '1_2_3_5_6_8_10', '3_4_7_9_10']
             # 39 ['6_7_9']
+            #@@ single cell
+            # 77*c*1*g*4* ['2_4_5_6_7', '1_3_4_7_8_10', '3_5_9_10', '1_2_3_5_6_7_10']
+            # 32*c*1*g*4* ['1_2_4_7', '7_8_9_10']
+            # 196*c*1*g*4* ['1']
+            # ...
+            # 55*c*1*g*4* ['2_3_8_9']
+            # 49*c*1*g*4* ['2_3_4_5_6_7']
 
             read = umi_map[k]
             # read = umi_map[int(k)]
             read_cache = {}
             for sub_tree in sub_trees:
+                # print(k, sub_tree)
                 ### k, sub_tree
+                #@@ single locus
                 # 23 1_2_5_6_8
                 # 23 1_3_4_8_9_10
                 # 23 1_4_7_9
@@ -263,11 +311,21 @@ class Subsampling:
                 # 29 1_2_3_5_6_8_10
                 # 29 3_4_7_9_10
                 # 39 6_7_9
+
+                #@@ single cell
+                # 77*c*1*g*4* ['2_4_5_6_7', '1_3_4_7_8_10', '3_5_9_10', '1_2_3_5_6_7_10']
+                # 77*c*1*g*4* 2_4_5_6_7
+                # 77*c*1*g*4* 1_3_4_7_8_10
+                # ...
+                # 49*c*1*g*4* ['2_3_4_5_6_7']
+                # 49*c*1*g*4* 2_3_4_5_6_7
                 if len(sub_tree) > 0:
                     read_id = k + '_' + sub_tree
                 else: # sub_tree can be ''. len('') == 0
                     read_id = k
+                print(read_id)
                 ### read_id
+                #@@ single locus
                 # 23_1_2_5_6_8
                 # 23_1_3_4_8_9_10
                 # 23_1_4_7_9
@@ -288,12 +346,21 @@ class Subsampling:
                 # 29_1_2_3_5_6_8_10
                 # 29_3_4_7_9_10
                 # 39_6_7_9
+
+                #@@ single cell
+                # 77*c*1*g*4*_2_4_5_6_7
+                # 77*c*1*g*4*_1_3_4_7_8_10
+                # 77*c*1*g*4*_3_5_9_10
+                # ...
+                # 55*c*1*g*4*_2_3_8_9
+                # 49*c*1*g*4*_2_3_4_5_6_7
                 k_ = k
                 sub_tree_pcr_arr = sub_tree.split('_')
                 # print(sub_tree_pcr_arr)
                 for pcr in sub_tree_pcr_arr:
                     if pcr != '':
                         k_ = k_ + '_' + pcr
+                    # print(k, '<======>', k_, 'read id:', read_id)
                     ### k, '<======>', k_, 'read id:', read_id
                     ### k, k_
                     # 23 <======> 23_1 read id: 23_1_2_5_6_8
@@ -313,6 +380,20 @@ class Subsampling:
                     # 23 <======> 23_1_4_7_9 read id: 23_1_4_7_9
                     # 23 <======> 23_2 read id: 23_2_3_4_5_7_9
                     # ...
+
+                    # single cell
+                    # 55*c*1*g*4* <======> 55*c*1*g*4*_2 read id: 55*c*1*g*4*_2_3_8_9
+                    # 55*c*1*g*4* <======> 55*c*1*g*4*_2_3 read id: 55*c*1*g*4*_2_3_8_9
+                    # 55*c*1*g*4* <======> 55*c*1*g*4*_2_3_8 read id: 55*c*1*g*4*_2_3_8_9
+                    # 55*c*1*g*4* <======> 55*c*1*g*4*_2_3_8_9 read id: 55*c*1*g*4*_2_3_8_9
+                    # 49*c*1*g*4* <======> 49*c*1*g*4*_2 read id: 49*c*1*g*4*_2_3_4_5_6_7
+                    # 49*c*1*g*4* <======> 49*c*1*g*4*_2_3 read id: 49*c*1*g*4*_2_3_4_5_6_7
+                    # 49*c*1*g*4* <======> 49*c*1*g*4*_2_3_4 read id: 49*c*1*g*4*_2_3_4_5_6_7
+                    # 49*c*1*g*4* <======> 49*c*1*g*4*_2_3_4_5 read id: 49*c*1*g*4*_2_3_4_5_6_7
+                    # 49*c*1*g*4* <======> 49*c*1*g*4*_2_3_4_5_6 read id: 49*c*1*g*4*_2_3_4_5_6_7
+                    # 49*c*1*g*4* <======> 49*c*1*g*4*_2_3_4_5_6_7 read id: 49*c*1*g*4*_2_3_4_5_6_7
+                    # ...
+
                     if k_ in read_cache.keys():
                         read = read_cache[k_]
                     else:
