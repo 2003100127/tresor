@@ -13,6 +13,7 @@ from phylotres.pcr.Amplify import Amplify as pcr
 from phylotres.pcr.Subsampling import Subsampling
 from phylotres.sequencing.Calling import Calling as seq
 from phylotres.util.sequence.fastq.Write import write as wfastq
+from phylotres.util.file.create.Folder import Folder as crtfolder
 from phylotres.util.Console import Console
 
 
@@ -108,13 +109,15 @@ class Gene:
             ### +++++++++++++++ block: generate sequencing library +++++++++++++++
             self.console.print('===>Sequencing library generation starts')
             self.len_params['umi']['umi_unit_len'] = umi_unit_len_i
+            working_dir_new = self.working_dir + 'umi_len_' + str(umi_unit_len_i) + '/'
+            crtfolder().osmkdir(working_dir_new)
             self.sequencing_library = bulksimulib(
                 gspl=self.gspl,
                 len_params=self.len_params,
                 fasta_cdna_fpn=self.fasta_cdna_fpn,
                 seq_num=self.seq_num,
                 is_seed=self.use_seed,
-                working_dir=self.working_dir,
+                working_dir=working_dir_new,
                 condis=self.condis,
                 sim_thres=self.sim_thres,
                 permutation=self.permutation,
@@ -140,7 +143,7 @@ class Gene:
             self.console.print('======>Assign parameters...')
             # print(np.array(self.sequencing_library))
             pcr_ampl_params = {
-                'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
+                'read_lib_fpn': working_dir_new + 'sequencing_library.txt',
 
                 'data': np.array(self.sequencing_library),
                 'ampl_rate': self.ampl_rate,

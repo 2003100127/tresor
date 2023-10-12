@@ -1,7 +1,10 @@
 __version__ = "v1.0"
 __copyright__ = "Copyright 2024"
 __license__ = "MIT"
-__author__ = "Adam Cribbs lab"
+__developer__ = "Jianfeng Sun"
+__maintainer__ = "Jianfeng Sun"
+__email__="jianfeng.sunmt@gmail.com"
+__lab__ = "Cribbslab"
 
 import time
 import numpy as np
@@ -366,14 +369,14 @@ class Error:
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         # print(np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0))
         res2p['mut_info'] = np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0)
-        del data_pcr
-        self.console.print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
+        self.console.print('======>Time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
         self.console.print('======>Summary report:')
         self.console.print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
-        self.console.print('=========>the dimensions of the data: number of reads: {}'.format(res2p['data'].shape))
-        self.console.print('=========>the number of reads at this PCR: {}, '.format(res2p['recorder_pcr_read_num']))
-        self.console.print('=========>the number of nucleotides at this PCR: {}, '.format(res2p['recorder_nucleotide_num']))
-        self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
+        self.console.print('=========>Dimension of the data: number of reads: {}'.format(res2p['data'].shape))
+        self.console.print('=========>Number of reads at the PCR: {}, '.format(res2p['recorder_pcr_read_num']))
+        self.console.print('=========>Number of nucleotides at the PCR: {}, '.format(res2p['recorder_nucleotide_num']))
+        self.console.print('=========>Number of errors at the PCR: {}, '.format(res2p['recorder_pcr_err_num']))
+        del data_pcr
         return res2p
 
     def table_tree(self, res2p):
@@ -386,7 +389,6 @@ class Error:
             ]
         )
         del res2p['data_spl']
-        pcr_merge_stime = time.time()
         data_pcr['sam_id'] = data_pcr['sam_id'].apply(lambda x: x + '_' + str(res2p['ipcr'] + 1))
         data_pcr['source'] = 'pcr-' + str(res2p['ipcr'] + 1)
         # print(data_pcr)
@@ -395,13 +397,9 @@ class Error:
         # print(res2p['data'])
         # print(res2p['data'].shape)
         del data_pcr
-        self.console.print('======>Time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
         self.console.print('======>Summary report:')
-        self.console.print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
-        self.console.print('=========>the dimensions of the data: number of reads: {}'.format(res2p['data'].shape))
-        self.console.print('=========>the number of reads at this PCR: {}, '.format(res2p['recorder_pcr_read_num']))
-        self.console.print('=========>the number of nucleotides at this PCR: {}, '.format(res2p['recorder_nucleotide_num']))
-        self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
+        self.console.print('=========>Number of reads at this PCR: {}'.format(res2p['data'].shape))
+        self.console.print('=========>Time for PCR tree construction: {time:.2f}s'.format(time=time.time() - pcr_stime))
         return res2p
 
     def change(self, read, pos_list, base_list):
