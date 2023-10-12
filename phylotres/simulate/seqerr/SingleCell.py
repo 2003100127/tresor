@@ -20,10 +20,8 @@ class SingleCell:
 
     def __init__(
             self,
+            gmat,
             len_params,
-            num_genes,
-            num_cells,
-            simulator,
             seq_num,
             seq_len,
             is_sv_umi_lib,
@@ -48,7 +46,6 @@ class SingleCell:
             sv_fastq_fp,
 
             seq_errors,
-            R_root=None,
             seq_sub_spl_number=None,
             seq_sub_spl_rate=1/3,
 
@@ -66,10 +63,7 @@ class SingleCell:
         self.sim_thres = sim_thres
         self.permutation = permutation
 
-        self.R_root = R_root
-        self.simulator = simulator
-        self.num_genes = num_genes
-        self.num_cells = num_cells
+        self.gmat = gmat
 
         self.err_route = err_route
         self.ampl_rate = ampl_rate
@@ -99,10 +93,7 @@ class SingleCell:
         self.console.print('===>Sequencing library generation starts')
         self.sequencing_library = scsimulib(
             len_params=len_params,
-            R_root=self.R_root,
-            num_genes=self.num_genes,
-            num_cells=self.num_cells,
-            simulator=self.simulator,
+            gmat=self.gmat,
             fasta_cdna_fpn=fasta_cdna_fpn,
             seq_num=seq_num,
             is_seed=use_seed,
@@ -272,8 +263,19 @@ class SingleCell:
 if __name__ == "__main__":
     from phylotres.path import to
 
+    from phylotres.gmat.FromSimulator import fromSimulator
+
+    gmat, _, _ = fromSimulator(
+        simulator='spsimseq',
+        R_root='D:/Programming/R/R-4.3.1/',
+        num_genes=10,
+        num_cells=10,
+    ).run()
+
     p = SingleCell(
         # initial sequence generation
+        gmat=gmat,
+
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,
@@ -302,11 +304,6 @@ if __name__ == "__main__":
         working_dir=to('data/simu/'),
         fasta_cdna_fpn=False,
         # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
-
-        R_root='D:/Programming/R/R-4.3.1/',
-        num_genes=6,
-        num_cells=6,
-        simulator='SPsimSeqFixSM',
 
         is_sv_umi_lib=True,
         is_sv_seq_lib=True,

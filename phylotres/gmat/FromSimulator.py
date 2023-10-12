@@ -27,13 +27,13 @@ class fromSimulator:
         self.console = Console()
         self.console.verbose = verbose
 
-    def SPsimSeqFixSM(self, ):
+    def spsimseq(self, ):
         import os
         os.environ['R_HOME'] = self.R_root
         import rpy2.robjects as rob
         from rpy2.robjects import pandas2ri
         from rpy2.robjects.conversion import localconverter
-        self.console.print('=========>SPsimSeqFixSM is being used')
+        self.console.print('=========>spsimseq is being used')
         res = rob.r(
             """
             suppressPackageStartupMessages(library(SPsimSeq))
@@ -71,7 +71,7 @@ class fromSimulator:
             return (dd)
             """
         )
-        self.console.print('=========>SPsimSeqFixSM completes simulation')
+        self.console.print('=========>spsimseq completes simulation')
         a, b, c = res
         print(res)
         with localconverter(rob.default_converter + pandas2ri.converter):
@@ -84,7 +84,7 @@ class fromSimulator:
 
     def tool(self, ):
         return {
-            'SPsimSeqFixSM': self.SPsimSeqFixSM()
+            'spsimseq': self.spsimseq()
         }
 
     def run(self, ):
@@ -93,7 +93,10 @@ class fromSimulator:
 
 if __name__ == "__main__":
 
-    p = gmat, _, _ = fromSimulator(simulator='SPsimSeqFixSM').run()
+    p = gmat, _, _ = fromSimulator(
+        simulator='spsimseq',
+        R_root='D:/Programming/R/R-4.3.1/',
+    ).run()
     from scipy.sparse import coo_matrix
     csr_ = coo_matrix(gmat)
     print(csr_)

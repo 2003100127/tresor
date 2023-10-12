@@ -24,7 +24,6 @@ from phylotres.util.similarity.distance.Hamming import Hamming
 from phylotres.util.Console import Console
 from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6
-from phylotres.gmat.FromSimulator import fromSimulator
 
 
 class SingleCell:
@@ -32,11 +31,7 @@ class SingleCell:
     def __init__(
             self,
             len_params,
-            R_root=None,
-            num_genes=10,
-            num_cells=10,
-            simulator='SPsimSeqFixSM',
-
+            gmat,
             fasta_cdna_fpn=False,
             is_seed=False,
 
@@ -64,12 +59,9 @@ class SingleCell:
         self.dprimer = dprimer
         self.dadapter = dadapter
         self.dspacer = dspacer
-        self.R_root = R_root
+        self.gmat = gmat
         self.working_dir = working_dir
         self.len_params = len_params
-        self.simulator = simulator
-        self.num_genes = num_genes
-        self.num_cells = num_cells
         self.is_seed = is_seed
         self.fasta_cdna_fpn = fasta_cdna_fpn
         self.is_sv_umi_lib = is_sv_umi_lib
@@ -84,14 +76,9 @@ class SingleCell:
         self.dna_map = self.dnasgl.todict(nucleotides=self.dnasgl.get(universal=True), reverse=True)
         self.crtfolder.osmkdir(working_dir)
 
-        gbycell, _, _ = fromSimulator(
-            simulator=simulator,
-            R_root=R_root,
-            num_cells=self.num_cells,
-            num_genes=self.num_genes,
-        ).run()
-        self.gmat = gbycell
         # print(self.gmat)
+        self.num_genes = len(self.gmat.columns)
+        self.num_cells = len(self.gmat.index)
         self.cell_map = {k: v for k, v in enumerate(self.gmat.columns)}
         self.gene_map = {k: v for k, v in enumerate(self.gmat.index)}
         # print(self.cell_map)
@@ -391,11 +378,17 @@ class SingleCell:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    p = SingleCell(
+    from phylotres.gmat.FromSimulator import fromSimulator
+
+    gmat, _, _ = fromSimulator(
+        simulator='spsimseq',
         R_root='D:/Programming/R/R-4.3.1/',
         num_genes=10,
         num_cells=10,
-        simulator='SPsimSeqFixSM',
+    ).run()
+
+    p = SingleCell(
+        gmat=gmat,
 
         len_params={
             'umi': {
