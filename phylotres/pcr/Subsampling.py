@@ -181,7 +181,7 @@ class Subsampling:
         if pcr_dict['seq_sub_spl_number'] is not None:
             num_reads_for_sequencing = pcr_dict['seq_sub_spl_number']
         else:
-            num_reads_for_sequencing = pcr_dict['seq_sub_spl_rate'] * num_all_pcr_ampl_reads
+            num_reads_for_sequencing = int(pcr_dict['seq_sub_spl_rate'] * num_all_pcr_ampl_reads)
         spl_ids = rannum().choice(
             # low=0,
             high=num_all_pcr_ampl_reads,

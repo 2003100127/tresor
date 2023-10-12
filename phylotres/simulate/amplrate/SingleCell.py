@@ -35,7 +35,7 @@ class SingleCell:
             sim_thres,
             permutation,
 
-            ampl_rate,
+            ampl_rates,
             err_route,
             pcr_error,
             pcr_num,
@@ -45,7 +45,7 @@ class SingleCell:
 
             sv_fastq_fp,
 
-            seq_errors,
+            seq_error,
             seq_sub_spl_number=None,
             seq_sub_spl_rate=1/3,
 
@@ -66,14 +66,14 @@ class SingleCell:
         self.gmat = gmat
 
         self.err_route = err_route
-        self.ampl_rate = ampl_rate
         self.pcr_error = pcr_error
+        self.seq_error = seq_error
         self.pcr_num = pcr_num
         self.err_num_met = err_num_met
         self.use_seed = use_seed
         self.seed = seed
 
-        self.seq_errors = seq_errors
+        self.ampl_rates = ampl_rates
         self.seq_sub_spl_number = seq_sub_spl_number
         self.seq_sub_spl_rate = seq_sub_spl_rate
         self.sv_fastq_fp = sv_fastq_fp
@@ -130,107 +130,107 @@ class SingleCell:
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
         # print(np.array(self.sequencing_library))
-        pcr_ampl_params = {
-            'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
 
-            'data': np.array(self.sequencing_library),
-            'ampl_rate': self.ampl_rate,
-            'pcr_error': self.pcr_error,
-            'pcr_num': self.pcr_num,
+        for i, ampl_rate_i in enumerate(self.ampl_rates):
+            self.console.print('======>{}. Amplification rate: {}'.format(i, ampl_rate_i))
+            pcr_ampl_params = {
+                'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
 
-            'err_route': self.err_route,
-            'err_num_met': self.err_num_met,
-            'use_seed': self.use_seed,
-            'seed': self.seed,
-            'recorder_nucleotide_num': [],
-            'recorder_pcr_err_num': [],
-            'recorder_pcr_read_num': [],
+                'data': np.array(self.sequencing_library),
+                'ampl_rate': ampl_rate_i,
+                'pcr_error': self.pcr_error,
+                'pcr_num': self.pcr_num,
 
-            'seq_sub_spl_number': self.seq_sub_spl_number,
-            'seq_sub_spl_rate': self.seq_sub_spl_rate,
+                'err_route': self.err_route,
+                'err_num_met': self.err_num_met,
+                'use_seed': self.use_seed,
+                'seed': self.seed,
+                'recorder_nucleotide_num': [],
+                'recorder_pcr_err_num': [],
+                'recorder_pcr_read_num': [],
 
-            'pcr_deletion': True,
-            'pcr_insertion': True, # False True
-            'pcr_del_rate': 2.4*10e-6,
-            'pcr_ins_rate': 7.1*10e-7,
+                'seq_sub_spl_number': self.seq_sub_spl_number,
+                'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-            'verbose': self.verbose,
-        }
-        # pcr_ampl_params['data']
-        # single-cell
-        # [['GAAATCATGTAGTTCGGGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG' '0*c*0*g*1*' 'init']
-        #  ['GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAAAAAAAA' '0*c*0*g*4*' 'init']
-        #  ['GAAATCATGTAGTTCGAAACCCGGGGGGCCCTTTCCCTTTGGGAAATTTCCC' '1*c*0*g*4*' 'init']
-        # ...
-        # ['CGCGTTAGTAATTCATAAAGGGGGGCCCAAACCCGGGGGGGGGGGGTTTCCC' '221*c*1*g*4*' 'init']
-        #  ['CGCGTTAGTAATTCATAAATTTCCCGGGCCCCCCGGGAAAGGGCCCCCCTTT' '222*c*1*g*4*' 'init']]
-        if pcr_ampl_params['err_route'] == 'tree':
-            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-        if pcr_ampl_params['err_route'] == 'minnow':
-            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-        if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
-            # print(pcr_ampl_params['data'][:, 0])
-            def calc_len(a):
-                return len(a)
-            vfunc = np.vectorize(calc_len)
-            print(vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis])
-            # [[52] vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis]
-            #  [52]
-            #  [52]
-            #  ...
-            #  [52]
-            #  [52]]
-            pcr_ampl_params['data'] = np.hstack((
-                vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
-                pcr_ampl_params['data'][:, 1:3],
-            ))
+                'pcr_deletion': True,
+                'pcr_insertion': True, # False True
+                'pcr_del_rate': 2.4*10e-6,
+                'pcr_ins_rate': 7.1*10e-7,
+
+                'verbose': self.verbose,
+            }
             # pcr_ampl_params['data']
-            # [['52' '0*c*0*g*1*' 'init']
-            #  ['52' '0*c*0*g*4*' 'init']
-            #  ['52' '1*c*0*g*4*' 'init']
-            #  ...
-            #   ['52' '221*c*1*g*4*' 'init']
-            #  ['52' '222*c*1*g*4*' 'init']]
-            col_0 = np.array([[1] for _ in range(pcr_ampl_params['data'].shape[0])])
-            mut_info_table = np.hstack((col_0, col_0))
-            col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
-            mut_info_table = np.hstack((mut_info_table, col_2))
-            pcr_ampl_params['mut_info'] = mut_info_table
-            # print(mut_info_table)
-            # pcr_ampl_params['mut_info'] = np.empty(shape=[0, 3])
-            # print(pcr_ampl_params['mut_info'])
+            # single-cell
+            # [['GAAATCATGTAGTTCGGGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG' '0*c*0*g*1*' 'init']
+            #  ['GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAAAAAAAA' '0*c*0*g*4*' 'init']
+            #  ['GAAATCATGTAGTTCGAAACCCGGGGGGCCCTTTCCCTTTGGGAAATTTCCC' '1*c*0*g*4*' 'init']
+            # ...
+            # ['CGCGTTAGTAATTCATAAAGGGGGGCCCAAACCCGGGGGGGGGGGGTTTCCC' '221*c*1*g*4*' 'init']
+            #  ['CGCGTTAGTAATTCATAAATTTCCCGGGCCCCCCGGGAAAGGGCCCCCCTTT' '222*c*1*g*4*' 'init']]
+            if pcr_ampl_params['err_route'] == 'tree':
+                pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
+            if pcr_ampl_params['err_route'] == 'minnow':
+                pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
+            if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
+                # print(pcr_ampl_params['data'][:, 0])
+                def calc_len(a):
+                    return len(a)
+                vfunc = np.vectorize(calc_len)
+                # [[52] vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis]
+                #  [52]
+                #  [52]
+                #  ...
+                #  [52]
+                #  [52]]
+                pcr_ampl_params['data'] = np.hstack((
+                    vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
+                    pcr_ampl_params['data'][:, 1:3],
+                ))
+                # pcr_ampl_params['data']
+                # [['52' '0*c*0*g*1*' 'init']
+                #  ['52' '0*c*0*g*4*' 'init']
+                #  ['52' '1*c*0*g*4*' 'init']
+                #  ...
+                #   ['52' '221*c*1*g*4*' 'init']
+                #  ['52' '222*c*1*g*4*' 'init']]
+                col_0 = np.array([[1] for _ in range(pcr_ampl_params['data'].shape[0])])
+                mut_info_table = np.hstack((col_0, col_0))
+                col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
+                mut_info_table = np.hstack((mut_info_table, col_2))
+                pcr_ampl_params['mut_info'] = mut_info_table
+                # print(mut_info_table)
+                # pcr_ampl_params['mut_info'] = np.empty(shape=[0, 3])
+                # print(pcr_ampl_params['mut_info'])
 
-        ### +++++++++++++++ block: PCR amplification: simulation +++++++++++++++
-        pcr_stime = time.time()
-        pcr = self.pcr(pcr_params=pcr_ampl_params).np()
-        # print(pcr.keys())
-        self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
+            ### +++++++++++++++ block: PCR amplification: simulation +++++++++++++++
+            pcr_stime = time.time()
+            pcr = self.pcr(pcr_params=pcr_ampl_params).np()
+            # print(pcr.keys())
+            self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
-        ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
-        # print(pcr['data'])
-        # print(pcr['data'].shape)
-        if pcr_ampl_params['err_route'] == 'tree':
-            pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
-        # print(pcr['data'])
-        # print(pcr['data'].shape)
+            ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
+            # print(pcr['data'])
+            # print(pcr['data'].shape)
+            if pcr_ampl_params['err_route'] == 'tree':
+                pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
+            # print(pcr['data'])
+            # print(pcr['data'].shape)
 
-        if pcr_ampl_params['err_route'] == 'minnow':
-            pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
+            if pcr_ampl_params['err_route'] == 'minnow':
+                pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
 
-        if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
-            pcr['data'] = self.subsampling.mutation_table_minimum(pcr_dict=pcr)
+            if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
+                pcr['data'] = self.subsampling.mutation_table_minimum(pcr_dict=pcr)
 
-        if pcr_ampl_params['err_route'] == 'mutation_table_complete':
-            pcr['data'] = self.subsampling.mutation_table_complete(pcr_dict=pcr)
+            if pcr_ampl_params['err_route'] == 'mutation_table_complete':
+                pcr['data'] = self.subsampling.mutation_table_complete(pcr_dict=pcr)
 
-        ### +++++++++++++++ block: Sequencing: parameters +++++++++++++++
-        self.console.print('======>Sequencing starts')
-        for i, seq_err_i in enumerate(self.seq_errors):
-            self.console.print('======>{}. Sequencing error rate: {}'.format(i, seq_err_i))
+            ### +++++++++++++++ block: Sequencing: parameters +++++++++++++++
+            self.console.print('======>Sequencing starts')
             seq_params = {
                 'data': pcr['data'],
 
-                'seq_error': seq_err_i,
+                'seq_error': self.seq_error,
                 'err_num_met': self.err_num_met,
                 'use_seed': self.use_seed,
                 'seed': self.seed,
@@ -239,8 +239,8 @@ class SingleCell:
                 'seq_sub_spl_number': self.seq_sub_spl_number,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-                'seq_deletion': True,
-                'seq_insertion': True,  # False True
+                'seq_deletion': False,
+                'seq_insertion': False,  # False True
                 'seq_del_rate': 2.4 * 10e-6,
                 'seq_ins_rate': 7.1 * 10e-7,
             }
@@ -250,13 +250,14 @@ class SingleCell:
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,
-                fn='seq_err_' + str(i),
+                fn='ampl_rate_' + str(i),
+                # fn='ampl_rate_' + "{:.2f}".format(ampl_rate_i),
                 symbol='-',
             )
             del seq
             self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
-        return
+        return 'Finished!'
 
 
 if __name__ == "__main__":
@@ -317,13 +318,13 @@ if __name__ == "__main__":
         permutation=0,
 
         # PCR amplification
-        ampl_rate=0.85,
-        err_route='mutation_table_complete', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        ampl_rates=np.linspace(0.1, 1, 10),
+        err_route='err2d', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinomial',
-        seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
-        seq_sub_spl_number=200, # None
+        seq_error=0.01,
+        seq_sub_spl_number=None, # None 200
         seq_sub_spl_rate=0.333,
         use_seed=True,
         seed=1,

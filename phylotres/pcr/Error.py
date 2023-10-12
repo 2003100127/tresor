@@ -101,8 +101,8 @@ class Error:
         # print(len(data_pcr['read'][0]))
         # print(data_pcr.shape[0])
         res2p['recorder_pcr_read_num'].append(data_pcr.shape[0])
-        print('======>{} reads to be amplified'.format(data_pcr.shape[0]))
-        print('======>constructing the position table starts...')
+        self.console.print('======>{} reads to be amplified'.format(data_pcr.shape[0]))
+        self.console.print('======>constructing the position table starts...')
         # print(data_pcr)
         pcr_postable_stime = time.time()
         if kind == 'index_by_same_len':
@@ -115,11 +115,11 @@ class Error:
             seq_pos_ids, seq_ids = self.postableIndexBySameLen(seq_len=len(data_pcr['read'][0]), num_seq=data_pcr.shape[0])
         # print(seq_ids)
         pos_table = {'seq_ids': seq_ids, 'seq_pos_ids': seq_pos_ids}
-        print('======>time for constructing the position table  {time:.3f}s'.format(time=time.time() - pcr_postable_stime))
+        self.console.print('======>time for constructing the position table  {time:.3f}s'.format(time=time.time() - pcr_postable_stime))
         ampl_nt_num = len(seq_ids)
-        print('======>{} nucleotides to be amplified'.format(ampl_nt_num))
+        self.console.print('======>{} nucleotides to be amplified'.format(ampl_nt_num))
         res2p['recorder_nucleotide_num'].append(ampl_nt_num)
-        print('======>determining PCR error numbers starts...')
+        self.console.print('======>determining PCR error numbers starts...')
         pcr_err_num_simu_stime = time.time()
         if res2p['err_num_met'] == 'binomial':
             pcr_err_num = rannum().binomial(n=ampl_nt_num, p=res2p['pcr_error'], use_seed=True, seed=res2p['ipcr'] + 1)
@@ -133,7 +133,7 @@ class Error:
             # print(pcr_err_num)
         else:
             pcr_err_num = rannum().binomial(n=ampl_nt_num, p=res2p['pcr_error'], use_seed=True, seed=res2p['ipcr'] + 1)
-        print('======>{} nucleotides to be erroneous at this PCR'.format(pcr_err_num))
+        self.console.print('======>{} nucleotides to be erroneous at this PCR'.format(pcr_err_num))
         res2p['recorder_pcr_err_num'].append(pcr_err_num)
         spl_nt_ids = rannum().uniform(low=0, high=ampl_nt_num, num=pcr_err_num, use_seed=True, seed=res2p['ipcr'] + 1)
         arr_err_pos = []
@@ -141,8 +141,8 @@ class Error:
             arr_err_pos.append([pos_table['seq_ids'][i], pos_table['seq_pos_ids'][i]])
         pseudo_nums = rannum().uniform(low=0, high=3, num=pcr_err_num, use_seed=False)
         # print(pseudo_nums)
-        print('======>time for determining PCR error numbers  {time:.3f}s'.format(time=time.time() - pcr_err_num_simu_stime))
-        print('======>assigning PCR errors starts...')
+        self.console.print('======>time for determining PCR error numbers  {time:.3f}s'.format(time=time.time() - pcr_err_num_simu_stime))
+        self.console.print('======>assigning PCR errors starts...')
         pcr_err_assign_stime = time.time()
         data_pcr['read'] = data_pcr.apply(lambda x: list(x['read']), axis=1)
         # caser = self.todict5(arr_err_pos)
@@ -159,8 +159,8 @@ class Error:
             # print('before', data_pcr.loc[pos_err[0], 'read'][pos_err[1]])
             data_pcr.loc[pos_err[0], 'read'][pos_err[1]] = dna_map[pseudo_num]
             # print('after', data_pcr.loc[pos_err[0], 'read'][pos_err[1]])
-        print('======>time for assigning PCR errors {time:.2f}s'.format(time=time.time() - pcr_err_assign_stime))
-        print('======>merging the PCR duplicates and all previous sequences starts...')
+        self.console.print('======>time for assigning PCR errors {time:.2f}s'.format(time=time.time() - pcr_err_assign_stime))
+        self.console.print('======>merging the PCR duplicates and all previous sequences starts...')
         del arr_err_pos
         del spl_nt_ids
         pcr_merge_stime = time.time()
@@ -170,13 +170,13 @@ class Error:
         data_pcr = np.array(data_pcr)
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
-        print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
-        print('======>Summary report:')
-        print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
-        print('=========>the dimensions of the data: number of reads: {}'.format(res2p['data'].shape))
-        print('=========>the number of reads at this PCR: {}, '.format(res2p['recorder_pcr_read_num']))
-        print('=========>the number of nucleotides at this PCR: {}, '.format(res2p['recorder_nucleotide_num']))
-        print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
+        self.console.print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
+        self.console.print('======>Summary report:')
+        self.console.print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
+        self.console.print('=========>the dimensions of the data: number of reads: {}'.format(res2p['data'].shape))
+        self.console.print('=========>the number of reads at this PCR: {}, '.format(res2p['recorder_pcr_read_num']))
+        self.console.print('=========>the number of nucleotides at this PCR: {}, '.format(res2p['recorder_nucleotide_num']))
+        self.console.print('=========>the number of errors at this PCR: {}, '.format(res2p['recorder_pcr_err_num']))
         return res2p
 
     def table2D(self, res2p):
@@ -202,7 +202,18 @@ class Error:
         pcr_merge_stime = time.time()
         data_pcr['sam_id'] = data_pcr['sam_id'].apply(lambda x: x + '_' + str(res2p['ipcr'] + 1))
         data_pcr['source'] = 'pcr-' + str(res2p['ipcr'] + 1)
-        print(data_pcr)
+        ### data_pcr.columns
+        # ['read', 'sam_id', 'source', 'read_len', 'num_err_per_read',
+        #         'pos_err_per_read', 'base_roll_per_read', 'read_pcr']
+        ### data_pcr
+        # read  ...                                           read_pcr
+        # 0     CGCGTTAGTAATTCATTTTTTTCCCTTTAAAGGGTTTAAATTTGGG...  ...  CGCGTTAGTAATTCATTTTTTTCCCTTTAAAGGGTTTAAATTTGGG...
+        # 1     CGCGTTAGTAATTCATCCCTTTAAAAAATTTGGGTTTGGGAAAAAA...  ...  CGCGTTAGTAATTCATCCCTTTAAAAAATTTGGGTTTGGGAAAAAA...
+        # 2     CGCGTTAGTAATTCATGGGCCCTTTTTTAAATTTAAACCCCCCAAA...  ...  CGCGTTAGTAATTCATGGGCCCTTTTTTAAATTTAAACCCCCCAAA...
+        # ...                                                 ...  ...                                                ...
+        # 8692  GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAA...  ...  GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAA...
+        # 8693  CGCGTTAGTAATTCATTTTGGGGGGAAACCCAAACCCCCCCCCGGG...  ...  CGCGTTAGTAATTCATTTTGGGGGGAAACCCAAACCCCCCCCCGGG...
+        # [8694 rows x 8 columns]
         data_pcr = np.array(data_pcr[['read_pcr', 'sam_id', 'source']])
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
@@ -220,18 +231,6 @@ class Error:
 
         Notes
         -----
-        df_mut_info
-               pos_err_per_read base_roll_per_read sam_id
-            0     []      []   14_1
-            1     []      []   25_1
-            2     []      []   16_1
-            ...
-            18    []      []   45_1
-            19    [21]    [2]  36_1
-            20    []      []    0_1
-            ...
-            41    []      []   27_1
-            42    []      []   42_1
 
         Parameters
         ----------
@@ -255,9 +254,6 @@ class Error:
         # ...
         # 41    0
         # 42    0
-        print(rannum().uniform(
-            low=0, high=16, num=0, use_seed=False, seed=res2p['ipcr'] + 1
-        ).size)
 
         df_mut_info['pos_err_per_read'] = data_pcr.apply(lambda x: rannum().uniform(
             low=0, high=x['read_len'], num=x['num_err_per_read'], use_seed=False, seed=res2p['ipcr'] + 1
@@ -279,7 +275,21 @@ class Error:
         # print(df_mut_info)
         df_mut_info = df_mut_info.drop(df_mut_info.loc[df_mut_info['mark'] == 1].index)
         df_mut_info = df_mut_info.drop(['mark'], axis=1)
-        print(df_mut_info)
+        ### df_mut_info
+        # pos_err_per_read base_roll_per_read                          sam_id
+        # 201                 [9]                [1]           154*c*1*g*4*_3_4_9_10
+        # 264                [47]                [1]        53*c*1*g*4*_1_2_6_7_9_10
+        # 870                [28]                [0]           7*c*1*g*3*_3_4_8_9_10
+        # 946                [13]                [2]        13*c*1*g*0*_1_3_4_8_9_10
+        # 1312               [40]                [1]      68*c*1*g*4*_3_5_6_7_8_9_10
+        # ...                 ...                ...                             ...
+        # 152258             [48]                [2]             115*c*1*g*4*_4_5_10
+        # 152548              [6]                [1]         164*c*1*g*4*_3_4_6_7_10
+        # 152656             [30]                [2]         173*c*1*g*4*_1_5_7_9_10
+        # 152914             [33]                [0]  46*c*1*g*4*_1_2_3_4_5_6_7_9_10
+        # 153185              [5]                [2]         177*c*1*g*4*_2_5_6_8_10
+        #
+        # [792 rows x 3 columns]
         data_pcr = np.array(data_pcr[['read_len', 'sam_id', 'source']])
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         # print(np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0))
@@ -299,18 +309,6 @@ class Error:
 
         Notes
         -----
-        df_mut_info
-               pos_err_per_read base_roll_per_read sam_id
-            0     []      []   14_1
-            1     []      []   25_1
-            2     []      []   16_1
-            ...
-            18    []      []   45_1
-            19    [21]    [2]  36_1
-            20    []      []    0_1
-            ...
-            41    []      []   27_1
-            42    []      []   42_1
 
         Parameters
         ----------
@@ -326,7 +324,7 @@ class Error:
         data_pcr['num_err_per_read'] = data_pcr['read_len'].apply(lambda x: rannum().binomial(
             n=int(x), p=res2p['pcr_error'], use_seed=False, seed=res2p['ipcr'] + 1
         ))
-        # data_pcr['num_err_per_read']
+        ### data_pcr['num_err_per_read']
         # index num_err_per_read
         # 0     0
         # 1     0
@@ -334,9 +332,6 @@ class Error:
         # ...
         # 41    0
         # 42    0
-        print(rannum().uniform(
-            low=0, high=16, num=0, use_seed=False, seed=res2p['ipcr'] + 1
-        ).size)
 
         df_mut_info['pos_err_per_read'] = data_pcr.apply(lambda x: rannum().uniform(
             low=0, high=x['read_len'], num=x['num_err_per_read'], use_seed=False, seed=res2p['ipcr'] + 1
@@ -351,7 +346,19 @@ class Error:
         data_pcr['sam_id'] = data_pcr['sam_id'].apply(lambda x: x + '_' + str(res2p['ipcr'] + 1))
         data_pcr['source'] = 'pcr-' + str(res2p['ipcr'] + 1)
 
-        print(df_mut_info)
+        ### df_mut_info
+        # pos_err_per_read base_roll_per_read
+        # 0                    []                 []
+        # 1                    []                 []
+        # 2                    []                 []
+        # 3                    []                 []
+        # 4                    []                 []
+        # ...                 ...                ...
+        # 153595               []                 []
+        # 153596               []                 []
+        # 153597               []                 []
+        # 153598               []                 []
+        # 153599               []                 []
         df_mut_info['sam_id'] = data_pcr['sam_id'].copy()
         # print(data_pcr)
         # print(df_mut_info)
