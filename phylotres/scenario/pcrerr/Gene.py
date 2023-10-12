@@ -53,6 +53,7 @@ class Gene:
             verbose=True,
             **kwargs,
     ):
+        print(kwargs)
         self.len_params = len_params
         self.seq_num = seq_num
         self.seq_len = seq_len

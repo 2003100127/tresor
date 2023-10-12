@@ -17,10 +17,10 @@ from phylotres.read.adapter.Design import Design as dadapter
 from phylotres.read.spacer.Design import Design as dspacer
 from phylotres.util.random.Sampling import Sampling as ranspl
 from phylotres.util.random.Number import Number as rannum
-from phylotres.util.file.write.Writer import Writer as pfwriter
-from phylotres.util.file.create.Folder import Folder as crtfolder
+from phylotres.util.file.Writer import Writer as pfwriter
+from phylotres.util.file.Folder import Folder as crtfolder
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
-from phylotres.util.similarity.distance.Hamming import Hamming
+from phylotres.util.Hamming import Hamming
 from phylotres.util.Console import Console
 from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6

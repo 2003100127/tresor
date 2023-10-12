@@ -13,7 +13,7 @@ from phylotres.pcr.Amplify import Amplify as pcr
 from phylotres.sequencing.Calling import Calling as seq
 from phylotres.pcr.Subsampling import Subsampling
 from phylotres.util.sequence.fastq.Write import write as wfastq
-from phylotres.util.file.create.Folder import Folder as crtfolder
+from phylotres.util.file.Folder import Folder as crtfolder
 from phylotres.util.Console import Console
 
 

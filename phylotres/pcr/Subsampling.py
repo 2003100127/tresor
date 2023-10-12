@@ -10,7 +10,7 @@ import numpy as np
 from phylotres.pcr.Amplify import Amplify as pcr
 from phylotres.sequencing.Calling import Calling as seq
 from phylotres.util.sequence.fastq.Write import write as wfastq
-from phylotres.util.file.read.Reader import Reader as pfreader
+from phylotres.util.file.Reader import Reader as pfreader
 from phylotres.util.random.Number import Number as rannum
 from phylotres.util.random.Sampling import Sampling as ranspl
 from phylotres.util.sequence.symbol.Single import Single as dnasgl

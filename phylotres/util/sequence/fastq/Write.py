@@ -9,7 +9,7 @@ __lab__ = "Cribbslab"
 import gzip
 import pandas as pd
 from functools import wraps
-from phylotres.util.file.create.Folder import Folder as crtfolder
+from phylotres.util.file.Folder import Folder as crtfolder
 
 
 class write:

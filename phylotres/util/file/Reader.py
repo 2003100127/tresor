@@ -17,7 +17,6 @@ class Reader(object):
 
     def __call__(self, deal):
         generic = self.generic
-        excel = self.excel
         @wraps(deal)
         def read(ph, *args, **kwargs):
             deal(ph, **kwargs)
@@ -30,25 +29,9 @@ class Reader(object):
                     header=None if 'header' not in keys else kwargs['header'],
                     is_utf8=False if 'is_utf8' not in keys else kwargs['is_utf8'],
                 )
-            elif kwargs['type'] == 'excel':
-                return excel(
-                    df_fpn=kwargs['df_fpn'],
-                    sheet_name='Sheet1' if 'sheet_name' not in keys else kwargs['sheet_name'],
-                    header=None if 'header' not in keys else kwargs['header'],
-                    is_utf8=False if 'is_utf8' not in keys else kwargs['is_utf8'],
-                )
         return read
 
     def generic(self, df_fpn, df_sep='\t', skiprows=None, header=None, is_utf8=False):
-        """
-
-        :param df_fpn:
-        :param df_sep:
-        :param header:
-        :param is_utf8:
-        :param dtype:
-        :return:
-        """
         if is_utf8:
             return pd.read_csv(
                 df_fpn,
@@ -64,33 +47,3 @@ class Reader(object):
                 header=header,
                 skiprows=skiprows
             )
-
-    def excel(self, df_fpn, sheet_name='Sheet1', header=None, is_utf8=False):
-        """
-
-        :param df_fpn:
-        :param sheet_name:
-        :param header:
-        :param is_utf8:
-        :return:
-        """
-        if is_utf8:
-            return pd.read_excel(
-                df_fpn,
-                sheet_name=sheet_name,
-                header=header,
-                encoding='utf-8',
-                engine='openpyxl',
-            )
-        else:
-            return pd.read_excel(
-                df_fpn,
-                sheet_name=sheet_name,
-                header=header,
-                engine='openpyxl',
-            )
-
-
-if __name__ == "__main__":
-    p = reader()
-    print(p.generic('data/drug/similarity/drug_all_07-02.txt'))

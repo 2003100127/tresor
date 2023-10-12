@@ -10,10 +10,10 @@ import time
 import numpy as np
 from phylotres.util.random.Sampling import Sampling as ranspl
 from phylotres.util.random.Number import Number as rannum
-from phylotres.util.file.write.Writer import Writer as pfwriter
-from phylotres.util.file.create.Folder import Folder as crtfolder
+from phylotres.util.file.Writer import Writer as pfwriter
+from phylotres.util.file.Folder import Folder as crtfolder
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
-from phylotres.util.similarity.distance.Hamming import Hamming
+from phylotres.util.Hamming import Hamming
 from phylotres.read.umi.Design import Design as dumi
 from phylotres.read.seq.Design import Design as dseq
 from phylotres.read.primer.Design import Design as dprimer

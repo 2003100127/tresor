@@ -11,9 +11,6 @@ import os
 
 class Folder:
 
-    def __init__(self, ):
-        pass
-
     def osmkdir(self, DIRECTORY):
         if not os.path.exists(DIRECTORY):
             os.makedirs(DIRECTORY)
