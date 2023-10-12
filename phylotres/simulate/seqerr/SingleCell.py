@@ -262,7 +262,7 @@ class SingleCell:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    from phylotres.gmat.FromSimulator import fromSimulator
+    from phylotres.gcell.FromSimulator import fromSimulator
 
     gmat, _, _ = fromSimulator(
         simulator='spsimseq',

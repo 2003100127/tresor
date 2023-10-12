@@ -40,7 +40,7 @@ class Subsampling:
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
         umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
-        print(umi_map)
+        # print(umi_map)
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
 
@@ -100,7 +100,7 @@ class Subsampling:
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
         umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
-        print(umi_map)
+        # print(umi_map)
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
 
@@ -114,8 +114,8 @@ class Subsampling:
         # print(len(spl_id_map))
         spl_mut_info = pcr_dict['mut_info'][spl_ids]
         # print(pcr_dict['mut_info'].shape)
-        print(spl_mut_info)
-        print(len(spl_mut_info))
+        # print(spl_mut_info)
+        # print(len(spl_mut_info))
         keys = spl_mut_info[:, 2]
         # print(len(keys))
         pos_dict = tactic6(pcr_dict['mut_info'][:, [2, 0]])
@@ -155,7 +155,6 @@ class Subsampling:
         # umi_map = df_seq_lib[0].to_dict()
         import pandas as pd
         umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
-        print(umi_map)
         #@@ single locus
         # {0: 'GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC', 1: 'GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT',
         # 2: 'AAATTTGGGCCCGGGAAAGGGCCCAAAAAAGGGAAA', ...,

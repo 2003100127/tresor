@@ -6,8 +6,8 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-from phylotres.gmat.FromSimulator import fromSimulator as scgmatsimu
-from phylotres.gspl.FromSimulator import fromSimulator as bulkgmatsimu
+from phylotres.gcell.FromSimulator import fromSimulator as scgmatsimu
+from phylotres.gsample.FromSimulator import fromSimulator as bulkgmatsimu
 
 
 def spsimseq_sc(
@@ -15,13 +15,13 @@ def spsimseq_sc(
         num_genes=10,
         num_cells=10,
 ):
-    gbycell, _, _ = scgmatsimu(
+    gbycell, df_cells, df_genes = scgmatsimu(
         simulator='spsimseq',
         R_root=R_root,
         num_cells=num_genes,
         num_genes=num_cells,
     ).run()
-    return gbycell, _, _
+    return gbycell, df_cells, df_genes
 
 
 def spsimseq_bulk(
@@ -39,7 +39,7 @@ def spsimseq_bulk(
 
 
 if __name__ == "__main__":
-    # gbycell = spsimseq_sc(
+    # gbycell, _, _ = spsimseq_sc(
     #     R_root='D:/Programming/R/R-4.3.1/',
     #     num_genes=10,
     #     num_cells=10,

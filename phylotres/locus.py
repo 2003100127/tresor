@@ -6,7 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
-from phylotres.simulate.seqerr.SingleLocus import SingleLocus as sgllocus
+from phylotres.simulate.seqerr.SingleLocus import SingleLocus as seqerrsl
 
 
 def simu_seq_err(
@@ -44,7 +44,7 @@ def simu_seq_err(
 
         **kwargs,
 ):
-    sgllocus(
+    seqerrsl(
         # initial sequence generation
         len_params=len_params,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
@@ -84,7 +84,7 @@ def simu_seq_err(
 if __name__ == "__main__":
     from phylotres.path import to
 
-    p = simu_seq_err(
+    print(simu_seq_err(
         len_params={
             'umi': {
                 'umi_unit_pattern': 3,
@@ -148,4 +148,4 @@ if __name__ == "__main__":
         verbose=False,  # True
 
         sv_fastq_fp=to('data/simu/'),
-    )
+    ))

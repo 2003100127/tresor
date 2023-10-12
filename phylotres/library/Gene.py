@@ -349,7 +349,7 @@ class Gene:
 if __name__ == "__main__":
     from phylotres.path import to
 
-    from phylotres.gspl.FromSimulator import fromSimulator
+    from phylotres.gsample.FromSimulator import fromSimulator
 
     gspl = fromSimulator(
         R_root='D:/Programming/R/R-4.3.1/',
