@@ -114,8 +114,13 @@ class Gene:
             verbose=self.verbose,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
-        print(self.sequencing_library)
-        print(len(self.sequencing_library))
+        ### self.sequencing_library
+        # [['GGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG', '0*s*0*g*3*', 'init'],
+        # ['GGGTTTGGGAAAAAAAAAAAATTTTTTGGGCCCGGG', '1*s*0*g*3*', 'init'],
+        # ['CCCTTTCCCGGGGGGTTTGGGCCCCCCTTTAAAAAA', '2*s*0*g*3*', 'init'],
+        # ...
+        # ['TTTGGGGGGGGGGGGGGGGGGAAAAAAAAAAAATTT', '421*s*0*g*5*', 'init'],
+        # ['AAATTTTTTCCCCCCCCCGGGAAAAAAGGGAAATTT', '422*s*0*g*5*', 'init']]
         self.console.print('===>Sequencing library has been generated')
 
     def generate(self, ):
@@ -161,13 +166,15 @@ class Gene:
 
             'verbose': self.verbose,
         }
+        print(pcr_ampl_params['data'])
         # pcr_ampl_params['data']
-        # [['GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC' '0' 'init']
-        #  ['GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT' '1' 'init']
-        #  ['AAATTTGGGCCCGGGAAAGGGCCCAAAAAAGGGAAA' '2' 'init']
+        # [['GGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG' '0*s*0*g*3*' 'init']
+        #  ['GGGTTTGGGAAAAAAAAAAAATTTTTTGGGCCCGGG' '1*s*0*g*3*' 'init']
+        #  ['CCCTTTCCCGGGGGGTTTGGGCCCCCCTTTAAAAAA' '2*s*0*g*3*' 'init']
         #  ...
-        #  ['CCCAAAAAAGGGCCCAAAGGGCCCTTTGGGGGGCCC' '48' 'init']
-        #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
+        #  ['GGGAAAAAAAAAAAACCCAAACCCTTTAAATTTGGG' '420*s*0*g*5*' 'init']
+        #  ['TTTGGGGGGGGGGGGGGGGGGAAAAAAAAAAAATTT' '421*s*0*g*5*' 'init']
+        #  ['AAATTTTTTCCCCCCCCCGGGAAAAAAGGGAAATTT' '422*s*0*g*5*' 'init']]
         # print(pcr_ampl_params['data'][:, 1:3])
         # print(pcr_ampl_params)
         if pcr_ampl_params['err_route'] == 'tree':
@@ -189,7 +196,6 @@ class Gene:
                 vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
                 pcr_ampl_params['data'][:, 1:3],
             ))
-            print(pcr_ampl_params['data'])
             # pcr_ampl_params['data']
             # [['36' '0' 'init']
             #  ['36' '1' 'init']
@@ -213,15 +219,30 @@ class Gene:
         self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
-        print(pcr['data'])
-        print(pcr['data'].shape)
         if pcr_ampl_params['err_route'] == 'tree':
             pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
-        # print(pcr['data'])
-        # print(pcr['data'].shape)
 
+        # pcr['data']
+        # [['68*s*0*g*3*_1_3_9' 'pcr-9']
+        #  ['334*s*0*g*5*_1_2_4_5_6_7_8' 'pcr-8']
+        #  ['54*s*0*g*5*_2_3_4_5_6' 'pcr-6']
+        #  ...
+        #  ['55*s*0*g*3*_2_3_4_5_6_7_9_10' 'pcr-10']
+        #  ['175*s*0*g*5*_1_3_8_9_10' 'pcr-10']
+        #  ['8*s*0*g*5*_2_6_7_10' 'pcr-10']]
+        # pcr['data'].shape
+        # 396201, 2
         if pcr_ampl_params['err_route'] == 'minnow':
             pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
+        # pcr['data']
+        # [['TTTTTTTTTCCCGGGGGGCCCGGGAAAGGGAAAGGG' '261*s*0*g*4*_1_3_5_7_8_9' 'pcr-9']
+        #  ['AAAGGGTTTGGGCCCTTTAAAGGGGGGGGGAAAAAA' '175*s*0*g*4*_1_4_7' 'pcr-7']
+        #  ['AAAGGGTTTGGGCCCTTTAAAGGGGGGGGGAAAAAA' '175*s*0*g*4*_1_4_5_8_9' 'pcr-9']
+        # ...
+        # ['GGGCCCAAACCCTTTGGGAAACCCGGGAAACCCGGG' '171*s*0*g*4*_2_3_4_6_8_9' 'pcr-9']
+        #  ['GGGCCCCCCTTTCCCCCCTTTCCCTTTGGGAAAAAA' '226*s*0*g*4*_3_5_6_9' 'pcr-9']]
+        # pcr['data'].shape
+        # (200, 3)
 
         if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
             pcr['data'] = self.subsampling.mutation_table_minimum(pcr_dict=pcr)
@@ -273,7 +294,7 @@ if __name__ == "__main__":
     gspl = fromSimulator(
         R_root='D:/Programming/R/R-4.3.1/',
         num_samples=2,
-        num_genes=20,
+        num_genes=6,
         simulator='spsimseq',
     ).run()
 
@@ -315,8 +336,8 @@ if __name__ == "__main__":
         is_sv_primer_lib=True,
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
-        # condis=['umi'],
-        condis=['umi', 'seq'],
+        condis=['umi'],
+        # condis=['umi', 'seq'],
         # condis=['umi', 'custom', 'seq', 'custom_1'],
         sim_thres=3,
         permutation=0,
