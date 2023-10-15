@@ -14,7 +14,7 @@ setup(
     include_package_data=True,
     # package_data={},
     platforms="any",
-    python_requires=">3=.10",
+    python_requires=">=3.10",
     install_requires=[
         "pandas",
         "numpy",

@@ -149,10 +149,15 @@ class SingleLocus:
                 'seq_sub_spl_number': seq_dep_i,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-                'pcr_deletion': False,
-                'pcr_insertion': False, # False True
-                'pcr_del_rate': 2.4*10e-6,
-                'pcr_ins_rate': 7.1*10e-7,
+                # 'pcr_deletion': False,
+                # 'pcr_insertion': False, # False True
+                # 'pcr_del_rate': 2.4*10e-6,
+                # 'pcr_ins_rate': 7.1*10e-7,
+
+                'pcr_deletion': self.kwargs['pcr_deletion'] if 'pcr_deletion' in self.kwargs.keys() else False,
+                'pcr_insertion': self.kwargs['pcr_insertion'] if 'pcr_insertion' in self.kwargs.keys() else False,
+                'pcr_del_rate': self.kwargs['pcr_del_rate'] if 'pcr_del_rate' in self.kwargs.keys() else 0,
+                'pcr_ins_rate': self.kwargs['pcr_ins_rate'] if 'pcr_ins_rate' in self.kwargs.keys() else 0,
 
                 'verbose': self.verbose,
             }
@@ -240,10 +245,15 @@ class SingleLocus:
                 'seq_sub_spl_number': seq_dep_i,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-                'seq_deletion': False,
-                'seq_insertion': False,  # False True
-                'seq_del_rate': 2.4 * 10e-6,
-                'seq_ins_rate': 7.1 * 10e-7,
+                # 'seq_deletion': False,
+                # 'seq_insertion': False,  # False True
+                # 'seq_del_rate': 2.4 * 10e-6,
+                # 'seq_ins_rate': 7.1 * 10e-7,
+
+                'seq_deletion': self.kwargs['seq_deletion'] if 'seq_deletion' in self.kwargs.keys() else False,
+                'seq_insertion': self.kwargs['seq_insertion'] if 'seq_insertion' in self.kwargs.keys() else False,
+                'seq_del_rate': self.kwargs['seq_del_rate'] if 'seq_del_rate' in self.kwargs.keys() else 0,
+                'seq_ins_rate': self.kwargs['seq_ins_rate'] if 'seq_ins_rate' in self.kwargs.keys() else 0,
             }
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')

@@ -47,6 +47,54 @@ class Gene:
             verbose=True,
             **kwargs,
     ):
+        """
+        The __init__ function is called when the class is instantiated.
+        It sets up the instance of the class, and defines all its attributes.
+
+        Parameters
+        ----------
+        gspl
+            Generate the gene_map and gspl_arr
+        len_params
+            Set the length of each part of the sequence
+        fasta_cdna_fpn
+            Specify the fasta file containing the cdna sequences
+        is_seed
+            Determine whether the simulation is for seed or not
+        working_dir
+            Specify the working directory
+        condis
+            Determine the type of simulation
+        sim_thres
+            Control the similarity threshold of the simulated sequences
+        permutation
+            Determine the number of permutations
+        is_sv_umi_lib
+            Control whether to save the umi library
+        is_sv_seq_lib
+            Determine whether the sequence library is simulated or not
+        is_sv_primer_lib
+            Determine whether to use the primer library or not
+        is_sv_adapter_lib
+            Determine whether the adapter library is saved
+        is_sv_spacer_lib
+            Determine whether to simulate the spacer library
+        verbose
+            Control the output of the console
+        **kwargs
+            Pass a variable number of keyword arguments to a function
+
+            Generate the gene_map, which is a dictionary of genes and their corresponding index
+
+        Returns
+        -------
+
+            The instance of the class
+
+        Doc Author
+        ----------
+            Trelent
+        """
         self.pfwriter = pfwriter()
         self.ranspl = ranspl()
         self.rannum = rannum()
