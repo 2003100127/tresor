@@ -17,8 +17,7 @@ from phylotres.gsample.FromSimulator import fromSimulator as bulkgmatsimu
 def deepcvaesc_sc(
 
 ):
-
-    sampling(loaded_model, num_labels=num_labels, batch_size=32)
+    sample(model_fpn, num_labels=num_labels, batch_size=32)
     return
 
 

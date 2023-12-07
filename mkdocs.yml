@@ -1,0 +1,13 @@
+site_name: My Docs
+
+theme:
+  name: material
+  features:
+    - content.code.select
+    - content.code.copy
+
+markdown_extensions:
+  - toc:
+      permalink: True
+      baselevel: 2
+      separator: "_"
