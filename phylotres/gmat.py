@@ -7,7 +7,19 @@ __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
 from phylotres.gcell.FromSimulator import fromSimulator as scgmatsimu
+from phylotres.gcell.deepcvaesc.Predict import sample
 from phylotres.gsample.FromSimulator import fromSimulator as bulkgmatsimu
+
+
+#################################
+
+
+def deepcvaesc_sc(
+
+):
+
+    sampling(loaded_model, num_labels=num_labels, batch_size=32)
+    return
 
 
 def spsimseq_sc(
