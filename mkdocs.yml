@@ -1,13 +1,37 @@
-site_name: My Docs
+site_name: PhyloTres
+
+repo_url: https://github.com/cribbslab/resimpy
+repo_name: cribbslab/phylotres
+
 
 theme:
   name: material
   features:
     - content.code.select
     - content.code.copy
+    - content.tabs.link
+#    - navigation.tabs
+    - navigation.instant
+    - navigation.expand
+#    - toc.integrate
+  icon:
+    repo: fontawesome/brands/git-alt
 
 markdown_extensions:
   - toc:
       permalink: True
       baselevel: 2
       separator: "_"
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+
+extra:
+  consent:
+    actions:
+      - accept
+      - manage
+
+plugins:
+  - tags
