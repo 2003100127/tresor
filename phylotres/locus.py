@@ -21,18 +21,19 @@ def library(
         seq_num,
         sim_thres,
         permutation,
-        is_seed,
-        mode,
-        is_sv_umi_lib,
-        is_sv_seq_lib,
-        is_sv_primer_lib,
-        is_sv_adapter_lib,
-        is_sv_spacer_lib,
+
+        is_seed=True,
+        is_sv_umi_lib=True,
+        is_sv_seq_lib=True,
+        is_sv_primer_lib=True,
+        is_sv_adapter_lib=True,
+        is_sv_spacer_lib=True,
 
         len_params=None,
         seq_params=None,
         material_params=None,
         condis=None,
+        mode=None,
 
         config_fpn=None,
         verbose=True,
@@ -96,7 +97,6 @@ def simu_seq_err(
         use_seed=True,
         seed=1,
 
-        fasta_cdna_fpn=None,
 
         pcr_deletion=False,
         pcr_insertion=False,
@@ -121,11 +121,12 @@ def simu_seq_err(
     seqerr(
         # initial sequence generation
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
         working_dir=working_dir,
-        fasta_cdna_fpn=fasta_cdna_fpn,
 
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
@@ -175,7 +176,6 @@ def simu_pcr_err(
         is_sv_primer_lib,
         is_sv_adapter_lib,
         is_sv_spacer_lib,
-        fasta_cdna_fpn,
         working_dir,
         condis,
         sim_thres,
@@ -196,6 +196,8 @@ def simu_pcr_err(
 ):
     pcrerr(
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
@@ -204,7 +206,6 @@ def simu_pcr_err(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
-        fasta_cdna_fpn=fasta_cdna_fpn,
         working_dir=working_dir,
         condis=condis,
         sim_thres=sim_thres,
@@ -234,7 +235,6 @@ def simu_pcr_num(
         is_sv_primer_lib,
         is_sv_adapter_lib,
         is_sv_spacer_lib,
-        fasta_cdna_fpn,
         working_dir,
         condis,
         sim_thres,
@@ -255,6 +255,8 @@ def simu_pcr_num(
 ):
     pcrnum(
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
@@ -263,7 +265,6 @@ def simu_pcr_num(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
-        fasta_cdna_fpn=fasta_cdna_fpn,
         working_dir=working_dir,
         condis=condis,
         sim_thres=sim_thres,
@@ -293,7 +294,6 @@ def simu_ampl_rate(
         is_sv_primer_lib,
         is_sv_adapter_lib,
         is_sv_spacer_lib,
-        fasta_cdna_fpn,
         working_dir,
         condis,
         sim_thres,
@@ -314,6 +314,8 @@ def simu_ampl_rate(
 ):
     amplrate(
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
@@ -322,7 +324,6 @@ def simu_ampl_rate(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
-        fasta_cdna_fpn=fasta_cdna_fpn,
         working_dir=working_dir,
         condis=condis,
         sim_thres=sim_thres,
@@ -352,7 +353,6 @@ def simu_umi_len(
         is_sv_primer_lib,
         is_sv_adapter_lib,
         is_sv_spacer_lib,
-        fasta_cdna_fpn,
         working_dir,
         condis,
         sim_thres,
@@ -373,6 +373,8 @@ def simu_umi_len(
 ):
     umilen(
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
@@ -381,7 +383,6 @@ def simu_umi_len(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
-        fasta_cdna_fpn=fasta_cdna_fpn,
         working_dir=working_dir,
         condis=condis,
         sim_thres=sim_thres,
@@ -411,7 +412,6 @@ def simu_seq_dep(
         is_sv_primer_lib,
         is_sv_adapter_lib,
         is_sv_spacer_lib,
-        fasta_cdna_fpn,
         working_dir,
         condis,
         sim_thres,
@@ -440,6 +440,8 @@ def simu_seq_dep(
 ):
     seqdep(
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
@@ -448,7 +450,6 @@ def simu_seq_dep(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
-        fasta_cdna_fpn=fasta_cdna_fpn,
         working_dir=working_dir,
         condis=condis,
         sim_thres=sim_thres,
@@ -486,7 +487,6 @@ def simu_generic(
         is_sv_primer_lib,
         is_sv_adapter_lib,
         is_sv_spacer_lib,
-        fasta_cdna_fpn,
         working_dir,
         condis,
         sim_thres,
@@ -516,6 +516,8 @@ def simu_generic(
 ):
     generic(
         len_params=len_params,
+        mode=kwargs['mode'],
+        material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
         seq_len=seq_len,
@@ -524,7 +526,6 @@ def simu_generic(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
-        fasta_cdna_fpn=fasta_cdna_fpn,
         working_dir=working_dir,
         condis=condis,
         sim_thres=sim_thres,
@@ -558,6 +559,49 @@ if __name__ == "__main__":
     from phylotres.path import to
     import numpy as np
 
+    library(
+        seq_num=50,
+        len_params={
+            'umi': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'umi_1': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'seq': 100,
+            'seq_2': 100,
+            'adapter': 10,
+            'adapter_1': 10,
+            'primer': 10,
+            'primer_1': 10,
+            'spacer': 10,
+            'spacer_1': 10,
+        },
+        seq_params={
+            'custom': 'AAGC',  # BAGC
+            'custom_1': 'V',
+        },
+        material_params={
+            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+        },
+        is_seed=True,
+
+        working_dir=to('data/simu/'),
+
+        # condis=['umi'],
+        # condis=['umi', 'seq'],
+        condis=['umi', 'custom', 'seq', 'custom_1'],
+        # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
+        sim_thres=3,
+        permutation=0,
+
+        mode='short_read',  # long_read short_read
+
+        verbose=True,  # False True
+    )
+
     # simu_seq_err(
     #     len_params={
     #         'umi': {
@@ -570,11 +614,12 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
+    #     material_params={
+    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #     },
     #     seq_num=50,
     #     seq_len=100,
     #     working_dir=to('data/simu/'),
-    #     fasta_cdna_fpn=False,
-    #     # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -620,7 +665,7 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True
-    #
+    #       mode='short_read',  # long_read short_read
     #     sv_fastq_fp=to('data/simu/'),
     # )
 
@@ -649,11 +694,12 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
+#         material_params={
+#             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+#         },
     #     seq_num=50,
     #     seq_len=100,
     #     working_dir=to('data/simu/'),
-    #     fasta_cdna_fpn=False,
-    #     # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -680,7 +726,7 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-    #
+    #     mode='short_read',  # long_read short_read
     #     sv_fastq_fp=to('data/simu/'),
     # )
 
@@ -708,11 +754,12 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
+#         material_params={
+#             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+#         },
     #     seq_num=50,
     #     seq_len=100,
     #     working_dir=to('data/simu/'),
-    #     fasta_cdna_fpn=False,
-    #     # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
     #     is_sv_primer_lib=True,
@@ -737,7 +784,7 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-    #
+    #     mode='short_read',  # long_read short_read
     #     sv_fastq_fp=to('data/simu/'),
     # )
 
@@ -767,11 +814,12 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
+#         material_params={
+#             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+#         },
     #     seq_num=50,
     #     seq_len=100,
     #     working_dir=to('data/simu/'),
-    #     fasta_cdna_fpn=False,
-    #     # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -797,7 +845,7 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-    #
+    #     mode='short_read',  # long_read short_read
     #     sv_fastq_fp=to('data/simu/'),
     # )
 
@@ -827,11 +875,12 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
+#         material_params={
+#             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+#         },
     #     seq_num=50,
     #     seq_len=100,
     #     working_dir=to('data/simu/'),
-    #     fasta_cdna_fpn=False,
-    #     # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -857,7 +906,7 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-    #
+    #     mode='short_read',  # long_read short_read
     #     sv_fastq_fp=to('data/simu/'),
     # )
 
@@ -887,11 +936,12 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
+    #     material_params={
+    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #     },
     #     seq_num=50,
     #     seq_len=100,
     #     working_dir=to('data/simu/'),
-    #     fasta_cdna_fpn=False,
-    #     # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -917,67 +967,70 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-    #
+    #     mode='short_read',  # long_read short_read
     #     sv_fastq_fp=to('data/simu/'),
     # )
 
-    simu_generic(
-        # initial sequence generation
-
-        len_params={
-            'umi': {
-                'umi_unit_pattern': 3,
-                'umi_unit_len': 12,
-            },
-            'umi_1': {
-                'umi_unit_pattern': 3,
-                'umi_unit_len': 12,
-            },
-            'barcode': 16,
-            'seq': 100,
-            'seq_2': 100,
-            'adapter': 10,
-            'adapter_1': 10,
-            'primer': 10,
-            'primer_1': 10,
-            'spacer': 10,
-            'spacer_1': 10,
-        },
-        seq_params={
-            'custom': 'AAGC',
-            'custom_1': 'A',
-        },
-        seq_num=50,
-        seq_len=100,
-        working_dir=to('data/simu/'),
-        fasta_cdna_fpn=False,
-        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
-
-        is_sv_umi_lib=True,
-        is_sv_seq_lib=True,
-        is_sv_primer_lib=True,
-        is_sv_adapter_lib=True,
-        is_sv_spacer_lib=True,
-        condis=['umi'],
-        # condis=['umi', 'seq'],
-        # condis=['umi', 'custom', 'seq', 'custom_1'],
-        sim_thres=3,
-        permutation=0,
-
-        # PCR amplification
-        ampl_rate=0.9,
-        err_route='minnow',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
-        pcr_error=1e-04,
-        pcr_num=10,
-        err_num_met='nbinomial',
-        seq_error=0.01,
-        seq_sub_spl_number=2000,  # None 200
-        # seq_sub_spl_rate=0.333,
-        use_seed=True,
-        seed=1,
-
-        verbose=False,  # True False
-
-        sv_fastq_fp=to('data/simu/'),
-        sv_fastq_fn='example',
-    )
+    # simu_generic(
+    #     # initial sequence generation
+    #
+    #     len_params={
+    #         'umi': {
+    #             'umi_unit_pattern': 3,
+    #             'umi_unit_len': 12,
+    #         },
+    #         'umi_1': {
+    #             'umi_unit_pattern': 3,
+    #             'umi_unit_len': 12,
+    #         },
+    #         'barcode': 16,
+    #         'seq': 100,
+    #         'seq_2': 100,
+    #         'adapter': 10,
+    #         'adapter_1': 10,
+    #         'primer': 10,
+    #         'primer_1': 10,
+    #         'spacer': 10,
+    #         'spacer_1': 10,
+    #     },
+    #     seq_params={
+    #         'custom': 'AAGC',
+    #         'custom_1': 'A',
+    #     },
+    #     material_params={
+    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #     },
+    #     seq_num=50,
+    #     seq_len=100,
+    #     working_dir=to('data/simu/'),
+    #
+    #     is_sv_umi_lib=True,
+    #     is_sv_seq_lib=True,
+    #     is_sv_primer_lib=True,
+    #     is_sv_adapter_lib=True,
+    #     is_sv_spacer_lib=True,
+    #     # condis=['umi'],
+    #     condis=['umi', 'seq'],
+    #     # condis=['umi', 'custom', 'seq', 'custom_1'],
+    #     sim_thres=3,
+    #     permutation=0,
+    #
+    #     # PCR amplification
+    #     ampl_rate=0.9,
+    #     err_route='minnow',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #     pcr_error=1e-04,
+    #     pcr_num=10,
+    #     err_num_met='nbinomial',
+    #     seq_error=0.01,
+    #     seq_sub_spl_number=2000,  # None 200
+    #     # seq_sub_spl_rate=0.333,
+    #     use_seed=True,
+    #     seed=1,
+    #
+    #     verbose=False,  # True False
+    #
+    #     mode='short_read',  # long_read short_read
+    #
+    #     sv_fastq_fp=to('data/simu/'),
+    #     sv_fastq_fn='example',
+    # )

@@ -299,6 +299,7 @@ if __name__ == "__main__":
             'custom_1': 'A',
         },
         material_params={
+            'bc_lib_fpn': to('data/3M-february-2018.txt'),  # None
             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
         },
         seq_num=50,

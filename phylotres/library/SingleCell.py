@@ -98,6 +98,10 @@ class SingleCell:
         self.kwargs = kwargs
         print(self.kwargs)
 
+        if not self.kwargs['material_params']:
+            self.kwargs['material_params'] = {}
+            self.kwargs['material_params']['fasta_cdna_fpn'] = None
+
         self.console = Console()
         self.console.verbose = verbose
 
@@ -154,6 +158,11 @@ class SingleCell:
                 barcode_i = df_bc_lib.loc[bc_ran_id[0], 'bc']
                 # print(bc_ran_id)
                 # print(barcode_i)
+                self.dbarcode().write(
+                    res=barcode_i,
+                    lib_fpn=self.working_dir + 'barcode.txt',
+                    is_sv=self.is_sv_barcode_lib,
+                )
             else:
                 pbarcode = self.dbarcode(
                     dna_map=self.dna_map,

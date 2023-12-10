@@ -85,6 +85,7 @@ class SingleLocus:
         self.subsampling = Subsampling()
 
         self.kwargs = kwargs
+        print(self.kwargs)
 
         self.console = Console()
         self.console.verbose = verbose

@@ -73,6 +73,10 @@ class SingleLocus:
         self.kwargs = kwargs
         print(self.kwargs)
 
+        if not self.kwargs['material_params']:
+            self.kwargs['material_params'] = {}
+            self.kwargs['material_params']['fasta_cdna_fpn'] = None
+
         self.console = Console()
         self.console.verbose = verbose
 
