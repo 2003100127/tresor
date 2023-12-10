@@ -130,7 +130,7 @@ def simu_seq_err(
         # initial sequence generation
         gspl=gspl,
         len_params=len_params,
-        mode=kwargs['mode'],
+        mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
@@ -193,7 +193,7 @@ def simu_pcr_err(
     pcrerr(
         gspl=gspl,
         len_params=len_params,
-        mode=kwargs['mode'],
+        mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
@@ -254,7 +254,7 @@ def simu_pcr_num(
     pcrnum(
         gspl=gspl,
         len_params=len_params,
-        mode=kwargs['mode'],
+        mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
@@ -315,7 +315,7 @@ def simu_ampl_rate(
     amplrate(
         gspl=gspl,
         len_params=len_params,
-        mode=kwargs['mode'],
+        mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
@@ -376,7 +376,7 @@ def simu_umi_len(
     umilen(
         gspl=gspl,
         len_params=len_params,
-        mode=kwargs['mode'],
+        mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
@@ -437,7 +437,7 @@ def simu_seq_dep(
     seqdep(
         gspl=gspl,
         len_params=len_params,
-        mode=kwargs['mode'],
+        mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
