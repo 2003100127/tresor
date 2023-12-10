@@ -5,21 +5,29 @@ setup(
     version="0.0.1",
     keywords=("pip", "phylotres"),
     description="PhyloTres",
-    long_description="PhyloTres",
+    long_description="Simulation tool PhyloTres",
     license="GNU GENERAL V3.0",
-    url="https://github.com/cribbslab/phylotres; https://www.ndorms.ox.ac.uk/research/research-groups/cribbs-group-computational-and-systems-biology",
+
+    url="https://github.com/cribbslab/phylotres",
     author="Jianfeng Sun",
-    author_email="jianfeng.sun@ndorms.ox.ac.uk; Adam.Cribbs@ndorms.ox.ac.uk",
+    # author_email="jianfeng.sun@ndorms.ox.ac.uk; Adam.Cribbs@ndorms.ox.ac.uk",
+
     packages=find_packages(),
     include_package_data=True,
     # package_data={},
     platforms="any",
-    python_requires=">=3.10",
+    python_requires=">3.8",
     install_requires=[
+        "click",
         "pandas",
         "numpy",
         "scipy",
         "biopython",
         "pyfiglet==0.8.post1",
     ],
+    entry_points={
+        'console_scripts': [
+            'phylotres=phylotres.main:main',
+        ],
+    },
 )

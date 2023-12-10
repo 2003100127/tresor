@@ -159,13 +159,12 @@ class SingleLocus:
                             high=len(seq_cdna_map[ii]) - self.len_params['seq'],
                             num=1,
                             use_seed=self.is_seed,
-                            seed=i + 100000000,
+                            seed=i + 1,
                         )
                         if (cdna_short_read_ran_id[0] + self.len_params['seq']) > len(seq_cdna_map[ii]):
                             u.append(seq_cdna_map[ii][0:self.len_params['seq']])
                         else:
-                            u.append(seq_cdna_map[ii][
-                                     cdna_short_read_ran_id[0]:(cdna_short_read_ran_id[0] + self.len_params['seq'])])
+                            u.append(seq_cdna_map[ii][cdna_short_read_ran_id[0]:(cdna_short_read_ran_id[0] + self.len_params['seq'])])
                 cdna_seqs_sel_maps[seq_i] = u
                 # print(cdna_seqs_sel_maps)
                 # print(len(cdna_seqs_sel_maps))
