@@ -80,6 +80,8 @@ class SingleCell:
         # print(self.gmat)
         self.num_genes = len(self.gmat.columns)
         self.num_cells = len(self.gmat.index)
+        print(self.num_genes)
+        print(self.num_cells)
         self.cell_map = {k: v for k, v in enumerate(self.gmat.columns)}
         self.gene_map = {k: v for k, v in enumerate(self.gmat.index)}
         # print(self.cell_map)
@@ -140,7 +142,7 @@ class SingleCell:
             # print(df_bc_lib)
             num_bc_lib = df_bc_lib.shape[0]
         for cell_i in range(self.num_cells):
-            barcode_seed = cell_i + self.permutation * cell_i * 80 + (cell_i + 1) * 10000000
+            barcode_seed = cell_i + self.permutation * cell_i * 80 + (cell_i + 1) * 10000
             if 'bc_lib_fpn' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bc_lib_fpn']:
                 bc_ran_id = self.rannum.uniform(
                     low=0,
@@ -255,7 +257,7 @@ class SingleCell:
                         self.console.print("============>UMI condition {}: {}".format(umi_mark_id, 'umi' + umi_mark))
                         umi_flag = False
                         while not umi_flag:
-                            umi_seed = id + self.permutation * seq_num + umi_cnt + (umi_mark_id + 1) * 100000000 + (x+1)*100000
+                            umi_seed = id + self.permutation * seq_num + umi_cnt + (umi_mark_id + 1) * 100000 + (x+1)*100000
                             umip = self.dumi(
                                 dna_map=self.dna_map,
                                 umi_unit_pattern=self.len_params['umi' + umi_mark]['umi_unit_pattern'],
@@ -305,7 +307,7 @@ class SingleCell:
                             )
                             # print(seq_i)
                         else:
-                            seq_seed = id + self.permutation * seq_num + 8000000 + (seq_mark_id+1) * 200000000 + (x+1)*100000
+                            seq_seed = id + self.permutation * seq_num + 8000000 + (seq_mark_id+1) * 200000 + (x+1)*100000
                             pseq = self.dseq(
                                 dna_map=self.dna_map,
                                 pseudorandom_num=self.rannum.uniform(
@@ -333,7 +335,7 @@ class SingleCell:
                     for primer_mark_id, primer_mark_suffix in enumerate(condi_map['primer']):
                         primer_mark = '_' + primer_mark_suffix if primer_mark_suffix != 'alone' else ''
                         self.console.print("============>Primer condition {}: {}".format(primer_mark_id, 'primer' + primer_mark))
-                        primer_seed = id + self.permutation * seq_num + 8000000 + (primer_mark_id + 1) * 300000000 + (x+1)*100000
+                        primer_seed = id + self.permutation * seq_num + 8000000 + (primer_mark_id + 1) * 300000 + (x+1)*100000
                         pprimer = self.dprimer(
                             dna_map=self.dna_map,
                             pseudorandom_num=self.rannum.uniform(
@@ -360,7 +362,7 @@ class SingleCell:
                     for adapter_mark_id, adapter_mark_suffix in enumerate(condi_map['adapter']):
                         adapter_mark = '_' + adapter_mark_suffix if adapter_mark_suffix != 'alone' else ''
                         self.console.print("============>Adapter condition {}: {}".format(adapter_mark_id, 'adapter' + adapter_mark))
-                        adapter_seed = id + self.permutation * seq_num + 8000000 + (adapter_mark_id+1) * 400000000 + (x+1)*100000
+                        adapter_seed = id + self.permutation * seq_num + 8000000 + (adapter_mark_id+1) * 400000 + (x+1)*100000
                         padapter = self.dadapter(
                             dna_map=self.dna_map,
                             pseudorandom_num=self.rannum.uniform(
@@ -388,7 +390,7 @@ class SingleCell:
                     for spacer_mark_id, spacer_mark_suffix in enumerate(condi_map['spacer']):
                         spacer_mark = '_' + spacer_mark_suffix if spacer_mark_suffix != 'alone' else ''
                         self.console.print("============>Spacer condition {}: {}".format(spacer_mark_id, 'spacer' + spacer_mark))
-                        spacer_seed = id + self.permutation * seq_num + 8000000 + (spacer_mark_id+1) * 500000000 + (x+1)*100000
+                        spacer_seed = id + self.permutation * seq_num + 8000000 + (spacer_mark_id+1) * 500000 + (x+1)*100000
                         pspacer = self.dspacer(
                             dna_map=self.dna_map,
                             pseudorandom_num=self.rannum.uniform(

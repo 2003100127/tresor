@@ -23,6 +23,7 @@ setup(
         "numpy",
         "scipy",
         "biopython",
+        "tables",
         "pyfiglet==0.8.post1",
     ],
     entry_points={

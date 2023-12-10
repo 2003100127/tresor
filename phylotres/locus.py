@@ -6,6 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
+from phylotres.library.SingleLocus import SingleLocus as libslocus
 from phylotres.scenario.seqerr.SingleLocus import SingleLocus as seqerr
 from phylotres.scenario.pcrerr.SingleLocus import SingleLocus as pcrerr
 from phylotres.scenario.pcrnum.SingleLocus import SingleLocus as pcrnum
@@ -13,6 +14,64 @@ from phylotres.scenario.amplrate.SingleLocus import SingleLocus as amplrate
 from phylotres.scenario.umilen.SingleLocus import SingleLocus as umilen
 from phylotres.scenario.seqdep.SingleLocus import SingleLocus as seqdep
 from phylotres.scenario.generic.SingleLocus import SingleLocus as generic
+
+
+def library(
+        working_dir,
+        seq_num,
+        sim_thres,
+        permutation,
+        is_seed,
+        mode,
+        is_sv_umi_lib,
+        is_sv_seq_lib,
+        is_sv_primer_lib,
+        is_sv_adapter_lib,
+        is_sv_spacer_lib,
+
+        len_params=None,
+        seq_params=None,
+        material_params=None,
+        condis=None,
+
+        config_fpn=None,
+        verbose=True,
+):
+    if config_fpn:
+        import yaml
+        with open(config_fpn, "r") as f:
+            configs = yaml.safe_load(f)
+            # for k, item in configs.items():
+            #     print(k, item)
+        len_params=configs['len_params']
+        seq_params=configs['seq_params']
+        material_params=configs['material_params']
+        condis=configs['condis']
+
+    libslocus(
+        seq_num=seq_num,
+        len_params=len_params,
+        seq_params=seq_params,
+        material_params=material_params,
+        condis=condis,
+
+        working_dir=working_dir,
+
+        sim_thres=sim_thres,
+        permutation=permutation,
+
+        mode=mode,  # long_read short_read
+
+        is_sv_umi_lib=is_sv_umi_lib,
+        is_sv_seq_lib=is_sv_seq_lib,
+        is_sv_primer_lib=is_sv_primer_lib,
+        is_sv_adapter_lib=is_sv_adapter_lib,
+        is_sv_spacer_lib=is_sv_spacer_lib,
+
+        is_seed=is_seed,
+        verbose=verbose,  # False True
+    ).pooling()
+    return 'Finished'
 
 
 def simu_seq_err(

@@ -6,12 +6,89 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
+from phylotres.library.Gene import Gene as libgene
 from phylotres.scenario.seqerr.Gene import Gene as seqerr
 from phylotres.scenario.pcrerr.Gene import Gene as pcrerr
 from phylotres.scenario.pcrnum.Gene import Gene as pcrnum
 from phylotres.scenario.amplrate.Gene import Gene as amplrate
 from phylotres.scenario.umilen.Gene import Gene as umilen
 from phylotres.scenario.seqdep.Gene import Gene as seqdep
+
+
+def library(
+        working_dir,
+        seq_num,
+
+        # gspl
+        r_root,
+        num_samples,
+        num_genes,
+        simulator,
+
+        sim_thres,
+        permutation,
+        is_seed,
+        is_sv_umi_lib,
+        is_sv_seq_lib,
+        is_sv_primer_lib,
+        is_sv_adapter_lib,
+        is_sv_spacer_lib,
+        mode,
+
+        len_params=None,
+        seq_params=None,
+        material_params=None,
+        condis=None,
+
+        config_fpn=None,
+        verbose=True,
+):
+    if config_fpn:
+        import yaml
+        with open(config_fpn, "r") as f:
+            configs = yaml.safe_load(f)
+            # for k, item in configs.items():
+            #     print(k, item)
+        len_params = configs['len_params']
+        seq_params = configs['seq_params']
+        material_params = configs['material_params']
+        condis = configs['condis']
+
+    from phylotres.gsample.FromSimulator import fromSimulator
+
+    gspl = fromSimulator(
+        R_root=r_root,
+        num_samples=num_samples,
+        num_genes=num_genes,
+        simulator=simulator,
+    ).run()
+    print(gspl)
+
+    libgene(
+        gspl=gspl,
+        seq_num=seq_num,
+        len_params=len_params,
+        seq_params=seq_params,
+        material_params=material_params,
+        condis=condis,
+
+        working_dir=working_dir,
+
+        sim_thres=sim_thres,
+        permutation=permutation,
+
+        mode=mode,  # long_read short_read
+
+        is_seed=is_seed,
+        is_sv_umi_lib=is_sv_umi_lib,
+        is_sv_seq_lib=is_sv_seq_lib,
+        is_sv_primer_lib=is_sv_primer_lib,
+        is_sv_adapter_lib=is_sv_adapter_lib,
+        is_sv_spacer_lib=is_sv_spacer_lib,
+
+        verbose=verbose,  # False True
+    ).pooling()
+    return 'Finished'
 
 
 def simu_seq_err(

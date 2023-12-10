@@ -6,12 +6,94 @@ __maintainer__ = "Jianfeng Sun"
 __email__="jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
+from phylotres.library.SingleCell import SingleCell as libsc
 from phylotres.scenario.seqerr.SingleCell import SingleCell as seqerr
 from phylotres.scenario.pcrerr.SingleCell import SingleCell as pcrerr
 from phylotres.scenario.pcrnum.SingleCell import SingleCell as pcrnum
 from phylotres.scenario.amplrate.SingleCell import SingleCell as amplrate
 from phylotres.scenario.umilen.SingleCell import SingleCell as umilen
 from phylotres.scenario.seqdep.SingleCell import SingleCell as seqdep
+
+
+def library(
+        working_dir,
+        seq_num,
+
+        # gmat
+        r_root,
+        num_cells,
+        num_genes,
+        simulator,
+
+        sim_thres,
+        permutation,
+        is_seed,
+        is_sv_umi_lib,
+        is_sv_seq_lib,
+        is_sv_primer_lib,
+        is_sv_adapter_lib,
+        is_sv_spacer_lib,
+        mode,
+
+        len_params=None,
+        seq_params=None,
+        material_params=None,
+        condis=None,
+
+        config_fpn=None,
+        verbose=True,
+):
+    if config_fpn:
+        import yaml
+        with open(config_fpn, "r") as f:
+            configs = yaml.safe_load(f)
+            # for k, item in configs.items():
+            #     print(k, item)
+        len_params = configs['len_params']
+        seq_params = configs['seq_params']
+        material_params = configs['material_params']
+        condis = configs['condis']
+
+    if "gmat_h5_fpn" in configs['material_params'].keys() and configs['material_params']['gmat_h5_fpn']:
+        import pandas as pd
+        df_gmat = pd.read_hdf(configs['material_params']['gmat_h5_fpn'], 'df')
+        df_gmat = df_gmat.drop(columns=['Y'])
+        print(df_gmat)
+    else:
+        from phylotres.gcell.FromSimulator import fromSimulator
+        df_gmat, _, _ = fromSimulator(
+            simulator=simulator,
+            R_root=r_root,
+            num_genes=num_genes,
+            num_cells=num_cells,
+        ).run()
+        print(df_gmat)
+
+    libsc(
+        gmat=df_gmat,
+        seq_num=seq_num,
+        len_params=len_params,
+        seq_params=seq_params,
+        material_params=material_params,
+        condis=condis,
+
+        working_dir=working_dir,
+
+        sim_thres=sim_thres,
+        permutation=permutation,
+
+        mode=mode,  # long_read short_read
+
+        is_seed=is_seed,
+        is_sv_umi_lib=is_sv_umi_lib,
+        is_sv_seq_lib=is_sv_seq_lib,
+        is_sv_primer_lib=is_sv_primer_lib,
+        is_sv_adapter_lib=is_sv_adapter_lib,
+        is_sv_spacer_lib=is_sv_spacer_lib,
+
+        verbose=verbose,  # False True
+    ).pooling()
+    return 'Finished'
 
 
 def simu_seq_err(

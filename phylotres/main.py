@@ -8,9 +8,9 @@ __lab__ = "Cribbslab"
 
 import click
 from pyfiglet import Figlet
-from phylotres.library.SingleLocus import SingleLocus as libslocus
-from phylotres.library.Gene import Gene as libgene
-from phylotres.library.SingleCell import SingleCell as libsc
+from phylotres.locus import library as lib_sl
+from phylotres.gene import library as lib_bulk
+from phylotres.sc import library as lib_sc
 from phylotres.util.Console import Console
 
 
@@ -31,14 +31,13 @@ class HelpfulCmd(click.Command):
                 library_sl | library_bulk | library_sc
                 
                 @@@ library_sl
-                phylotres library_sl -cfpn ./phylotres/data/libslocus.yml -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                phylotres library_sl -cfpn ./phylotres/data/libslocus.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
                 
                 @@@ library_bulk
-                phylotres library_bulk -cfpn ./phylotres/data/libgene.yml -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 20 -bsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
+                phylotres library_bulk -cfpn ./phylotres/data/libgene.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 20 -bsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
 
                 @@@ library_sc
-                phylotres library_sc -cfpn ./phylotres/data/libsc.yml -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -bsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
-
+                phylotres library_sc -cfpn ./phylotres/data/libsc.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -bsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
 
             """
         )
@@ -56,6 +55,12 @@ class HelpfulCmd(click.Command):
     '-wd', '--working_dir', type=str, required=True,
     help="""
         Path to store results in the working directory
+    """
+)
+@click.option(
+    '-snum', '--seq_num', type=int,
+    help="""
+        read/UMI number
     """
 )
 @click.option(
@@ -154,6 +159,7 @@ def main(
         tool,
         config_fpn,
         working_dir,
+        seq_num,
 
         # gspl
         r_root,
@@ -178,9 +184,10 @@ def main(
     print(vignette1.renderText('PhyloTres'))
     if tool == "library_sl":
         console.print("=============>Tool {} is being used...".format(tool))
-        library_sl(
+        lib_sl(
             config_fpn=config_fpn,
             working_dir=working_dir,
+            seq_num=seq_num,
             sim_thres=sim_thres,
             permutation=permutation,
             is_seed=is_seed,
@@ -194,9 +201,10 @@ def main(
         )
     elif tool == "library_bulk":
         console.print("=============>Tool {} is being used...".format(tool))
-        library_bulk(
+        lib_bulk(
             config_fpn=config_fpn,
             working_dir=working_dir,
+            seq_num=seq_num,
             sim_thres=sim_thres,
             r_root=r_root,
             num_samples=num_samples,
@@ -214,9 +222,10 @@ def main(
         )
     elif tool == "library_sc":
         console.print("=============>Tool {} is being used...".format(tool))
-        library_sc(
+        lib_sc(
             config_fpn=config_fpn,
             working_dir=working_dir,
+            seq_num=seq_num,
             sim_thres=sim_thres,
             r_root=r_root,
             num_cells=num_cells,
@@ -232,179 +241,3 @@ def main(
             mode=mode,
             verbose=verbose,
         )
-
-def library_sl(
-        config_fpn,
-        working_dir,
-        sim_thres,
-        permutation,
-        is_seed,
-        mode,
-        is_sv_umi_lib,
-        is_sv_seq_lib,
-        is_sv_primer_lib,
-        is_sv_adapter_lib,
-        is_sv_spacer_lib,
-        verbose,
-):
-    import yaml
-
-    with open(config_fpn, "r") as f:
-        configs = yaml.safe_load(f)
-        # for k, item in configs.items():
-        #     print(k, item)
-
-    libslocus(
-        seq_num=50,
-        len_params=configs['len_params'],
-        seq_params=configs['seq_params'],
-        material_params=configs['material_params'],
-        condis=configs['condis'],
-
-        working_dir=working_dir,
-
-        sim_thres=sim_thres,
-        permutation=permutation,
-
-        mode=mode,  # long_read short_read
-
-        is_sv_umi_lib=is_sv_umi_lib,
-        is_sv_seq_lib=is_sv_seq_lib,
-        is_sv_primer_lib=is_sv_primer_lib,
-        is_sv_adapter_lib=is_sv_adapter_lib,
-        is_sv_spacer_lib=is_sv_spacer_lib,
-
-        is_seed=is_seed,
-        verbose=verbose,  # False True
-    ).pooling()
-    return 'Finished'
-
-
-def library_bulk(
-        config_fpn,
-        working_dir,
-
-        # gspl
-        r_root,
-        num_samples,
-        num_genes,
-        simulator,
-
-        sim_thres,
-        permutation,
-        is_seed,
-        is_sv_umi_lib,
-        is_sv_seq_lib,
-        is_sv_primer_lib,
-        is_sv_adapter_lib,
-        is_sv_spacer_lib,
-        mode,
-        verbose,
-):
-    import yaml
-
-    with open(config_fpn, "r") as f:
-        configs = yaml.safe_load(f)
-        # for k, item in configs.items():
-        #     print(k,item)
-
-    from phylotres.gsample.FromSimulator import fromSimulator
-
-    gspl = fromSimulator(
-        R_root=r_root,
-        num_samples=num_samples,
-        num_genes=num_genes,
-        simulator=simulator,
-    ).run()
-    print(gspl)
-
-    libgene(
-        gspl=gspl,
-        seq_num=50,
-        len_params=configs['len_params'],
-        seq_params=configs['seq_params'],
-        material_params=configs['material_params'],
-        condis=configs['condis'],
-
-        working_dir=working_dir,
-
-        sim_thres=sim_thres,
-        permutation=permutation,
-
-        mode=mode,  # long_read short_read
-
-        is_seed=is_seed,
-        is_sv_umi_lib=is_sv_umi_lib,
-        is_sv_seq_lib=is_sv_seq_lib,
-        is_sv_primer_lib=is_sv_primer_lib,
-        is_sv_adapter_lib=is_sv_adapter_lib,
-        is_sv_spacer_lib=is_sv_spacer_lib,
-
-        verbose=verbose,  # False True
-    ).pooling()
-    return 'Finished'
-
-
-def library_sc(
-        config_fpn,
-        working_dir,
-
-        # gspl
-        r_root,
-        num_cells,
-        num_genes,
-        simulator,
-
-        sim_thres,
-        permutation,
-        is_seed,
-        is_sv_umi_lib,
-        is_sv_seq_lib,
-        is_sv_primer_lib,
-        is_sv_adapter_lib,
-        is_sv_spacer_lib,
-        mode,
-        verbose,
-):
-    import yaml
-
-    with open(config_fpn, "r") as f:
-        configs = yaml.safe_load(f)
-        # for k, item in configs.items():
-        #     print(k,item)
-
-    from phylotres.gcell.FromSimulator import fromSimulator
-
-    gmat, _, _ = fromSimulator(
-        simulator=simulator,
-        R_root=r_root,
-        num_genes=num_genes,
-        num_cells=num_cells,
-    ).run()
-    print(gmat)
-
-    libsc(
-        gmat=gmat,
-        seq_num=50,
-        len_params=configs['len_params'],
-        seq_params=configs['seq_params'],
-        material_params=configs['material_params'],
-        condis=configs['condis'],
-
-        working_dir=working_dir,
-
-        sim_thres=sim_thres,
-        permutation=permutation,
-
-        mode=mode,  # long_read short_read
-
-        is_seed=is_seed,
-        is_sv_umi_lib=is_sv_umi_lib,
-        is_sv_seq_lib=is_sv_seq_lib,
-        is_sv_primer_lib=is_sv_primer_lib,
-        is_sv_adapter_lib=is_sv_adapter_lib,
-        is_sv_spacer_lib=is_sv_spacer_lib,
-
-        verbose=verbose,  # False True
-    ).pooling()
-    return 'Finished'
