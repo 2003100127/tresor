@@ -8,6 +8,7 @@ __lab__ = "Cribbslab"
 
 import time
 import numpy as np
+import pandas as pd
 from scipy.sparse import coo_matrix
 from phylotres.util.random.Sampling import Sampling as ranspl
 from phylotres.util.random.Number import Number as rannum
@@ -32,7 +33,6 @@ class Gene:
             gspl,
             len_params,
 
-            fasta_cdna_fpn=False,
             is_seed=False,
 
             working_dir='./simu/',
@@ -109,7 +109,6 @@ class Gene:
         self.working_dir = working_dir
         self.len_params = len_params
         self.is_seed = is_seed
-        self.fasta_cdna_fpn = fasta_cdna_fpn
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
         self.is_sv_primer_lib = is_sv_primer_lib
@@ -172,14 +171,28 @@ class Gene:
         condi_keys = condi_map.keys()
 
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
-        if self.fasta_cdna_fpn:
+        if self.kwargs['material_params']['fasta_cdna_fpn']:
             self.console.print("======>Read CDNAs from a reference ome")
-            seq_cdna_map = tactic6(
-                arr_2d=sfasta().get_from_gz(
-                    self.fasta_cdna_fpn,
-                )
+            fastq_ref_arr = sfasta().get_from_gz(
+                fasta_fpn=self.kwargs['material_params']['fasta_cdna_fpn'],
             )
-            cdna_ids = [*seq_cdna_map.keys()]
+            if self.kwargs['mode'] == 'short_read':
+                df_fastq_ref = pd.DataFrame(fastq_ref_arr)
+                # print(df_fastq_ref)
+                df_fastq_ref = df_fastq_ref.rename(columns={0: 'name', 1: 'seq'})
+                df_fastq_ref['len'] = df_fastq_ref['seq'].apply(lambda x: len(x))
+                df_fastq_ref = df_fastq_ref.loc[df_fastq_ref['len'] > 2 * self.len_params['seq']]
+                # print(df_fastq_ref)
+                seq_cdna_map = tactic6(
+                    arr_2d=df_fastq_ref[['name', 'seq']].values.tolist()
+                )
+                cdna_ids = [*seq_cdna_map.keys()]
+            else:
+                seq_cdna_map = tactic6(
+                    arr_2d=fastq_ref_arr
+                )
+                cdna_ids = [*seq_cdna_map.keys()]
+            self.console.print("======>There are {} genes in the reference genome".format(len(cdna_ids)))
 
         ### +++++++++++++++ block: generate each read +++++++++++++++
         for x, gs in enumerate(self.gspl_arr):
@@ -187,7 +200,7 @@ class Gene:
             gene = gs[1]
             seq_num = gs[2]
 
-            if self.fasta_cdna_fpn:
+            if self.kwargs['material_params']['fasta_cdna_fpn']:
                 cdna_seqs_sel_maps = {}
                 for i, seq_i in enumerate(condi_map['seq']):
                     cdna_ids_sel = self.ranspl.uniform(
@@ -197,11 +210,37 @@ class Gene:
                         seed=i + 100000 + (x+1)*100000,
                         replace=True,
                     )
-                    cdna_seqs_sel_maps[seq_i] = [seq_cdna_map[i] for i in cdna_ids_sel]
-                    # print(cdna_seqs_sel)
+                    ### cdna_ids_sel
+                    # ['ENST00000526369.3', ..., 'ENST00000531461.5', 'ENST00000635785.1']
+                    # ['ENST00000581517.1', ..., 'ENST00000490527.1', 'ENST00000453971.1']
+                    # ...
+                    # ['ENST00000519955.1', ..., 'ENST00000527746.5', 'ENST00000360135.8']
+                    u = []
+                    for ii in cdna_ids_sel:
+                        if self.kwargs['mode'] == 'long_read':
+                            u.append(seq_cdna_map[ii])
+                        elif self.kwargs['mode'] == 'short_read':
+                            # @@ if a random number extending to the end of the reference CDNA sequence
+                            # leads to a length of sequence, which is shorter than the required short
+                            # read length, then we directly use the whole reference CDNA sequence.
+                            cdna_short_read_ran_id = self.rannum.uniform(
+                                low=0,
+                                high=len(seq_cdna_map[ii]) - self.len_params['seq'],
+                                num=1,
+                                use_seed=self.is_seed,
+                                seed=(i - 100000 + (x + 1) * 100000),
+                            )
+                            if (cdna_short_read_ran_id[0] + self.len_params['seq']) > len(seq_cdna_map[ii]):
+                                u.append(seq_cdna_map[ii][0:self.len_params['seq']])
+                            else:
+                                u.append(seq_cdna_map[ii][cdna_short_read_ran_id[0]:(cdna_short_read_ran_id[0]+self.len_params['seq'])])
+                    cdna_seqs_sel_maps[seq_i] = u
+                    # print(cdna_seqs_sel_maps)
+                    # print(len(cdna_seqs_sel_maps))
                     self.pfwriter.generic(
                         df=cdna_ids_sel,
-                        sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
+                        sv_fpn=self.working_dir + 'cdna_ids_' + seq_i + '_s_' + str(sample) + '_g_' + str(
+                            gene) + '.txt',
                     )
 
             for id in np.arange(seq_num):
@@ -257,13 +296,14 @@ class Gene:
                     for seq_mark_id, seq_mark_suffix in enumerate(condi_map['seq']):
                         seq_mark = '_' + seq_mark_suffix if seq_mark_suffix != 'alone' else ''
                         self.console.print("============>Sequence condition {}: {}".format(seq_mark_id, 'seq' + seq_mark))
-                        if self.fasta_cdna_fpn:
+                        if self.kwargs['material_params']['fasta_cdna_fpn']:
                             seq_i = self.dseq(
                                 cdna_seq=cdna_seqs_sel_maps[seq_mark_suffix][id],
                             ).cdna(
                                 lib_fpn=self.working_dir + 'seq' + seq_mark  + '_s_' + str(sample) + '_g_' + str(gene) + '.txt',
                                 is_sv=self.is_sv_seq_lib,
                             )
+                            # print(seq_i)
                         else:
                             seq_seed = id + self.permutation * seq_num + 8000000 + (seq_mark_id+1) * 200000000 + (x+1)*100000
                             pseq = self.dseq(
@@ -400,7 +440,7 @@ if __name__ == "__main__":
     from phylotres.gsample.FromSimulator import fromSimulator
 
     gspl = fromSimulator(
-        R_root='D:/Programming/R/R-4.3.1/',
+        R_root='D:/Programming/R/R-4.3.2/',
         num_samples=2,
         num_genes=20,
         simulator='spsimseq',
@@ -430,11 +470,12 @@ if __name__ == "__main__":
             'custom': 'BAGC',
             'custom_1': 'V',
         },
+        material_params={
+            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+        },
         is_seed=True,
 
         working_dir=to('data/simu/'),
-        fasta_cdna_fpn=False,
-        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
         # condis=['umi', 'seq'],
@@ -443,8 +484,10 @@ if __name__ == "__main__":
         # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
+
+        mode='short_read',  # long_read short_read
+
         verbose=False,
     )
 
-    # print(p.umi_len)
     p.pooling()

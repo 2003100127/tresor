@@ -489,7 +489,9 @@ if __name__ == "__main__":
         # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
+
         mode='short_read', # long_read short_read
+
         verbose=False,
     )
 
