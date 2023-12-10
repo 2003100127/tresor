@@ -171,7 +171,7 @@ class Gene:
         condi_keys = condi_map.keys()
 
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
-        if self.kwargs['material_params']['fasta_cdna_fpn']:
+        if 'seq' in condi_keys and self.kwargs['material_params']['fasta_cdna_fpn']:
             self.console.print("======>Read CDNAs from a reference ome")
             fastq_ref_arr = sfasta().get_from_gz(
                 fasta_fpn=self.kwargs['material_params']['fasta_cdna_fpn'],
@@ -200,7 +200,7 @@ class Gene:
             gene = gs[1]
             seq_num = gs[2]
 
-            if self.kwargs['material_params']['fasta_cdna_fpn']:
+            if 'seq' in condi_keys and self.kwargs['material_params']['fasta_cdna_fpn']:
                 cdna_seqs_sel_maps = {}
                 for i, seq_i in enumerate(condi_map['seq']):
                     cdna_ids_sel = self.ranspl.uniform(
