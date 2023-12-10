@@ -480,7 +480,7 @@ if __name__ == "__main__":
     import numpy as np
 
     gmat, _, _ = spsimseq_sc(
-        R_root='D:/Programming/R/R-4.3.1/',
+        R_root='D:/Programming/R/R-4.3.2/',
         num_genes=6,
         num_cells=2,
     )

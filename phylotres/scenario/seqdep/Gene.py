@@ -30,7 +30,6 @@ class Gene:
             is_sv_primer_lib,
             is_sv_adapter_lib,
             is_sv_spacer_lib,
-            fasta_cdna_fpn,
             working_dir,
             condis,
             sim_thres,
@@ -63,7 +62,6 @@ class Gene:
         self.is_sv_spacer_lib = is_sv_spacer_lib
 
         self.working_dir = working_dir
-        self.fasta_cdna_fpn = fasta_cdna_fpn
         self.condis = condis
         self.sim_thres = sim_thres
         self.permutation = permutation
@@ -99,7 +97,6 @@ class Gene:
         self.sequencing_library = bulksimulib(
             gspl=self.gspl,
             len_params=self.len_params,
-            fasta_cdna_fpn=self.fasta_cdna_fpn,
             seq_num=self.seq_num,
             is_seed=self.use_seed,
             working_dir=self.working_dir,
@@ -112,6 +109,8 @@ class Gene:
             is_sv_adapter_lib=self.is_sv_adapter_lib,
             is_sv_spacer_lib=self.is_sv_spacer_lib,
             verbose=self.verbose,
+            mode=self.kwargs['mode'],
+            material_params=self.kwargs['material_params'] if 'material_params' in self.kwargs.keys() else None,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
         ### self.sequencing_library
@@ -292,7 +291,7 @@ if __name__ == "__main__":
     from phylotres.gsample.FromSimulator import fromSimulator
 
     gspl = fromSimulator(
-        R_root='D:/Programming/R/R-4.3.1/',
+        R_root='D:/Programming/R/R-4.3.2/',
         num_samples=2,
         num_genes=6,
         simulator='spsimseq',
@@ -325,11 +324,12 @@ if __name__ == "__main__":
             'custom': 'AAGC',
             'custom_1': 'A',
         },
+        material_params={
+            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+        },
         seq_num=50,
         seq_len=100,
         working_dir=to('data/simu/'),
-        fasta_cdna_fpn=False,
-        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         is_sv_umi_lib=True,
         is_sv_seq_lib=True,
@@ -355,6 +355,8 @@ if __name__ == "__main__":
         seed=1,
 
         verbose=False, # True False
+
+        mode='short_read',  # long_read short_read
 
         sv_fastq_fp=to('data/simu/'),
     )

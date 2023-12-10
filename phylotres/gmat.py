@@ -51,7 +51,7 @@ def spsimseq_bulk(
 
 if __name__ == "__main__":
     # gbycell, _, _ = spsimseq_sc(
-    #     R_root='D:/Programming/R/R-4.3.1/',
+    #     R_root='D:/Programming/R/R-4.3.2/',
     #     num_genes=10,
     #     num_cells=10,
     # )
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # print(gbycell)
 
     gspl = spsimseq_bulk(
-        R_root='D:/Programming/R/R-4.3.1/',
+        R_root='D:/Programming/R/R-4.3.2/',
         num_samples=2,
         num_genes=10,
     )

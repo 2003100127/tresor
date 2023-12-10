@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     p = gmat, _, _ = fromSimulator(
         simulator='spsimseq',
-        R_root='D:/Programming/R/R-4.3.1/',
+        R_root='D:/Programming/R/R-4.3.2/',
     ).run()
     from scipy.sparse import coo_matrix
     csr_ = coo_matrix(gmat)

@@ -338,13 +338,13 @@ class SingleLocus:
 
     def paste(self, read_struct=[]):
         read = ''.join(read_struct)
-        if self.kwargs['material_params']['bead_mutation']:
+        if 'bead_mutation' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bead_mutation']:
             from phylotres.pcr.Subsampling import Subsampling
             read = Subsampling().mutated(read=read, pcr_error=self.kwargs['material_params']['bead_mut_rate'])
-        if self.kwargs['material_params']['bead_deletion']:
+        if 'bead_deletion' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bead_deletion']:
             from phylotres.pcr.Subsampling import Subsampling
             read = Subsampling().deletion(read=read, del_rate=self.kwargs['material_params']['bead_del_rate'])
-        if self.kwargs['material_params']['bead_insertion']:
+        if 'bead_insertion' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bead_insertion']:
             from phylotres.pcr.Subsampling import Subsampling
             read = Subsampling().insertion(read=read, ins_rate=self.kwargs['material_params']['bead_ins_rate'])
         return read
