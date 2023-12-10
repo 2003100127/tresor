@@ -20,9 +20,9 @@ from phylotres.read.seq.Design import Design as dseq
 from phylotres.read.primer.Design import Design as dprimer
 from phylotres.read.adapter.Design import Design as dadapter
 from phylotres.read.spacer.Design import Design as dspacer
-from phylotres.util.Console import Console
 from phylotres.util.sequence.Fasta import Fasta as sfasta
 from phylotres.util.Kit import tactic6
+from phylotres.util.Console import Console
 
 
 class SingleLocus:
@@ -109,7 +109,7 @@ class SingleLocus:
         condi_keys = condi_map.keys()
 
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
-        if self.kwargs['material_params']['fasta_cdna_fpn']:
+        if 'seq' in condi_keys and self.kwargs['material_params']['fasta_cdna_fpn']:
             self.console.print("======>Read CDNAs from a reference ome")
             fastq_ref_arr = sfasta().get_from_gz(
                 fasta_fpn=self.kwargs['material_params']['fasta_cdna_fpn'],
@@ -337,7 +337,17 @@ class SingleLocus:
         return sequencing_library
 
     def paste(self, read_struct=[]):
-        return ''.join(read_struct)
+        read = ''.join(read_struct)
+        if self.kwargs['material_params']['bead_mutation']:
+            from phylotres.pcr.Subsampling import Subsampling
+            read = Subsampling().mutated(read=read, pcr_error=self.kwargs['material_params']['bead_mut_rate'])
+        if self.kwargs['material_params']['bead_deletion']:
+            from phylotres.pcr.Subsampling import Subsampling
+            read = Subsampling().deletion(read=read, del_rate=self.kwargs['material_params']['bead_del_rate'])
+        if self.kwargs['material_params']['bead_insertion']:
+            from phylotres.pcr.Subsampling import Subsampling
+            read = Subsampling().insertion(read=read, ins_rate=self.kwargs['material_params']['bead_ins_rate'])
+        return read
 
 
 if __name__ == "__main__":
@@ -364,7 +374,7 @@ if __name__ == "__main__":
             'spacer_1': 10,
         },
         seq_params={
-            'custom': 'BAGC',
+            'custom': 'AAGC', # BAGC
             'custom_1': 'V',
         },
         material_params={
