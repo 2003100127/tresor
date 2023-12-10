@@ -17,6 +17,7 @@ from phylotres.read.adapter.Design import Design as dadapter
 from phylotres.read.spacer.Design import Design as dspacer
 from phylotres.util.random.Sampling import Sampling as ranspl
 from phylotres.util.random.Number import Number as rannum
+from phylotres.util.file.Reader import Reader as pfreader
 from phylotres.util.file.Writer import Writer as pfwriter
 from phylotres.util.file.Folder import Folder as crtfolder
 from phylotres.util.sequence.symbol.Single import Single as dnasgl
@@ -48,6 +49,7 @@ class SingleCell:
             verbose=True,
             **kwargs,
     ):
+        self.pfreader = pfreader()
         self.pfwriter = pfwriter()
         self.ranspl = ranspl()
         self.rannum = rannum()
@@ -132,23 +134,41 @@ class SingleCell:
 
         ### +++++++++++++++ block: generate barcodes +++++++++++++++
         barcode_map = {}
+        ### +++++++++++++++ block: check if barcodes are read from a lib +++++++++++++++
+        if 'bc_lib_fpn' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bc_lib_fpn']:
+            df_bc_lib = self.pfreader.generic(df_fpn=self.kwargs['material_params']['bc_lib_fpn'])
+            df_bc_lib = df_bc_lib.rename(columns={0: 'bc'})
+            # print(df_bc_lib)
+            num_bc_lib = df_bc_lib.shape[0]
         for cell_i in range(self.num_cells):
             barcode_seed = cell_i + self.permutation * cell_i * 80 + (cell_i + 1) * 10000000
-            pbarcode = self.dbarcode(
-                dna_map=self.dna_map,
-                pseudorandom_num=self.rannum.uniform(
+            if 'bc_lib_fpn' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bc_lib_fpn']:
+                bc_ran_id = self.rannum.uniform(
                     low=0,
-                    high=4,
-                    num=self.len_params['barcode'],
+                    high=num_bc_lib,
+                    num=1,
                     use_seed=self.is_seed,
                     seed=barcode_seed,
-                ),
-            )
-            barcode_i = pbarcode.general(
-                lib_fpn=self.working_dir + 'barcode.txt',
-                is_sv=self.is_sv_barcode_lib,
-            )
-            print(barcode_i)
+                )
+                barcode_i = df_bc_lib.loc[bc_ran_id[0], 'bc']
+                # print(bc_ran_id)
+                # print(barcode_i)
+            else:
+                pbarcode = self.dbarcode(
+                    dna_map=self.dna_map,
+                    pseudorandom_num=self.rannum.uniform(
+                        low=0,
+                        high=4,
+                        num=self.len_params['barcode'],
+                        use_seed=self.is_seed,
+                        seed=barcode_seed,
+                    ),
+                )
+                barcode_i = pbarcode.general(
+                    lib_fpn=self.working_dir + 'barcode.txt',
+                    is_sv=self.is_sv_barcode_lib,
+                )
+                print(barcode_i)
             barcode_map[cell_i] = barcode_i
 
         ### +++++++++++++++ block: select CDNA from a reference ome +++++++++++++++
@@ -245,6 +265,7 @@ class SingleCell:
                                 lib_fpn=self.working_dir + 'seq' + seq_mark  + '_c_' + str(cell) + '_g_' + str(gene) + '.txt',
                                 is_sv=self.is_sv_seq_lib,
                             )
+                            print(seq_i)
                         else:
                             seq_seed = id + self.permutation * seq_num + 8000000 + (seq_mark_id+1) * 200000000 + (x+1)*100000
                             pseq = self.dseq(
@@ -382,7 +403,7 @@ if __name__ == "__main__":
 
     gmat, _, _ = fromSimulator(
         simulator='spsimseq',
-        R_root='D:/Programming/R/R-4.3.1/',
+        R_root='D:/Programming/R/R-4.3.2/',
         num_genes=10,
         num_cells=10,
     ).run()
@@ -413,16 +434,20 @@ if __name__ == "__main__":
             'custom': 'BAGC',
             'custom_1': 'V',
         },
+        material_params={
+            'bc_lib_fpn': to('data/simu/3M-february-2018.txt'),
+        },
 
         is_seed=True,
 
         working_dir=to('data/simu/'),
-        fasta_cdna_fpn=False,
-        # fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
+        # fasta_cdna_fpn=False,
+        fasta_cdna_fpn=to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),
 
         # condis=['umi'],
         # condis=['barcode', 'umi'],
-        condis=['barcode',  'custom', 'umi', 'custom_1'],
+        condis=['barcode',  'umi', 'seq'],
+        # condis=['barcode',  'custom', 'umi', 'custom_1'],
         # condis=['umi', 'seq'],
         # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
