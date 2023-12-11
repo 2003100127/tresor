@@ -15,7 +15,12 @@
 ## Overview
 
 ```angular2html
-
+    ____  __          __    ______
+   / __ \/ /_  __  __/ /___/_  __/_______  _____
+  / /_/ / __ \/ / / / / __ \/ / / ___/ _ \/ ___/
+ / ____/ / / / /_/ / / /_/ / / / /  /  __(__  )
+/_/   /_/ /_/\__, /_/\____/_/ /_/   \___/____/
+            /____/
 ```
 
 PhyloTres is a Python toolkit for simulating sequencing reads at the single-locus, bulk RNA-seq, and single-cell levels. It is implemented based on phylogenetic tree-based methods, which allows for ultra-fast simulation read generation. PhyloTres allows both short-read and long-read sequencing read simulation, and substitution and indel (insertion and deletion) errors added to reads. PhyloTres implements a very flexible read generation framework, which allows users to design their simulated reads in any forms and structures. PhyloTres can vastly help both computational and experimental researchers to swiftly test their sequencing method ideas.
