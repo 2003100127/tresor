@@ -9,13 +9,16 @@ __lab__ = "Cribbslab"
 import click
 from pyfiglet import Figlet
 
+### @@@ gmat_bulk gmat_sc
 from phylotres.gmat import spsimseq_bulk as gmat_spsimseq_bulk
 from phylotres.gmat import spsimseq_sc as gmat_spsimseq_sc
 
+### library_sl | library_bulk | library_sc
 from phylotres.locus import library as lib_sl
 from phylotres.gene import library as lib_bulk
 from phylotres.sc import library as lib_sc
 
+### seqerr_sl | pcrerr_sl | pcrnum_sl | amplrate_sl | umilen_sl | seqdep_sl | generic_sl
 from phylotres.locus import simu_seq_err as seqerr_sl
 from phylotres.locus import simu_pcr_err as pcrerr_sl
 from phylotres.locus import simu_pcr_num as pcrnum_sl
@@ -24,6 +27,7 @@ from phylotres.locus import simu_umi_len as umilen_sl
 from phylotres.locus import simu_seq_dep as seqdep_sl
 from phylotres.locus import simu_generic as generic_sl
 
+### seqerr_gene | pcrerr_gene | pcrnum_gene | amplrate_gene | umilen_gene | seqdep_gene
 from phylotres.gene import simu_seq_err as seqerr_gene
 from phylotres.gene import simu_pcr_err as pcrerr_gene
 from phylotres.gene import simu_pcr_num as pcrnum_gene
@@ -31,6 +35,7 @@ from phylotres.gene import simu_ampl_rate as amplrate_gene
 from phylotres.gene import simu_umi_len as umilen_gene
 from phylotres.gene import simu_seq_dep as seqdep_gene
 
+### seqerr_sc | pcrerr_sc | pcrnum_sc | amplrate_sc | umilen_sc | seqdep_sc
 from phylotres.sc import simu_seq_err as seqerr_sc
 from phylotres.sc import simu_pcr_err as pcrerr_sc
 from phylotres.sc import simu_pcr_num as pcrnum_sc
@@ -77,6 +82,7 @@ class HelpfulCmd(click.Command):
 
                 
                 seqerr_sl | pcrerr_sl | pcrnum_sl | amplrate_sl | umilen_sl | seqdep_sl | generic_sl
+                
                 @@@ seqerr_sl
                 phylotres seqerr_sl -cfpn ./phylotres/data/seqerr_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
             
