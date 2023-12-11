@@ -1,5 +1,5 @@
 <h1>
-    <img src="https://github.com/cribbslab/phylotres/blob/main/phylotres/util/phylotres_sign.png?raw=true" width="300" height="100">
+    <img src="https://github.com/cribbslab/phylotres-dev/blob/main/img/logo.png?raw=true" width="300" height="100">
     <br>
 </h1>
 
