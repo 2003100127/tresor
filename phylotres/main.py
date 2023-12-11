@@ -15,6 +15,7 @@ from phylotres.sc import library as lib_sc
 from phylotres.locus import simu_seq_err as seqerr_sl
 from phylotres.locus import simu_pcr_err as pcrerr_sl
 from phylotres.locus import simu_pcr_num as pcrnum_sl
+from phylotres.locus import simu_ampl_rate as amplrate_sl
 
 from phylotres.util.Console import Console
 
@@ -52,6 +53,9 @@ class HelpfulCmd(click.Command):
             
                 @@@ pcrnum_sl
                 phylotres pcrnum_sl -cfpn ./phylotres/data/pcrnum_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ amplrate_sl
+                phylotres amplrate_sl -cfpn ./phylotres/data/amplrate_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
             
             
             """
@@ -295,6 +299,24 @@ def main(
     elif tool == "pcrnum_sl":
         console.print("=============>Tool {} is being used...".format(tool))
         pcrnum_sl(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "amplrate_sl":
+        console.print("=============>Tool {} is being used...".format(tool))
+        amplrate_sl(
             config_fpn=config_fpn,
             working_dir=working_dir,
             seq_num=seq_num,
