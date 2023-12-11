@@ -76,23 +76,22 @@ def library(
 
 
 def simu_seq_err(
-        len_params,
         seq_num,
-        seq_len,
         working_dir,
-
-        condis,
         sim_thres,
         permutation,
 
-        ampl_rate,
-        err_route,
-        pcr_error,
-        pcr_num,
-        err_num_met,
-        seq_errors,
-        seq_sub_spl_number,
-        seq_sub_spl_rate,
+        len_params=None,
+        condis=None,
+
+        ampl_rate=None,
+        err_route=None,
+        pcr_error=None,
+        pcr_num=None,
+        err_num_met=None,
+        seq_errors=None,
+        seq_sub_spl_number=None,
+        seq_sub_spl_rate=None,
 
         use_seed=True,
         seed=1,
@@ -114,10 +113,47 @@ def simu_seq_err(
         is_sv_spacer_lib=True,
         sv_fastq_fp=True,
 
+        config_fpn=None,
         verbose=True,
 
         **kwargs,
 ):
+    if config_fpn:
+        import yaml
+        with open(config_fpn, "r") as f:
+            configs = yaml.safe_load(f)
+            # for k, item in configs.items():
+            #     print(k, item)
+        len_params=configs['len_params']
+        kwargs['seq_params']=configs['seq_params']
+        kwargs['material_params']=configs['material_params']
+        condis=configs['condis']
+
+        ampl_rate = configs['ampl_rate']
+        err_route = configs['err_route']
+        pcr_error = configs['pcr_error']
+        pcr_num = configs['pcr_num']
+        err_num_met = configs['err_num_met']
+        seq_errors = configs['seq_errors']
+        seq_sub_spl_number = configs['seq_sub_spl_number']
+        seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "pcr_deletion" in configs.keys():
+            pcr_deletion = configs['pcr_deletion']
+        if "pcr_insertion" in configs.keys():
+            pcr_insertion = configs['pcr_insertion']
+        if "pcr_del_rate" in configs.keys():
+            pcr_del_rate = configs['pcr_del_rate']
+        if "pcr_ins_rate" in configs.keys():
+            pcr_ins_rate = configs['pcr_ins_rate']
+        if "seq_deletion" in configs.keys():
+            seq_deletion = configs['seq_deletion']
+        if "seq_insertion" in configs.keys():
+            seq_insertion = configs['seq_insertion']
+        if "seq_del_rate" in configs.keys():
+            seq_del_rate = configs['seq_del_rate']
+        if "seq_ins_rate" in configs.keys():
+            seq_ins_rate = configs['seq_ins_rate']
+
     seqerr(
         # initial sequence generation
         len_params=len_params,
@@ -125,7 +161,6 @@ def simu_seq_err(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         working_dir=working_dir,
 
         is_sv_umi_lib=is_sv_umi_lib,
@@ -170,7 +205,6 @@ def simu_seq_err(
 def simu_pcr_err(
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -200,7 +234,6 @@ def simu_pcr_err(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -229,7 +262,6 @@ def simu_pcr_err(
 def simu_pcr_num(
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -259,7 +291,6 @@ def simu_pcr_num(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -288,7 +319,6 @@ def simu_pcr_num(
 def simu_ampl_rate(
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -318,7 +348,6 @@ def simu_ampl_rate(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -347,7 +376,6 @@ def simu_ampl_rate(
 def simu_umi_len(
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -377,7 +405,6 @@ def simu_umi_len(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -406,7 +433,6 @@ def simu_umi_len(
 def simu_seq_dep(
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -444,7 +470,6 @@ def simu_seq_dep(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -481,7 +506,6 @@ def simu_seq_dep(
 def simu_generic(
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -520,7 +544,6 @@ def simu_generic(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -618,7 +641,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -698,7 +720,6 @@ if __name__ == "__main__":
 #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
 #         },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -754,11 +775,10 @@ if __name__ == "__main__":
     #         'custom': 'AAGC',
     #         'custom_1': 'A',
     #     },
-#         material_params={
-#             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-#         },
+    #     material_params={
+    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -818,7 +838,6 @@ if __name__ == "__main__":
 #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
 #         },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -879,7 +898,6 @@ if __name__ == "__main__":
 #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
 #         },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -940,7 +958,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -1001,7 +1018,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,

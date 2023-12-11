@@ -95,7 +95,6 @@ def simu_seq_err(
         gspl,
         len_params,
         seq_num,
-        seq_len,
         working_dir,
 
         condis,
@@ -134,7 +133,6 @@ def simu_seq_err(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         working_dir=working_dir,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
@@ -166,7 +164,6 @@ def simu_pcr_err(
         gspl,
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -197,7 +194,6 @@ def simu_pcr_err(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -227,7 +223,6 @@ def simu_pcr_num(
         gspl,
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -258,7 +253,6 @@ def simu_pcr_num(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -288,7 +282,6 @@ def simu_ampl_rate(
         gspl,
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -319,7 +312,6 @@ def simu_ampl_rate(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -349,7 +341,6 @@ def simu_umi_len(
         gspl,
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -380,7 +371,6 @@ def simu_umi_len(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -410,7 +400,6 @@ def simu_seq_dep(
         gspl,
         len_params,
         seq_num,
-        seq_len,
         is_sv_umi_lib,
         is_sv_seq_lib,
         is_sv_primer_lib,
@@ -441,7 +430,6 @@ def simu_seq_dep(
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
         seq_params=kwargs['seq_params'] if 'seq_params' in kwargs.keys() else None,
         seq_num=seq_num,
-        seq_len=seq_len,
         is_sv_umi_lib=is_sv_umi_lib,
         is_sv_seq_lib=is_sv_seq_lib,
         is_sv_primer_lib=is_sv_primer_lib,
@@ -559,7 +547,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -623,7 +610,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -685,7 +671,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -747,7 +732,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -810,7 +794,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,
@@ -873,7 +856,6 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     seq_len=100,
     #     working_dir=to('data/simu/'),
     #
     #     is_sv_umi_lib=True,

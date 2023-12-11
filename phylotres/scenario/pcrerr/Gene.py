@@ -24,7 +24,6 @@ class Gene:
 
             len_params,
             seq_num,
-            seq_len,
             is_sv_umi_lib,
             is_sv_seq_lib,
             is_sv_primer_lib,
@@ -55,7 +54,6 @@ class Gene:
         print(kwargs)
         self.len_params = len_params
         self.seq_num = seq_num
-        self.seq_len = seq_len
         self.is_sv_umi_lib = is_sv_umi_lib
         self.is_sv_seq_lib = is_sv_seq_lib
         self.is_sv_primer_lib = is_sv_primer_lib
@@ -329,7 +327,6 @@ if __name__ == "__main__":
             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
         },
         seq_num=50,
-        seq_len=100,
         working_dir=to('data/simu/'),
 
         is_sv_umi_lib=True,
