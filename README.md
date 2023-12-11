@@ -47,6 +47,14 @@ pip install phylotres --upgrade
 ## Citation
 
 Please cite our work if you use PhyloTres in your research.
+```angular2html
+@article{phylotres,
+    title = {PhyloTres: high-performance simulation of sequencing reads},
+    author = {Jianfeng Sun and Adam P. Cribbs},
+    url = {https://github.com/cribbslab/phylotres},
+    year = {2023},
+}
+```
 
 ## Contact
 
