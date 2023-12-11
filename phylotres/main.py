@@ -8,6 +8,10 @@ __lab__ = "Cribbslab"
 
 import click
 from pyfiglet import Figlet
+
+from phylotres.gmat import spsimseq_bulk as gmat_spsimseq_bulk
+from phylotres.gmat import spsimseq_sc as gmat_spsimseq_sc
+
 from phylotres.locus import library as lib_sl
 from phylotres.gene import library as lib_bulk
 from phylotres.sc import library as lib_sc
@@ -43,10 +47,10 @@ class HelpfulCmd(click.Command):
                 phylotres library_sl -cfpn ./phylotres/data/libslocus.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
                 
                 @@@ library_bulk
-                phylotres library_bulk -cfpn ./phylotres/data/libgene.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 20 -bsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
+                phylotres library_bulk -cfpn ./phylotres/data/libgene.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 20 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
 
                 @@@ library_sc
-                phylotres library_sc -cfpn ./phylotres/data/libsc.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -bsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
+                phylotres library_sc -cfpn ./phylotres/data/libsc.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
 
 
                 @@@ seqerr_sl
@@ -70,6 +74,11 @@ class HelpfulCmd(click.Command):
                 @@@ generic_sl
                 phylotres generic_sl -cfpn ./phylotres/data/generic_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
             
+                @@@ gmat_bulk
+                phylotres gmat_bulk -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_bulk.h5 -is True -vb True
+            
+                @@@ gmat_sc
+                phylotres gmat_sc -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_sc.h5 -is True -vb True
             
             """
         )
@@ -78,7 +87,8 @@ class HelpfulCmd(click.Command):
 @click.command(cls=HelpfulCmd, context_settings=CONTEXT_SETTINGS)
 @click.argument('tool', type=str)
 @click.option(
-    '-cfpn', '--config_fpn', type=str, required=True,
+    '-cfpn', '--config_fpn', type=str,
+    # required=True,
     help="""
         Path to a YMAL file
     """
@@ -168,9 +178,9 @@ class HelpfulCmd(click.Command):
     """
 )
 @click.option(
-    '-bsimulator', '--bulk_simulator', type=str, default="spsimseq",
+    '-gsimulator', '--gmat_simulator', type=str, default="spsimseq",
     help="""
-        bulk simulator
+        gmat simulator
     """
 )
 
@@ -197,7 +207,7 @@ def main(
         r_root,
         num_samples,
         num_genes,
-        bulk_simulator,
+        gmat_simulator,
 
         # gmat
         num_cells,
@@ -241,7 +251,7 @@ def main(
             r_root=r_root,
             num_samples=num_samples,
             num_genes=num_genes,
-            simulator=bulk_simulator,
+            simulator=gmat_simulator,
             permutation=permutation,
             is_seed=is_seed,
             is_sv_umi_lib=is_sv_umi_lib,
@@ -262,7 +272,7 @@ def main(
             r_root=r_root,
             num_cells=num_cells,
             num_genes=num_genes,
-            simulator=bulk_simulator,
+            simulator=gmat_simulator,
             permutation=permutation,
             is_seed=is_seed,
             is_sv_umi_lib=is_sv_umi_lib,
@@ -273,6 +283,26 @@ def main(
             mode=mode,
             verbose=verbose,
         )
+    elif tool == "gmat_bulk":
+        console.print("=============>Tool {} is being used...".format(tool))
+        if gmat_simulator == 'spsimseq':
+            gmat_spsimseq_bulk(
+                R_root=r_root,
+                num_samples=num_samples,
+                num_genes=num_genes,
+                simulator=gmat_simulator,
+                sv_fpn=working_dir,
+            )
+    elif tool == "gmat_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        if gmat_simulator == 'spsimseq':
+            gmat_spsimseq_sc(
+                R_root=r_root,
+                num_cells=num_cells,
+                num_genes=num_genes,
+                simulator=gmat_simulator,
+                sv_fpn=working_dir,
+            )
     elif tool == "seqerr_sl":
         console.print("=============>Tool {} is being used...".format(tool))
         seqerr_sl(

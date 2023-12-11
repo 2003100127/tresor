@@ -35,7 +35,7 @@ class Writer:
 
     def generic(self, df, sv_fpn, df_sep='\t', header=None, index=False, id_from=0):
         df_ = pd.DataFrame(df)
-        df_.index = df_.index + id_from
+        # df_.index = df_.index + id_from
         return df_.to_csv(
             sv_fpn,
             sep=df_sep,
