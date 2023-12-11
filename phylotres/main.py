@@ -24,6 +24,20 @@ from phylotres.locus import simu_umi_len as umilen_sl
 from phylotres.locus import simu_seq_dep as seqdep_sl
 from phylotres.locus import simu_generic as generic_sl
 
+from phylotres.gene import simu_seq_err as seqerr_gene
+from phylotres.gene import simu_pcr_err as pcrerr_gene
+from phylotres.gene import simu_pcr_num as pcrnum_gene
+from phylotres.gene import simu_ampl_rate as amplrate_gene
+from phylotres.gene import simu_umi_len as umilen_gene
+from phylotres.gene import simu_seq_dep as seqdep_gene
+
+from phylotres.sc import simu_seq_err as seqerr_sc
+from phylotres.sc import simu_pcr_err as pcrerr_sc
+from phylotres.sc import simu_pcr_num as pcrnum_sc
+from phylotres.sc import simu_ampl_rate as amplrate_sc
+from phylotres.sc import simu_umi_len as umilen_sc
+from phylotres.sc import simu_seq_dep as seqdep_sc
+
 from phylotres.util.Console import Console
 
 
@@ -41,6 +55,15 @@ class HelpfulCmd(click.Command):
         click.echo(
             """
             tool 
+                gmat_bulk | gmat_sc
+                
+                @@@ gmat_bulk
+                phylotres gmat_bulk -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_bulk.h5 -is True -vb True
+            
+                @@@ gmat_sc
+                phylotres gmat_sc -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_sc.h5 -is True -vb True
+            
+            
                 library_sl | library_bulk | library_sc
                 
                 @@@ library_sl
@@ -52,7 +75,8 @@ class HelpfulCmd(click.Command):
                 @@@ library_sc
                 phylotres library_sc -cfpn ./phylotres/data/libsc.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
 
-
+                
+                seqerr_sl | pcrerr_sl | pcrnum_sl | amplrate_sl | umilen_sl | seqdep_sl | generic_sl
                 @@@ seqerr_sl
                 phylotres seqerr_sl -cfpn ./phylotres/data/seqerr_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
             
@@ -74,12 +98,47 @@ class HelpfulCmd(click.Command):
                 @@@ generic_sl
                 phylotres generic_sl -cfpn ./phylotres/data/generic_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
             
-                @@@ gmat_bulk
-                phylotres gmat_bulk -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_bulk.h5 -is True -vb True
             
-                @@@ gmat_sc
-                phylotres gmat_sc -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_sc.h5 -is True -vb True
+                seqerr_gene | pcrerr_gene | pcrnum_gene | amplrate_gene | umilen_gene | seqdep_gene
+                @@@ seqerr_gene
+                phylotres seqerr_gene -cfpn ./phylotres/data/seqerr_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
             
+                @@@ pcrerr_gene
+                phylotres pcrerr_gene -cfpn ./phylotres/data/pcrerr_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ pcrnum_gene
+                phylotres pcrnum_gene -cfpn ./phylotres/data/pcrnum_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ amplrate_gene
+                phylotres amplrate_gene -cfpn ./phylotres/data/amplrate_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ umilen_gene
+                phylotres umilen_gene -cfpn ./phylotres/data/umilen_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ seqdep_gene
+                phylotres seqdep_gene -cfpn ./phylotres/data/seqdep_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+            
+                seqerr_sc | pcrerr_sc | pcrnum_sc | amplrate_sc | umilen_sc | seqdep_sc
+                @@@ seqerr_sc
+                phylotres seqerr_sc -cfpn ./phylotres/data/seqerr_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ pcrerr_sc
+                phylotres pcrerr_sc -cfpn ./phylotres/data/pcrerr_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ pcrnum_sc
+                phylotres pcrnum_sc -cfpn ./phylotres/data/pcrnum_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ amplrate_sc
+                phylotres amplrate_sc -cfpn ./phylotres/data/amplrate_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ umilen_sc
+                phylotres umilen_sc -cfpn ./phylotres/data/umilen_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                @@@ seqdep_sc
+                phylotres seqdep_sc -cfpn ./phylotres/data/seqdep_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+            
+                
             """
         )
 
@@ -224,6 +283,7 @@ def main(
         verbose,
 ):
     print(vignette1.renderText('PhyloTres'))
+    ### @@@ simu library
     if tool == "library_sl":
         console.print("=============>Tool {} is being used...".format(tool))
         lib_sl(
@@ -283,6 +343,8 @@ def main(
             mode=mode,
             verbose=verbose,
         )
+
+    ### @@@ simu gmat
     elif tool == "gmat_bulk":
         console.print("=============>Tool {} is being used...".format(tool))
         if gmat_simulator == 'spsimseq':
@@ -303,6 +365,7 @@ def main(
                 simulator=gmat_simulator,
                 sv_fpn=working_dir,
             )
+    ### @@@ simu single locus
     elif tool == "seqerr_sl":
         console.print("=============>Tool {} is being used...".format(tool))
         seqerr_sl(
@@ -414,6 +477,226 @@ def main(
     elif tool == "generic_sl":
         console.print("=============>Tool {} is being used...".format(tool))
         generic_sl(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+
+    ### @@@ simu bulk
+    elif tool == "seqerr_gene":
+        console.print("=============>Tool {} is being used...".format(tool))
+        seqerr_gene(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "pcrerr_gene":
+        console.print("=============>Tool {} is being used...".format(tool))
+        pcrerr_gene(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "pcrnum_gene":
+        console.print("=============>Tool {} is being used...".format(tool))
+        pcrnum_gene(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "amplrate_gene":
+        console.print("=============>Tool {} is being used...".format(tool))
+        amplrate_gene(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "umilen_gene":
+        console.print("=============>Tool {} is being used...".format(tool))
+        umilen_gene(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "seqdep_gene":
+        console.print("=============>Tool {} is being used...".format(tool))
+        seqdep_gene(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+
+    ### @@@ simu sc
+    elif tool == "seqerr_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        seqerr_sc(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "pcrerr_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        pcrerr_sc(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "pcrnum_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        pcrnum_sc(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "amplrate_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        amplrate_sc(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "umilen_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        umilen_sc(
+            config_fpn=config_fpn,
+            working_dir=working_dir,
+            seq_num=seq_num,
+            sim_thres=sim_thres,
+            permutation=permutation,
+            is_seed=is_seed,
+            is_sv_umi_lib=is_sv_umi_lib,
+            is_sv_seq_lib=is_sv_seq_lib,
+            is_sv_primer_lib=is_sv_primer_lib,
+            is_sv_adapter_lib=is_sv_adapter_lib,
+            is_sv_spacer_lib=is_sv_spacer_lib,
+            mode=mode,
+            verbose=verbose,
+            sv_fastq_fp=working_dir,
+        )
+    elif tool == "seqdep_sc":
+        console.print("=============>Tool {} is being used...".format(tool))
+        seqdep_sc(
             config_fpn=config_fpn,
             working_dir=working_dir,
             seq_num=seq_num,
