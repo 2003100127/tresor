@@ -3,6 +3,7 @@ UMIs per each, or UMI+Genomic sequence per each. The general-purpose
 design gives the module this name. To achieve this purpose, a case-study
 CLI should look like below:
 
+## Gene-by-cell matrix
 === "Python"
 
     ``` py
@@ -19,17 +20,24 @@ CLI should look like below:
     
     ```
 
-=== "Command"
+=== "Shell"
 
     ```shell
-    phylotres gmat_sc -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_sc.h5 -is True -vb True
-            
+    phylotres gmat_sc \
+    -rfpn D:/Programming/R/R-4.3.2/ \ 
+    -ncell 10 \ 
+    -ngene 10 \ 
+    -gsimulator spsimseq \ 
+    -wd ./phylotres/data/spsimseq_sc.h5 \ 
+    -is True \ 
+    -vb True
     ```
 
 
 
 
-asd
+## Output
+
 
 ``` py
 12/12/2023 00:37:15 logger: =========>spsimseq is being used

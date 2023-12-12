@@ -27,7 +27,7 @@ PhyloTres is a Python toolkit for simulating sequencing reads at the single-locu
 
 ## Documentation
 
-Website: xxx
+Please check how to use the full functionalities of PhyloTres in the documentation https://cribbslab.github.io/phylotres.
 
 ## Installation
 
