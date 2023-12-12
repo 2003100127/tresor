@@ -1,10 +1,12 @@
 __version__ = "v1.0"
-__copyright__ = "Copyright 2021"
+__copyright__ = "Copyright 2024"
 __license__ = "MIT"
-__lab__ = "Adam Cribbs lab"
+__developer__ = "Jianfeng Sun"
+__maintainer__ = "Jianfeng Sun"
+__email__="jianfeng.sunmt@gmail.com"
+__lab__ = "Cribbslab"
 
 import numpy as np
-import tensorflow as tf
 from phylotres.util.plot.DimensionReduction import DimensionReduction as drplot
 
 
@@ -15,6 +17,7 @@ def sample(
         num_labels=11,
         batch_size=32,
 ):
+    import tensorflow as tf
     decoder = tf.keras.models.load_model(model_fpn)
     print(decoder)
     xs = []

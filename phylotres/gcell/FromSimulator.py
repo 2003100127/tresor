@@ -73,7 +73,7 @@ class fromSimulator:
         )
         self.console.print('=========>spsimseq completes simulation')
         a, b, c = res
-        print(res)
+        self.console.print('=========>spsimseq simu result:\n {}'.format(res))
         with localconverter(rob.default_converter + pandas2ri.converter):
             df = rob.conversion.rpy2py(a)
             df_cells = rob.conversion.rpy2py(b)

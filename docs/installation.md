@@ -1,16 +1,20 @@
 # Installation
 
-tags: `Resimpy`
-
 ## System Requirement
 
-Resimpyx is a cross-platform package to be installed via
-[PyPI](https://pypi.org/).
+There is no requirement for PhyloTres, a cross-platform package.
 
 ## PyPI
 
-<https://pypi.org/project/resimpyx/>
+[phylotres homepage](https://pypi.org/project/phylotres/)
 
 ```shell
-pip install --upgrade phylotres
+# create a conda environment
+conda create --name phylotres python=3.11
+
+# activate the conda environment
+conda activate phylotres
+
+# the latest version
+pip install phylotres --upgrade
 ```
