@@ -919,67 +919,67 @@ if __name__ == "__main__":
     #     verbose=False,
     # ))
 
-    # print(simu_seq_err(
-    #     gspl=gspl,
-    #
-    #     len_params={
-    #         'umi': {
-    #             'umi_unit_pattern': 3,
-    #             'umi_unit_len': 12,
-    #         },
-    #         'umi_1': {
-    #             'umi_unit_pattern': 3,
-    #             'umi_unit_len': 12,
-    #         },
-    #         'barcode': 16,
-    #         'seq': 100,
-    #         'seq_2': 100,
-    #         'adapter': 10,
-    #         'adapter_1': 10,
-    #         'primer': 10,
-    #         'primer_1': 10,
-    #         'spacer': 10,
-    #         'spacer_1': 10,
-    #     },
-    #     seq_params={
-    #         'custom': 'AAGC',
-    #         'custom_1': 'A',
-    #     },
-    #     material_params={
-    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-    #     },
-    #     seq_num=50,
-    #     working_dir=to('data/simu/'),
-    #
-    #     is_sv_umi_lib=True,
-    #     is_sv_seq_lib=True,
-    #     is_sv_primer_lib=True,
-    #     is_sv_adapter_lib=True,
-    #     is_sv_spacer_lib=True,
-    #     condis=['umi'],
-    #     # condis=['umi', 'seq'],
-    #     # condis=['umi', 'custom', 'seq', 'custom_1'],
-    #     sim_thres=3,
-    #     permutation=0,
-    #
-    #     # PCR amplification
-    #     ampl_rate=0.85,
-    #     err_route='minnow',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
-    #     pcr_error=1e-4,
-    #     pcr_num=10,
-    #     err_num_met='nbinomial',
-    #     seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
-    #                 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
-    #     seq_sub_spl_number=200,  # None
-    #     seq_sub_spl_rate=0.333,
-    #     use_seed=True,
-    #     seed=1,
-    #
-    #     verbose=True,  # True False
-    #     mode='short_read',  # long_read short_read
+    print(simu_seq_err(
+        gspl=gspl,
 
-    #     sv_fastq_fp=to('data/simu/'),
-    # ))
+        len_params={
+            'umi': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'umi_1': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'barcode': 16,
+            'seq': 100,
+            'seq_2': 100,
+            'adapter': 10,
+            'adapter_1': 10,
+            'primer': 10,
+            'primer_1': 10,
+            'spacer': 10,
+            'spacer_1': 10,
+        },
+        seq_params={
+            'custom': 'AAGC',
+            'custom_1': 'A',
+        },
+        material_params={
+            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+        },
+        seq_num=50,
+        working_dir=to('data/simu/'),
+
+        is_sv_umi_lib=True,
+        is_sv_seq_lib=True,
+        is_sv_primer_lib=True,
+        is_sv_adapter_lib=True,
+        is_sv_spacer_lib=True,
+        condis=['umi'],
+        # condis=['umi', 'seq'],
+        # condis=['umi', 'custom', 'seq', 'custom_1'],
+        sim_thres=3,
+        permutation=0,
+
+        # PCR amplification
+        ampl_rate=0.85,
+        err_route='minnow',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        pcr_error=1e-4,
+        pcr_num=10,
+        err_num_met='nbinomial',
+        seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
+                    0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
+        seq_sub_spl_number=200,  # None
+        seq_sub_spl_rate=0.333,
+        use_seed=True,
+        seed=1,
+
+        verbose=True,  # True False
+        mode='short_read',  # long_read short_read
+
+        sv_fastq_fp=to('data/simu/'),
+    ))
 
     # simu_pcr_err(
     #     # initial sequence generation

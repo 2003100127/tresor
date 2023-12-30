@@ -152,8 +152,10 @@ class SingleLocus:
                 'seq_sub_spl_number': self.seq_sub_spl_number,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-                'pcr_deletion': True,
-                'pcr_insertion': True, # False True
+                'pcr_deletion': self.kwargs['pcr_deletion'] if 'pcr_deletion' in self.kwargs.keys() else False,
+                'pcr_insertion': self.kwargs['pcr_insertion'] if 'pcr_insertion' in self.kwargs.keys() else False,
+                # 'pcr_deletion': True,
+                # 'pcr_insertion': True, # False True
                 'pcr_del_rate': 2.4*10e-6,
                 'pcr_ins_rate': 7.1*10e-7,
 
@@ -243,8 +245,10 @@ class SingleLocus:
                 'seq_sub_spl_number': self.seq_sub_spl_number,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
-                'seq_deletion': True,
-                'seq_insertion': True,  # False True
+                'seq_deletion': self.kwargs['seq_deletion'] if 'seq_deletion' in self.kwargs.keys() else False,
+                'seq_insertion': self.kwargs['seq_insertion'] if 'seq_insertion' in self.kwargs.keys() else False,
+                # 'seq_deletion': True,
+                # 'seq_insertion': True,  # False True
                 'seq_del_rate': 2.4 * 10e-6,
                 'seq_ins_rate': 7.1 * 10e-7,
             }

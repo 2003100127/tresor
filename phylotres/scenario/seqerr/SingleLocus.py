@@ -302,9 +302,9 @@ if __name__ == "__main__":
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='err1d', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        err_route='tree', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
-        pcr_num=10,
+        pcr_num=25,
         err_num_met='nbinomial',
         seq_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01, 0.025, 0.05, 0.075, 0.1, 0.2, 0.3],
         seq_sub_spl_number=200, # None
@@ -312,7 +312,7 @@ if __name__ == "__main__":
         use_seed=True,
         seed=1,
 
-        verbose=False, # True
+        verbose=True, # True False
 
         mode='short_read',  # long_read short_read
 

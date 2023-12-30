@@ -55,6 +55,7 @@ console.verbose = True
 
 
 class HelpfulCmd(click.Command):
+
     def format_help(self, ctx, formatter):
         click.echo(vignette1.renderText('PhyloTres'))
         click.echo(

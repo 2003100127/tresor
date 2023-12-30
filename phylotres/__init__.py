@@ -1,5 +1,6 @@
 from importlib import metadata as importlib_metadata
 
+from . import path
 from . import gmat
 from . import gene
 from . import gcell
