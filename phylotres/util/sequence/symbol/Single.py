@@ -3,7 +3,7 @@ __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 __developer__ = "Jianfeng Sun"
 __maintainer__ = "Jianfeng Sun"
-__email__="jianfeng.sunmt@gmail.com"
+__email__ = "jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
 
@@ -37,14 +37,14 @@ class Single:
     def _get(self, gap=False, universal=False):
         if universal:
             if gap:
-                return ['A', 'C', 'G', 'T', '-']
+                return ['A', 'C', 'G', 'T', 'B', '-']
             else:
-                return ['A', 'C', 'G', 'T']
+                return ['A', 'C', 'G', 'T', 'B']
         else:
             if gap:
-                return ['A', 'T', 'C', 'G', '-']
+                return ['A', 'T', 'C', 'G', 'B', '-']
             else:
-                return ['A', 'T', 'C', 'G']
+                return ['A', 'T', 'C', 'G', 'B']
 
     @trim(action='normal')
     def get(self, gap=False, universal=False):

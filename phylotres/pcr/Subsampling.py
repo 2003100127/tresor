@@ -3,7 +3,7 @@ __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 __developer__ = "Jianfeng Sun"
 __maintainer__ = "Jianfeng Sun"
-__email__="jianfeng.sunmt@gmail.com"
+__email__ = "jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
 import numpy as np
@@ -779,6 +779,10 @@ class Subsampling:
                                         read=read,
                                         pcr_error=pcr_dict['pcr_error'],
                                     )
+                                    if pcr_dict['pcr_deletion']:
+                                        r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                    if pcr_dict['pcr_insertion']:
+                                        r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                     read_for_repeat_tmp_per_col[val_in_a_col] = r1
                                     read_cache_table[ii].append(r1)
                                 else:
@@ -788,6 +792,10 @@ class Subsampling:
                                     read=read,
                                     pcr_error=pcr_dict['pcr_error'],
                                 )
+                                if pcr_dict['pcr_deletion']:
+                                    r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                if pcr_dict['pcr_insertion']:
+                                    r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                 read_cache_table[ii].append(r1)
                         if jj > 0:
                             if bool_flag_table[ii][jj] == True:
@@ -796,6 +804,10 @@ class Subsampling:
                                         read=read_cache_table[ii][jj - 1],
                                         pcr_error=pcr_dict['pcr_error'],
                                     )
+                                    if pcr_dict['pcr_deletion']:
+                                        r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                    if pcr_dict['pcr_insertion']:
+                                        r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                     read_for_repeat_tmp_per_col[val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj]))] = r1
                                     read_cache_table[ii].append(r1)
                                 else:
@@ -806,6 +818,10 @@ class Subsampling:
                                     read=read_cache_table[ii][jj - 1],
                                     pcr_error=pcr_dict['pcr_error'],
                                 )
+                                if pcr_dict['pcr_deletion']:
+                                    r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                if pcr_dict['pcr_insertion']:
+                                    r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                 read_cache_table[ii].append(r1)
             ### k, read_cache_table
             # 23 [['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC']]
@@ -830,7 +846,7 @@ class Subsampling:
             for i, tree in enumerate(trees_ori):
                 res_data.append([
                     read_cache_table[i][-1] if read_cache_table[i] != [] else read,  # read
-                    str(k) + '_' + '_'.join(tree) if read_cache_table[i] != [] else str(k),  # sam id
+                    str(k) + '_' + '_'.join(tree) if read_cache_table[i] != [] else str(k),  # sample id
                     spl_id_map[str(k) + '_' + '_'.join(tree)] if read_cache_table[i] != [] else 'init',  # source
                 ])
             # print('res_data {}'.format(res_data))

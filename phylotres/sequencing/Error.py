@@ -3,7 +3,7 @@ __copyright__ = "Copyright 2024"
 __license__ = "MIT"
 __developer__ = "Jianfeng Sun"
 __maintainer__ = "Jianfeng Sun"
-__email__="jianfeng.sunmt@gmail.com"
+__email__ = "jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
 import time
@@ -121,7 +121,7 @@ class Error:
         if res2p['seq_deletion']:
             data_seq['read'] = data_seq['read'].apply(lambda x: self.deletion(read=x, del_rate=res2p['seq_del_rate']))
         if res2p['seq_insertion']:
-            data_seq['read'] = data_seq['read'].apply(lambda x: self.deletion(read=x, del_rate=res2p['seq_ins_rate']))
+            data_seq['read'] = data_seq['read'].apply(lambda x: self.insertion(read=x, ins_rate=res2p['seq_ins_rate']))
         res2p['data'] = data_seq.values
         del data_seq
         seq_etime = time.time()
