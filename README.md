@@ -3,12 +3,24 @@
     <br>
 </h1>
 
-![](https://img.shields.io/pypi/v/tresor?logo=PyPI)
-![](https://img.shields.io/badge/last_released-Jul14._2023-green.svg)
-![](https://img.shields.io/badge/tresor-executable-519dd9.svg)
+[![Anaconda-Server Badge](https://anaconda.org/jianfeng_sun/tresor/badges/latest_release_date.svg)](https://anaconda.org/jianfeng_sun/tresor)
+![PyPI](https://img.shields.io/pypi/v/tresor?logo=PyPI)
+![Docker Image Version (latest)](https://img.shields.io/docker/v/2003100127/tresor)
+![Docker Pulls](https://img.shields.io/docker/pulls/2003100127/tresor)
+[![Anaconda-Server Badge](https://anaconda.org/jianfeng_sun/tresor/badges/version.svg)](https://anaconda.org/jianfeng_sun/tresor)
+![](https://img.shields.io/docker/automated/2003100127/tresor.svg)
+![](https://img.shields.io/github/stars/cribbslab/tresor?logo=GitHub&color=blue)
+[![Documentation Status](https://readthedocs.org/projects/tresor/badge/?version=latest)](https://tresor.readthedocs.io/en/latest/?badge=latest)
+[![Downloads](https://pepy.tech/badge/tresor)](https://pepy.tech/project/tresor)
 
+<hr>
 
-<!-- ![Build](https://github.com/2003100127/tresor/actions/workflows/build.yml/badge.svg) -->
+#### Platform
+
+![Python](https://img.shields.io/badge/-Python-000?&logo=Python)
+![Docker](https://img.shields.io/badge/-Docker-000?&logo=Docker)
+![Anaconda](https://img.shields.io/badge/-Anaconda-000?&logo=Anaconda)
+![PyPI](https://img.shields.io/badge/-PyPI-000?&logo=PyPI)
 
 ###### tags: `computational biology`, `sequencing read simulation`
 
