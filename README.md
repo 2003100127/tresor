@@ -1,5 +1,5 @@
-<h1>
-    <img src="https://github.com/cribbslab/phylotres-dev/blob/main/img/logo.png?raw=true" width="300" height="100">
+<h1 align="center">
+    <img src="https://github.com/cribbslab/phylotres-dev/blob/main/img/Tresor-logo.png?raw=true" width="276" height="114">
     <br>
 </h1>
 
