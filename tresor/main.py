@@ -57,93 +57,93 @@ console.verbose = True
 class HelpfulCmd(click.Command):
 
     def format_help(self, ctx, formatter):
-        click.echo(vignette1.renderText('PhyloTres'))
+        click.echo(vignette1.renderText('Tresor'))
         click.echo(
             """
             tool 
                 gmat_bulk | gmat_sc
                 
                 @@@ gmat_bulk
-                phylotres gmat_bulk -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_bulk.h5 -is True -vb True
+                tresor gmat_bulk -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 10 -gsimulator spsimseq -wd ./tresor/data/spsimseq_bulk.h5 -is True -vb True
             
                 @@@ gmat_sc
-                phylotres gmat_sc -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -wd ./phylotres/data/spsimseq_sc.h5 -is True -vb True
+                tresor gmat_sc -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -wd ./tresor/data/spsimseq_sc.h5 -is True -vb True
             
             
                 library_sl | library_bulk | library_sc
                 
                 @@@ library_sl
-                phylotres library_sl -cfpn ./phylotres/data/libslocus.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor library_sl -cfpn ./tresor/data/libslocus.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
                 
                 @@@ library_bulk
-                phylotres library_bulk -cfpn ./phylotres/data/libgene.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 20 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
+                tresor library_bulk -cfpn ./tresor/data/libgene.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -nspl 2 -ngene 20 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True 
 
                 @@@ library_sc
-                phylotres library_sc -cfpn ./phylotres/data/libsc.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True 
+                tresor library_sc -cfpn ./tresor/data/libsc.yml -snum 50 -rfpn D:/Programming/R/R-4.3.2/ -ncell 10 -ngene 10 -gsimulator spsimseq -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True 
 
                 
                 seqerr_sl | pcrerr_sl | pcrnum_sl | amplrate_sl | umilen_sl | seqdep_sl | generic_sl
                 
                 @@@ seqerr_sl
-                phylotres seqerr_sl -cfpn ./phylotres/data/seqerr_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor seqerr_sl -cfpn ./tresor/data/seqerr_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ pcrerr_sl
-                phylotres pcrerr_sl -cfpn ./phylotres/data/pcrerr_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor pcrerr_sl -cfpn ./tresor/data/pcrerr_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ pcrnum_sl
-                phylotres pcrnum_sl -cfpn ./phylotres/data/pcrnum_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor pcrnum_sl -cfpn ./tresor/data/pcrnum_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ amplrate_sl
-                phylotres amplrate_sl -cfpn ./phylotres/data/amplrate_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor amplrate_sl -cfpn ./tresor/data/amplrate_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ umilen_sl
-                phylotres umilen_sl -cfpn ./phylotres/data/umilen_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor umilen_sl -cfpn ./tresor/data/umilen_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ seqdep_sl
-                phylotres seqdep_sl -cfpn ./phylotres/data/seqdep_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor seqdep_sl -cfpn ./tresor/data/seqdep_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ generic_sl
-                phylotres generic_sl -cfpn ./phylotres/data/generic_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor generic_sl -cfpn ./tresor/data/generic_sl.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
             
                 seqerr_gene | pcrerr_gene | pcrnum_gene | amplrate_gene | umilen_gene | seqdep_gene
                 @@@ seqerr_gene
-                phylotres seqerr_gene -cfpn ./phylotres/data/seqerr_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor seqerr_gene -cfpn ./tresor/data/seqerr_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ pcrerr_gene
-                phylotres pcrerr_gene -cfpn ./phylotres/data/pcrerr_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor pcrerr_gene -cfpn ./tresor/data/pcrerr_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ pcrnum_gene
-                phylotres pcrnum_gene -cfpn ./phylotres/data/pcrnum_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor pcrnum_gene -cfpn ./tresor/data/pcrnum_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ amplrate_gene
-                phylotres amplrate_gene -cfpn ./phylotres/data/amplrate_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor amplrate_gene -cfpn ./tresor/data/amplrate_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ umilen_gene
-                phylotres umilen_gene -cfpn ./phylotres/data/umilen_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor umilen_gene -cfpn ./tresor/data/umilen_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ seqdep_gene
-                phylotres seqdep_gene -cfpn ./phylotres/data/seqdep_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor seqdep_gene -cfpn ./tresor/data/seqdep_gene.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
             
                 seqerr_sc | pcrerr_sc | pcrnum_sc | amplrate_sc | umilen_sc | seqdep_sc
                 @@@ seqerr_sc
-                phylotres seqerr_sc -cfpn ./phylotres/data/seqerr_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor seqerr_sc -cfpn ./tresor/data/seqerr_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ pcrerr_sc
-                phylotres pcrerr_sc -cfpn ./phylotres/data/pcrerr_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor pcrerr_sc -cfpn ./tresor/data/pcrerr_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ pcrnum_sc
-                phylotres pcrnum_sc -cfpn ./phylotres/data/pcrnum_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor pcrnum_sc -cfpn ./tresor/data/pcrnum_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ amplrate_sc
-                phylotres amplrate_sc -cfpn ./phylotres/data/amplrate_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor amplrate_sc -cfpn ./tresor/data/amplrate_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ umilen_sc
-                phylotres umilen_sc -cfpn ./phylotres/data/umilen_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor umilen_sc -cfpn ./tresor/data/umilen_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 @@@ seqdep_sc
-                phylotres seqdep_sc -cfpn ./phylotres/data/seqdep_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./phylotres/data/simu/ -md short_read -is True -vb True
+                tresor seqdep_sc -cfpn ./tresor/data/seqdep_sc.yml -snum 50 -permut 0 -sthres 3 -wd ./tresor/data/simu/ -md short_read -is True -vb True
             
                 
             """
@@ -289,7 +289,7 @@ def main(
         mode,
         verbose,
 ):
-    print(vignette1.renderText('PhyloTres'))
+    print(vignette1.renderText('Tresor'))
     ### @@@ simu library
     if tool == "library_sl":
         console.print("=============>Tool {} is being used...".format(tool))

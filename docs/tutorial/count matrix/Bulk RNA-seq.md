@@ -9,7 +9,7 @@ CLI should look like below:
 === "Python"
 
     ``` py
-    import phylotres as pts
+    import tresor as pts
 
     gspl = pts.gmat.spsimseq_bulk(
         R_root='D:/Programming/R/R-4.3.2/',
@@ -25,12 +25,12 @@ CLI should look like below:
 === "Command"
 
     ``` c++
-    phylotres gmat_bulk \
+    tresor gmat_bulk \
     -rfpn D:/Programming/R/R-4.3.2/ \
     -nspl 2 \
     -ngene 10 \
     -gsimulator spsimseq \
-    -wd ./phylotres/data/spsimseq_bulk.h5 \
+    -wd ./tresor/data/spsimseq_bulk.h5 \
     -is True \
     -vb True
             

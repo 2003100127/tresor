@@ -7,7 +7,7 @@ CLI should look like below:
 === "Python"
 
     ``` py
-    import phylotres as pts
+    import tresor as pts
     
     gbycell, _, _ = pts.spsimseq_sc(
         R_root='D:/Programming/R/R-4.3.2/',
@@ -23,12 +23,12 @@ CLI should look like below:
 === "Shell"
 
     ```shell
-    phylotres gmat_sc \
+    tresor gmat_sc \
     -rfpn D:/Programming/R/R-4.3.2/ \ 
     -ncell 10 \ 
     -ngene 10 \ 
     -gsimulator spsimseq \ 
-    -wd ./phylotres/data/spsimseq_sc.h5 \ 
+    -wd ./tresor/data/spsimseq_sc.h5 \ 
     -is True \ 
     -vb True
     ```

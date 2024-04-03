@@ -2,19 +2,19 @@
 
 ## System Requirement
 
-There is no requirement for PhyloTres, a cross-platform package.
+There is no requirement for Tresor, a cross-platform package.
 
 ## PyPI
 
-[phylotres homepage](https://pypi.org/project/phylotres/)
+[tresor homepage](https://pypi.org/project/tresor/)
 
 ```shell
 # create a conda environment
-conda create --name phylotres python=3.11
+conda create --name tresor python=3.11
 
 # activate the conda environment
-conda activate phylotres
+conda activate tresor
 
 # the latest version
-pip install phylotres --upgrade
+pip install tresor --upgrade
 ```
