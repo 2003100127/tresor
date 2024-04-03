@@ -1,7 +1,7 @@
-site_name: PhyloTres
+site_name: Tresor
 
-repo_url: https://github.com/cribbslab/resimpy
-repo_name: cribbslab/phylotres
+repo_url: https://github.com/cribbslab/tresor
+repo_name: cribbslab/tresor
 
 
 theme:
