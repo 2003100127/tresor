@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://github.com/cribbslab/tresor-dev/blob/main/img/Tresor-logo.png?raw=true" width="276" height="114">
+    <img src="https://github.com/cribbslab/tresor/blob/main/img/Tresor-logo.png?raw=true" width="276" height="114">
     <br>
 </h1>
 
