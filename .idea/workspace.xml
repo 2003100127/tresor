@@ -1,13 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="583f3ab5-3a3d-494f-a2dc-b518e2591a09" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/gene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/locus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/locus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/pcr/Error.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/pcr/Error.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/pcr/Subsampling.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/pcr/Subsampling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/sc.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/sc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/amplrate/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/amplrate/SingleLocus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/generic/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/generic/SingleLocus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrerr/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrerr/SingleLocus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrnum/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrnum/Gene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleCell.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleLocus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqdep/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqdep/SingleLocus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqerr/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqerr/SingleLocus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/umilen/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/umilen/SingleLocus.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2f9Q1rFu9qYAkjF0CqYzSf7N5Xp" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Document/Programming/Python/tresor_test&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-67fca87a943a-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.259" />
+      </set>
+    </attachedChunks>
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="583f3ab5-3a3d-494f-a2dc-b518e2591a09" name="Changes" comment="" />
+      <created>1713210602130</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713210602130</updated>
+      <workItem from="1713210603210" duration="1817000" />
+      <workItem from="1713309391197" duration="687000" />
+      <workItem from="1713329175535" duration="293000" />
+      <workItem from="1713329508593" duration="973000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

@@ -102,10 +102,12 @@ class SingleLocus:
         -------
 
         """
+        time_arr = []
         for i, umi_unit_len_i in enumerate(self.umi_unit_lens):
             self.console.print('======>{}. UMI length: {}'.format(i, umi_unit_len_i))
             ### +++++++++++++++ block: generate sequencing library +++++++++++++++
             self.console.print('===>Sequencing library generation starts')
+            satime = time.time()
             self.len_params['umi']['umi_unit_len'] = umi_unit_len_i
             working_dir_new = self.working_dir + 'umi_len_' + str(umi_unit_len_i) + '/'
             crtfolder().osmkdir(working_dir_new)
@@ -255,6 +257,8 @@ class SingleLocus:
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
             self.console.print('=========>Reads write to files in FastQ format')
+            print('======>simulation completes in {}s'.format(time.time() - satime))
+            time_arr.append(time.time() - satime)
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,
@@ -264,7 +268,9 @@ class SingleLocus:
             del seq
             self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
-        return
+        return {
+            'time_arr': time_arr,
+        }
 
 
 if __name__ == "__main__":

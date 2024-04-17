@@ -13,6 +13,7 @@ from tresor.pcr.Amplify import Amplify as pcr
 from tresor.sequencing.Calling import Calling as seq
 from tresor.pcr.Subsampling import Subsampling
 from tresor.util.sequence.fastq.Write import write as wfastq
+from tresor.util.file.Writer import Writer as fwriter
 from tresor.util.Console import Console
 
 
@@ -81,6 +82,7 @@ class SingleLocus:
         self.seq = seq
         self.wfastq = wfastq
         self.subsampling = Subsampling()
+        self.fwriter = fwriter()
 
         self.kwargs = kwargs
         print(self.kwargs)
@@ -125,6 +127,9 @@ class SingleLocus:
 
         """
         ### +++++++++++++++ block: PCR amplification: Preparation +++++++++++++++
+        time_arr = []
+        satime = time.time()
+
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
         # print(np.array(self.sequencing_library))
@@ -191,7 +196,7 @@ class SingleLocus:
                 vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
                 pcr_ampl_params['data'][:, 1:3],
             ))
-            print(pcr_ampl_params['data'])
+            # print(pcr_ampl_params['data'])
             # pcr_ampl_params['data']
             # [['36' '0' 'init']
             #  ['36' '1' 'init']
@@ -259,6 +264,9 @@ class SingleLocus:
         }
         seq = self.seq(seq_params=seq_params).np()
         self.console.print('=========>Sequencing has completed')
+        print('======>simulation completes in {}s'.format(time.time() - satime))
+        time_arr.append(time.time() - satime)
+
         self.console.print('=========>Reads write to files in FastQ format')
         self.wfastq().togz(
             list_2d=seq['data'],
@@ -270,7 +278,9 @@ class SingleLocus:
 
         self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
-        return
+        return {
+            'time_arr': time_arr,
+        }
 
 
 if __name__ == "__main__":

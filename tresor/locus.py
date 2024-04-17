@@ -6,6 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__ = "jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
+import time
 from tresor.library.SingleLocus import SingleLocus as libslocus
 from tresor.scenario.seqerr.SingleLocus import SingleLocus as seqerr
 from tresor.scenario.pcrerr.SingleLocus import SingleLocus as pcrerr
@@ -153,7 +154,8 @@ def simu_seq_err(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    seqerr(
+    stime = time.time()
+    res_dict = seqerr(
         # initial sequence generation
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
@@ -198,7 +200,10 @@ def simu_seq_err(
 
         sv_fastq_fp=sv_fastq_fp,
     ).generate()
-    return
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_pcr_err(
@@ -279,7 +284,8 @@ def simu_pcr_err(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    pcrerr(
+    stime = time.time()
+    res_dict = pcrerr(
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
@@ -318,7 +324,10 @@ def simu_pcr_err(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_pcr_num(
@@ -399,7 +408,8 @@ def simu_pcr_num(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    pcrnum(
+    stime = time.time()
+    res_dict = pcrnum(
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
@@ -438,7 +448,10 @@ def simu_pcr_num(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_ampl_rate(
@@ -519,7 +532,8 @@ def simu_ampl_rate(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    amplrate(
+    stime = time.time()
+    res_dict = amplrate(
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
@@ -558,7 +572,10 @@ def simu_ampl_rate(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_umi_len(
@@ -639,7 +656,8 @@ def simu_umi_len(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    umilen(
+    stime = time.time()
+    res_dict = umilen(
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
@@ -678,7 +696,10 @@ def simu_umi_len(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_seq_dep(
@@ -759,8 +780,8 @@ def simu_seq_dep(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-
-    seqdep(
+    stime = time.time()
+    res_dict = seqdep(
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
@@ -799,7 +820,10 @@ def simu_seq_dep(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_generic(
@@ -882,7 +906,8 @@ def simu_generic(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    generic(
+    stime = time.time()
+    res_dict = generic(
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
         material_params=kwargs['material_params'] if 'material_params' in kwargs.keys() else None,
@@ -922,7 +947,10 @@ def simu_generic(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 if __name__ == "__main__":
@@ -1354,6 +1382,7 @@ if __name__ == "__main__":
     #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
     #     )
 
+    # @@
     for i, umi_num_i in enumerate([
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
         11, 12, 13, 14, 15, 16, 17, 18, 19, 20,

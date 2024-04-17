@@ -6,6 +6,7 @@ __maintainer__ = "Jianfeng Sun"
 __email__ = "jianfeng.sunmt@gmail.com"
 __lab__ = "Cribbslab"
 
+import time
 from tresor.library.SingleCell import SingleCell as libsc
 from tresor.scenario.seqerr.SingleCell import SingleCell as seqerr
 from tresor.scenario.pcrerr.SingleCell import SingleCell as pcrerr
@@ -442,7 +443,8 @@ def simu_pcr_num(
         if "seq_ins_rate" in configs.keys():
             seq_ins_rate = configs['seq_ins_rate']
 
-    pcrnum(
+    stime = time.time()
+    res_dict = pcrnum(
         gmat=gmat,
         len_params=len_params,
         mode=kwargs['mode'] if 'mode' in kwargs.keys() else None,
@@ -482,7 +484,10 @@ def simu_pcr_num(
         seq_sub_spl_rate=seq_sub_spl_rate,
         verbose=verbose,
     ).generate()
-    return 'Finished!'
+    etime = time.time()
+    print("===>Time: {:.3f}s".format(etime - stime))
+    print('Finished!')
+    return res_dict
 
 
 def simu_ampl_rate(

@@ -125,6 +125,8 @@ class SingleLocus:
         ### +++++++++++++++ block: PCR amplification: Preparation +++++++++++++++
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
+        time_arr = []
+        satime = time.time()
         # print(np.array(self.sequencing_library))
         for i, ampl_rate_i in enumerate(self.ampl_rates):
             self.console.print('======>{}. Amplification rate: {}'.format(i, ampl_rate_i))
@@ -182,7 +184,7 @@ class SingleLocus:
                     vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
                     pcr_ampl_params['data'][:, 1:3],
                 ))
-                print(pcr_ampl_params['data'])
+                # print(pcr_ampl_params['data'])
                 # pcr_ampl_params['data']
                 # [['36' '0' 'init']
                 #  ['36' '1' 'init']
@@ -246,6 +248,8 @@ class SingleLocus:
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
             self.console.print('=========>Reads write to files in FastQ format')
+            print('======>simulation completes in {}s'.format(time.time() - satime))
+            time_arr.append(time.time() - satime)
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,
@@ -256,7 +260,9 @@ class SingleLocus:
             del seq
         self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
-        return
+        return {
+            'time_arr': time_arr,
+        }
 
 
 if __name__ == "__main__":

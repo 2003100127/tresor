@@ -22,7 +22,7 @@ class Subsampling:
 
     def __init__(
             self,
-            verbose=True
+            verbose=False
     ):
         self.pcr = pcr
         self.seq = seq

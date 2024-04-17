@@ -177,7 +177,7 @@ class Error:
         data_pcr = np.array(data_pcr)
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
-        print(res2p['recorder_pcr_err_num'])
+        # print(res2p['recorder_pcr_err_num'])
         self.console.print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
         self.console.print('======>Summary report:')
         self.console.print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))

@@ -46,7 +46,7 @@ class SingleLocus:
             seq_sub_spl_number=None,
             seq_sub_spl_rate=1/3,
 
-            verbose=True,
+            verbose=False,
             **kwargs,
     ):
         self.len_params = len_params
@@ -126,6 +126,8 @@ class SingleLocus:
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
         # print(np.array(self.sequencing_library))
+        time_arr = []
+        satime = time.time()
         for i, pcr_num_i in enumerate(self.pcr_nums):
             self.console.print('======>{}. PCR cycle number: {}'.format(i, pcr_num_i))
             pcr_ampl_params = {
@@ -182,7 +184,7 @@ class SingleLocus:
                     vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
                     pcr_ampl_params['data'][:, 1:3],
                 ))
-                print(pcr_ampl_params['data'])
+                # print(pcr_ampl_params['data'])
                 # pcr_ampl_params['data']
                 # [['36' '0' 'init']
                 #  ['36' '1' 'init']
@@ -245,6 +247,9 @@ class SingleLocus:
             }
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
+            print('======>simulation completes in {}s'.format(time.time() - satime))
+            time_arr.append(time.time() - satime)
+
             self.console.print('=========>Reads write to files in FastQ format')
             self.wfastq().togz(
                 list_2d=seq['data'],
@@ -254,9 +259,13 @@ class SingleLocus:
                 symbol='-',
             )
             del seq
+        eatime = time.time()
+        self.console.print('=========>Total time: {:.3f}s'.format(eatime - satime))
         self.console.print('=========>FastQ file is saved')
         self.console.print('======>Simulation completes')
-        return
+        return {
+            'time_arr': time_arr
+        }
 
 
 if __name__ == "__main__":
