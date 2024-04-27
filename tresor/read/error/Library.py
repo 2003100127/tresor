@@ -24,13 +24,17 @@ class Library:
             n=len(read), p=del_rate, use_seed=False, seed=False
         )
         if num_err_per_read != 0:
-            print(11111111111111)
+            mark = True
+        else:
+            mark = False
         pos_list = rannum().choice(
             high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
         )
         for _, pos in enumerate(pos_list):
             read = read[:pos] + read[pos + 1:]
-        return read
+        return read, {
+            'mark': mark,
+        }
 
     def insertion(
             self,
@@ -42,7 +46,9 @@ class Library:
         )
         # print(num_err_per_read)
         if num_err_per_read != 0:
-            print(11111111111111)
+            mark = True
+        else:
+            mark = False
         pos_list = rannum().choice(
             high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
         )
@@ -69,7 +75,9 @@ class Library:
             # 3 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
             # AAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
             # AAAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
-        return read
+        return read, {
+            'mark': mark,
+        }
 
     def mutated(
             self,
@@ -109,7 +117,7 @@ class Library:
             # {0: 'A', 1: 'T', 2: 'C'} 0 A
             read_l[pos] = dna_map[base_list[i]]
         return ''.join(read_l), {
-            'mark': mark
+            'mark': mark,
         }
 
     def change(

@@ -5,35 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="583f3ab5-3a3d-494f-a2dc-b518e2591a09" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/gene.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tresor/library/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/library/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/locus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/locus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/pcr/Amplify.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/pcr/Amplify.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/pcr/Error.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/pcr/Error.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/pcr/Subsampling.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/pcr/Subsampling.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/sc.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/sc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/amplrate/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/amplrate/Gene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/amplrate/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/amplrate/SingleCell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/amplrate/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/amplrate/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/generic/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/generic/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrerr/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrerr/Gene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrerr/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrerr/SingleCell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrerr/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrerr/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrnum/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrnum/Gene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleCell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrnum/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqdep/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqdep/Gene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqdep/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqdep/SingleCell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqdep/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqdep/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqerr/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqerr/Gene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqerr/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqerr/SingleCell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqerr/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqerr/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/umilen/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/umilen/Gene.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/umilen/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/umilen/SingleCell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/scenario/umilen/SingleLocus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/umilen/SingleLocus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/util/sequence/symbol/Single.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/util/sequence/symbol/Single.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/read/error/Library.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/read/error/Library.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +150,7 @@
       <workItem from="1713329508593" duration="19665000" />
       <workItem from="1713469873852" duration="35110000" />
       <workItem from="1714180433054" duration="5699000" />
-      <workItem from="1714187485931" duration="6497000" />
+      <workItem from="1714187485931" duration="7978000" />
     </task>
     <servers />
   </component>
@@ -196,7 +170,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/tresor$SingleLocus__1_.coverage" NAME="SingleLocus (1) Coverage Results" MODIFIED="1714189095698" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/scenario/generic" />
-    <SUITE FILE_PATH="coverage/tresor$SingleLocus.coverage" NAME="SingleLocus Coverage Results" MODIFIED="1714200815808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/library" />
+    <SUITE FILE_PATH="coverage/tresor$SingleLocus.coverage" NAME="SingleLocus Coverage Results" MODIFIED="1714202418782" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/library" />
     <SUITE FILE_PATH="coverage/tresor$Subsampling.coverage" NAME="Subsampling Coverage Results" MODIFIED="1713492276210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/pcr" />
   </component>
 </project>

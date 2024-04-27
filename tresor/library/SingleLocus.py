@@ -97,6 +97,9 @@ class SingleLocus:
         self.console.print("======>Sequencing library preparation starts")
         stime = time.time()
         sequencing_library = []
+        mut_recorder_arr = []
+        del_recorder_arr = []
+        ins_recorder_arr = []
         umi_pool = []
         umi_cnt = 0
 
@@ -334,9 +337,20 @@ class SingleLocus:
                     self.console.print("============>Custom-designed condition {}: {}".format(custom_mark_id, 'custom' + custom_mark))
                     read_struct_ref['custom' + custom_mark] = self.kwargs['seq_params']['custom' + custom_mark]
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
-            sequencing_library.append([self.paste([*read_struct_pfd_order.values()]), str(id), 'init'])
+            read, read_err_dict = self.paste([*read_struct_pfd_order.values()])
+            sequencing_library.append([read, str(id), 'init'])
+            mut_recorder_arr.append(read_err_dict['read_mut']['mark'])
+            del_recorder_arr.append(read_err_dict['read_del']['mark'])
+            ins_recorder_arr.append(read_err_dict['read_ins']['mark'])
         # print(umi_cnt)
         # print(umi_pool)
+        # print(sequencing_library)
+        print(mut_recorder_arr)
+        print(del_recorder_arr)
+        print(ins_recorder_arr)
+        print(sum(mut_recorder_arr))
+        print(sum(del_recorder_arr))
+        print(sum(ins_recorder_arr))
         self.pfwriter.generic(df=sequencing_library, sv_fpn=self.working_dir + 'sequencing_library.txt')
         etime = time.time()
         self.console.print("===>Time for sequencing library preparation: {:.3f}s".format(etime-stime))
@@ -347,19 +361,29 @@ class SingleLocus:
         if 'bead_mutation' in self.kwargs.keys() and self.kwargs['bead_mutation']:
             print('bead_mutation')
             print(read)
-            read = self.errlib.mutated(read=read, pcr_error=self.kwargs['bead_mut_rate'])
+            read, read_mut = self.errlib.mutated(read=read, pcr_error=self.kwargs['bead_mut_rate'])
             print(read)
+        else:
+            read_mut = False
         if 'bead_deletion' in self.kwargs.keys() and self.kwargs['bead_deletion']:
             print('bead_deletion')
             print(read)
-            read = self.errlib.deletion(read=read, del_rate=self.kwargs['bead_del_rate'])
+            read, read_del = self.errlib.deletion(read=read, del_rate=self.kwargs['bead_del_rate'])
             print(read)
+        else:
+            read_del = False
         if 'bead_insertion' in self.kwargs.keys() and self.kwargs['bead_insertion']:
             print('bead_insertion')
             print(read)
-            read = self.errlib.insertion(read=read, ins_rate=self.kwargs['bead_ins_rate'])
+            read, read_ins = self.errlib.insertion(read=read, ins_rate=self.kwargs['bead_ins_rate'])
             print(read)
-        return read
+        else:
+            read_ins = False
+        return read, {
+            'read_mut': read_mut,
+            'read_del': read_del,
+            'read_ins': read_ins,
+        }
 
 
 if __name__ == "__main__":
@@ -369,7 +393,7 @@ if __name__ == "__main__":
         seq_num=50,
         len_params={
             'umi': {
-                'umi_unit_pattern': 3,
+                'umi_unit_pattern': 1,
                 'umi_unit_len': 12,
             },
             'umi_1': {
@@ -404,11 +428,11 @@ if __name__ == "__main__":
         permutation=0,
 
         bead_mutation=True,  # True False
-        bead_mut_rate=2.4e-1,  # 0.016 0.00004
+        bead_mut_rate=1e-4,  # 0.016 0.00004
         bead_deletion=True,  # True False
         bead_insertion=True,
-        bead_del_rate=2.4e-7,  # 0.016 0.00004
-        bead_ins_rate=7.1e-1,  # 0.011 0.00001
+        bead_del_rate=0.1/112,  # 0.016 0.00004, 2.4e-7
+        bead_ins_rate=7.1e-7,  # 0.011 0.00001, 7.1e-7
 
         mode='short_read',  # long_read short_read
 
