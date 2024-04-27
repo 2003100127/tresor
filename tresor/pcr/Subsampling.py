@@ -128,6 +128,8 @@ class Subsampling:
             pcr_dict,
             replace=False,
     ):
+        print(pcr_dict)
+        print(pcr_dict['mut_info'])
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_complete')
         self.console.print('======>Read PCR amplified reads')
@@ -158,7 +160,6 @@ class Subsampling:
             seed=pcr_dict['seed'],
             replace=replace,
         )
-
         # print(spl_ids)
         # print(pcr_dict['data'])
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])

@@ -344,7 +344,18 @@ class Error:
         """
         pcr_stime = time.time()
         df_mut_info = pd.DataFrame()
-        data_pcr = pd.DataFrame(res2p['data_spl'], columns=['read_len', 'sam_id', 'source'])
+        print(res2p)
+        # print(res2p['data_spl'])
+
+        data_pcr = pd.DataFrame(res2p['data_spl'], columns=[
+            'read_len',
+            'sam_id',
+            'source',
+            'bead_mut',
+            'bead_del',
+            'bead_ins',
+        ])
+        # print(data_pcr)
         data_pcr['num_err_per_read'] = data_pcr['read_len'].apply(lambda x: rannum().binomial(
             n=int(x), p=res2p['pcr_error'], use_seed=False, seed=res2p['ipcr'] + 1
         ))
@@ -384,9 +395,23 @@ class Error:
         # 153598               []                 []
         # 153599               []                 []
         df_mut_info['sam_id'] = data_pcr['sam_id'].copy()
+        df_mut_info['bead_mut'] = data_pcr['bead_mut'].copy()
+        df_mut_info['bead_del'] = data_pcr['bead_del'].copy()
+        df_mut_info['bead_ins'] = data_pcr['bead_ins'].copy()
+
+        data_pcr = np.array(data_pcr[[
+            'read_len',
+            'sam_id',
+            'source',
+            'bead_mut',
+            'bead_del',
+            'bead_ins',
+        ]])
         # print(data_pcr)
-        # print(df_mut_info)
-        data_pcr = np.array(data_pcr[['read_len', 'sam_id', 'source']])
+        # print(res2p['data'])
+
+        print(res2p['mut_info'])
+        print(df_mut_info)
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         # print(np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0))
         res2p['mut_info'] = np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0)

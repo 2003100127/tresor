@@ -8,6 +8,8 @@ __lab__ = "Cribbslab"
 
 import time
 import numpy as np
+import pandas as pd
+
 from tresor.library.SingleLocus import SingleLocus as simuip
 from tresor.pcr.Amplify import Amplify as pcr
 from tresor.sequencing.Calling import Calling as seq
@@ -64,6 +66,13 @@ class SingleLocus:
         self.sim_thres = sim_thres
         self.permutation = permutation
 
+        self.bead_mutation = kwargs['bead_mutation']
+        self.bead_mut_rate = kwargs['bead_mut_rate']
+        self.bead_deletion = kwargs['bead_deletion']
+        self.bead_del_rate = kwargs['bead_del_rate']
+        self.bead_insertion = kwargs['bead_insertion']
+        self.bead_ins_rate = kwargs['bead_ins_rate']
+
         self.err_route = err_route
         self.ampl_rate = ampl_rate
         self.pcr_num = pcr_num
@@ -93,13 +102,24 @@ class SingleLocus:
 
         ### +++++++++++++++ block: generate sequencing library +++++++++++++++
         self.console.print('===>Sequencing library generation starts')
-        self.sequencing_library = simuip(
+        self.sequencing_library, self.lib_err_mark = simuip(
             len_params=self.len_params,
             seq_num=self.seq_num,
             is_seed=self.use_seed,
             working_dir=self.working_dir,
             condis=self.condis,
             sim_thres=self.sim_thres,
+            # bead_mutation=self.bead_mutation,
+            # bead_mut_rate=self.bead_mut_rate,
+            # bead_deletion=self.bead_deletion,
+            # bead_del_rate=self.bead_del_rate,
+            # bead_insertion=self.bead_insertion,
+            bead_mutation=self.kwargs['bead_mutation'] if 'bead_mutation' in self.kwargs.keys() else False,
+            bead_mut_rate=self.kwargs['bead_mut_rate'] if 'bead_mut_rate' in self.kwargs.keys() else False,
+            bead_deletion=self.kwargs['bead_deletion'] if 'bead_deletion' in self.kwargs.keys() else False,
+            bead_del_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
+            bead_insertion=self.kwargs['bead_insertion'] if 'bead_insertion' in self.kwargs.keys() else False,
+            bead_ins_rate=self.bead_ins_rate,
             permutation=self.permutation,
             is_sv_umi_lib=self.is_sv_umi_lib,
             is_sv_seq_lib=self.is_sv_seq_lib,
@@ -111,7 +131,10 @@ class SingleLocus:
             material_params=self.kwargs['material_params'] if 'material_params' in self.kwargs.keys() else None,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
+        self.sequencing_library = pd.concat([pd.DataFrame(self.sequencing_library), self.lib_err_mark], axis=1).values
+        # print(self.sequencing_library)
         self.console.print('===>Sequencing library has been generated')
+        # print(self.lib_err_mark)
 
     def generate(self, ):
         """
@@ -166,6 +189,7 @@ class SingleLocus:
 
             'verbose': self.verbose,
         }
+        print(pcr_ampl_params['data'])
         # pcr_ampl_params['data']
         # [['GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC' '0' 'init']
         #  ['GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT' '1' 'init']
@@ -179,8 +203,7 @@ class SingleLocus:
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'sptree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-        if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params[
-            'err_route'] == 'mutation_table_complete':
+        if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
             # print(pcr_ampl_params['data'][:, 0])
             def calc_len(a):
                 return len(a)
@@ -194,8 +217,9 @@ class SingleLocus:
             #  [36]]
             pcr_ampl_params['data'] = np.hstack((
                 vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
-                pcr_ampl_params['data'][:, 1:3],
+                pcr_ampl_params['data'][:, 1:6],
             ))
+            # print(pcr_ampl_params)
             # print(pcr_ampl_params['data'])
             # pcr_ampl_params['data']
             # [['36' '0' 'init']
@@ -208,8 +232,12 @@ class SingleLocus:
             mut_info_table = np.hstack((col_0, col_0))
             col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
             mut_info_table = np.hstack((mut_info_table, col_2))
+
+            mut_info_table = pd.concat([pd.DataFrame(mut_info_table), self.lib_err_mark], axis=1).values
+
             pcr_ampl_params['mut_info'] = mut_info_table
             # print(mut_info_table)
+            # print(self.lib_err_mark.values)
             # pcr_ampl_params['mut_info'] = np.empty(shape=[0, 3])
             # print(pcr_ampl_params['mut_info'])
 
@@ -290,7 +318,7 @@ if __name__ == "__main__":
         # initial sequence generation
         len_params={
             'umi': {
-                'umi_unit_pattern': 3,
+                'umi_unit_pattern': 1,
                 'umi_unit_len': 12,
             },
             'seq': 100,
@@ -300,7 +328,7 @@ if __name__ == "__main__":
             'custom_1': 'A',
         },
         material_params={
-            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+            # 'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
         },
         seq_num=50,
         working_dir=to('data/simu/'),
@@ -310,28 +338,34 @@ if __name__ == "__main__":
         is_sv_primer_lib=True,
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
-        condis=['umi'],
-        # condis=['umi', 'seq'],
+        # condis=['umi'],
+        condis=['umi', 'seq'],
         # condis=['umi', 'custom', 'seq', 'custom_1'],
         sim_thres=3,
         permutation=0,
 
         # PCR amplification
-        ampl_rate=0.9,
-        err_route='err2d', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+        ampl_rate=0.85,
+        err_route='mutation_table_complete', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinodmial',
         seq_error=0.01,
         seq_sub_spl_number=1000, # None 200
-        seq_sub_spl_rate=0.333,
+        seq_sub_spl_rate=None, # 0.333
         use_seed=True,
         seed=1,
+
+        bead_mutation=True,  # True False
+        bead_mut_rate=1e-4,  # 0.016 0.00004
+        bead_deletion=True,  # True False
+        bead_insertion=True,
+        bead_del_rate=0.1 / 112,  # 0.016 0.00004, 2.4e-7
+        bead_ins_rate=7.1e-7,  # 0.011 0.00001, 7.1e-7
 
         pcr_deletion=True,  # True False
         pcr_insertion=True,
         pcr_del_rate=2.4e-6,  # 0.016 0.00004
-        # pcr_ins_rate=criterion,
         pcr_ins_rate=7.1e-7,  # 0.011 0.00001
         seq_deletion=False,
         seq_insertion=False,

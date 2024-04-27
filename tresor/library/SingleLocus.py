@@ -339,46 +339,53 @@ class SingleLocus:
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
             read, read_err_dict = self.paste([*read_struct_pfd_order.values()])
             sequencing_library.append([read, str(id), 'init'])
+            # print(read_err_dict['read_mut']['mark'])
             mut_recorder_arr.append(read_err_dict['read_mut']['mark'])
             del_recorder_arr.append(read_err_dict['read_del']['mark'])
             ins_recorder_arr.append(read_err_dict['read_ins']['mark'])
         # print(umi_cnt)
         # print(umi_pool)
         # print(sequencing_library)
-        print(mut_recorder_arr)
-        print(del_recorder_arr)
-        print(ins_recorder_arr)
+        # print(mut_recorder_arr)
+        # print(del_recorder_arr)
+        # print(ins_recorder_arr)
+        df = pd.DataFrame({
+            'mut': mut_recorder_arr,
+            'del': del_recorder_arr,
+            'ins': ins_recorder_arr,
+        })
+        # print(df)
         print(sum(mut_recorder_arr))
         print(sum(del_recorder_arr))
         print(sum(ins_recorder_arr))
         self.pfwriter.generic(df=sequencing_library, sv_fpn=self.working_dir + 'sequencing_library.txt')
         etime = time.time()
         self.console.print("===>Time for sequencing library preparation: {:.3f}s".format(etime-stime))
-        return sequencing_library
+        return sequencing_library, df
 
     def paste(self, read_struct=[]):
         read = ''.join(read_struct)
         if 'bead_mutation' in self.kwargs.keys() and self.kwargs['bead_mutation']:
-            print('bead_mutation')
-            print(read)
+            # print('bead_mutation')
+            # print(read)
             read, read_mut = self.errlib.mutated(read=read, pcr_error=self.kwargs['bead_mut_rate'])
-            print(read)
+            # print(read)
         else:
-            read_mut = False
+            read_mut = {}
         if 'bead_deletion' in self.kwargs.keys() and self.kwargs['bead_deletion']:
-            print('bead_deletion')
-            print(read)
+            # print('bead_deletion')
+            # print(read)
             read, read_del = self.errlib.deletion(read=read, del_rate=self.kwargs['bead_del_rate'])
-            print(read)
+            # print(read)
         else:
-            read_del = False
+            read_del = {}
         if 'bead_insertion' in self.kwargs.keys() and self.kwargs['bead_insertion']:
-            print('bead_insertion')
-            print(read)
+            # print('bead_insertion')
+            # print(read)
             read, read_ins = self.errlib.insertion(read=read, ins_rate=self.kwargs['bead_ins_rate'])
-            print(read)
+            # print(read)
         else:
-            read_ins = False
+            read_ins = {}
         return read, {
             'read_mut': read_mut,
             'read_del': read_del,
