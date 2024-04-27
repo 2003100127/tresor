@@ -265,6 +265,8 @@ class SingleLocus:
 
         if pcr_ampl_params['err_route'] == 'mutation_table_complete':
             pcr['data'] = self.subsampling.mutation_table_complete(pcr_dict=pcr)
+            # print(pcr['data'])
+            # print(pcr['data'].shape)
 
         ### +++++++++++++++ block: Sequencing: parameters +++++++++++++++
         self.console.print('======>Sequencing starts')
@@ -348,7 +350,7 @@ if __name__ == "__main__":
         ampl_rate=0.85,
         err_route='mutation_table_complete', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
-        pcr_num=10,
+        pcr_num=15,
         err_num_met='nbinodmial',
         seq_error=0.01,
         seq_sub_spl_number=1000, # None 200

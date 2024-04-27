@@ -344,7 +344,7 @@ class Error:
         """
         pcr_stime = time.time()
         df_mut_info = pd.DataFrame()
-        print(res2p)
+        # print(res2p)
         # print(res2p['data_spl'])
 
         data_pcr = pd.DataFrame(res2p['data_spl'], columns=[
@@ -410,8 +410,8 @@ class Error:
         # print(data_pcr)
         # print(res2p['data'])
 
-        print(res2p['mut_info'])
-        print(df_mut_info)
+        # print(res2p['mut_info'])
+        # print(df_mut_info)
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         # print(np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0))
         res2p['mut_info'] = np.concatenate((res2p['mut_info'], np.array(df_mut_info)), axis=0)

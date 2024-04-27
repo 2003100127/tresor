@@ -128,7 +128,7 @@ class Subsampling:
             pcr_dict,
             replace=False,
     ):
-        print(pcr_dict)
+        # print(pcr_dict)
         print(pcr_dict['mut_info'])
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_complete')
@@ -161,13 +161,20 @@ class Subsampling:
             replace=replace,
         )
         # print(spl_ids)
-        # print(pcr_dict['data'])
+        asd1 = pd.DataFrame(pcr_dict['data'][:, 3:6]).astype(bool)
+        print(asd1)
+        print(asd1[asd1[1]].shape[0] / asd1.shape[0])
+        # print(pcr_dict['data'].shape)
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
         # print(spl_id_map)
         # print(len(spl_id_map))
         spl_mut_info = pcr_dict['mut_info'][spl_ids]
         # print(pcr_dict['mut_info'].shape)
-        # print(spl_mut_info)
+        asd = pd.DataFrame(spl_mut_info)[[3, 4, 5]].astype(bool)
+        print(asd[asd[4]])
+        print(asd[asd[4]].shape[0] / asd.shape[0])
+
+        # print(pd.DataFrame(spl_mut_info)[[3, 4, 5]].dtypes)
         # print(len(spl_mut_info))
         keys = spl_mut_info[:, 2]
         # print(len(keys))
