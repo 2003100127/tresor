@@ -161,9 +161,9 @@ class SingleCell:
         # ...
         # ['CGCGTTAGTAATTCATAAAGGGGGGCCCAAACCCGGGGGGGGGGGGTTTCCC' '221*c*1*g*4*' 'init']
         #  ['CGCGTTAGTAATTCATAAATTTCCCGGGCCCCCCGGGAAAGGGCCCCCCTTT' '222*c*1*g*4*' 'init']]
-        if pcr_ampl_params['err_route'] == 'tree':
+        if pcr_ampl_params['err_route'] == 'bftree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-        if pcr_ampl_params['err_route'] == 'minnow':
+        if pcr_ampl_params['err_route'] == 'sptree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
             # print(pcr_ampl_params['data'][:, 0])
@@ -206,13 +206,13 @@ class SingleCell:
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
         # print(pcr['data'])
         # print(pcr['data'].shape)
-        if pcr_ampl_params['err_route'] == 'tree':
-            pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
+        if pcr_ampl_params['err_route'] == 'bftree':
+            pcr['data'] = self.subsampling.bftree(pcr_dict=pcr)
         # print(pcr['data'])
         # print(pcr['data'].shape)
 
-        if pcr_ampl_params['err_route'] == 'minnow':
-            pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
+        if pcr_ampl_params['err_route'] == 'sptree':
+            pcr['data'] = self.subsampling.sptree(pcr_dict=pcr)
 
         if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
             pcr['data'] = self.subsampling.mutation_table_minimum(pcr_dict=pcr)
@@ -315,7 +315,7 @@ if __name__ == "__main__":
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='mutation_table_complete', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        err_route='mutation_table_complete', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinomial',

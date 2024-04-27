@@ -175,9 +175,9 @@ class SingleLocus:
         #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
         # print(pcr_ampl_params['data'][:, 1:3])
         # print(pcr_ampl_params)
-        if pcr_ampl_params['err_route'] == 'tree':
+        if pcr_ampl_params['err_route'] == 'bftree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-        if pcr_ampl_params['err_route'] == 'minnow':
+        if pcr_ampl_params['err_route'] == 'sptree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params[
             'err_route'] == 'mutation_table_complete':
@@ -224,13 +224,13 @@ class SingleLocus:
         ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
         # print(pcr['data'])
         # print(pcr['data'].shape)
-        if pcr_ampl_params['err_route'] == 'tree':
-            pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
+        if pcr_ampl_params['err_route'] == 'bftree':
+            pcr['data'] = self.subsampling.bftree(pcr_dict=pcr)
         # print(pcr['data'])
         # print(pcr['data'].shape)
 
-        if pcr_ampl_params['err_route'] == 'minnow':
-            pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
+        if pcr_ampl_params['err_route'] == 'sptree':
+            pcr['data'] = self.subsampling.sptree(pcr_dict=pcr)
 
         if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
             pcr['data'] = self.subsampling.mutation_table_minimum(pcr_dict=pcr)
@@ -318,7 +318,7 @@ if __name__ == "__main__":
 
         # PCR amplification
         ampl_rate=0.9,
-        err_route='minnow', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        err_route='err2d', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinodmial',
@@ -327,6 +327,16 @@ if __name__ == "__main__":
         seq_sub_spl_rate=0.333,
         use_seed=True,
         seed=1,
+
+        pcr_deletion=True,  # True False
+        pcr_insertion=True,
+        pcr_del_rate=2.4e-6,  # 0.016 0.00004
+        # pcr_ins_rate=criterion,
+        pcr_ins_rate=7.1e-7,  # 0.011 0.00001
+        seq_deletion=False,
+        seq_insertion=False,
+        seq_del_rate=2.4e-6,
+        seq_ins_rate=7.1e-7,
 
         verbose=False, # True
 

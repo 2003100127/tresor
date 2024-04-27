@@ -17,6 +17,7 @@ class Single:
             def wrapper(self, **kwargs):
                 if action == 'leave_one_out':
                     res = deal(self, kwargs['ele_loo'])
+                    # print(kwargs['ele_loo'])
                     res.remove(kwargs['ele_loo'])
                     return res
                 elif action == 'leave_list_out':

@@ -21,6 +21,7 @@ from tresor.read.primer.Design import Design as dprimer
 from tresor.read.adapter.Design import Design as dadapter
 from tresor.read.spacer.Design import Design as dspacer
 from tresor.util.sequence.Fasta import Fasta as sfasta
+from tresor.read.error.Library import Library as errlib
 from tresor.util.Kit import tactic6
 from tresor.util.Console import Console
 
@@ -49,6 +50,7 @@ class SingleLocus:
         self.ranspl = ranspl()
         self.rannum = rannum()
         self.dnasgl = dnasgl()
+        self.errlib = errlib()
         self.crtfolder = crtfolder()
         self.dumi = dumi
         self.dseq = dseq
@@ -342,15 +344,21 @@ class SingleLocus:
 
     def paste(self, read_struct=[]):
         read = ''.join(read_struct)
-        if 'bead_mutation' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bead_mutation']:
-            from tresor.pcr.Subsampling import Subsampling
-            read = Subsampling().mutated(read=read, pcr_error=self.kwargs['material_params']['bead_mut_rate'])
-        if 'bead_deletion' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bead_deletion']:
-            from tresor.pcr.Subsampling import Subsampling
-            read = Subsampling().deletion(read=read, del_rate=self.kwargs['material_params']['bead_del_rate'])
-        if 'bead_insertion' in self.kwargs['material_params'].keys() and self.kwargs['material_params']['bead_insertion']:
-            from tresor.pcr.Subsampling import Subsampling
-            read = Subsampling().insertion(read=read, ins_rate=self.kwargs['material_params']['bead_ins_rate'])
+        if 'bead_mutation' in self.kwargs.keys() and self.kwargs['bead_mutation']:
+            print('bead_mutation')
+            print(read)
+            read = self.errlib.mutated(read=read, pcr_error=self.kwargs['bead_mut_rate'])
+            print(read)
+        if 'bead_deletion' in self.kwargs.keys() and self.kwargs['bead_deletion']:
+            print('bead_deletion')
+            print(read)
+            read = self.errlib.deletion(read=read, del_rate=self.kwargs['bead_del_rate'])
+            print(read)
+        if 'bead_insertion' in self.kwargs.keys() and self.kwargs['bead_insertion']:
+            print('bead_insertion')
+            print(read)
+            read = self.errlib.insertion(read=read, ins_rate=self.kwargs['bead_ins_rate'])
+            print(read)
         return read
 
 
@@ -382,18 +390,25 @@ if __name__ == "__main__":
             'custom_1': 'V',
         },
         material_params={
-            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+            # 'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
         },
         is_seed=True,
 
         working_dir=to('data/simu/'),
 
         # condis=['umi'],
-        # condis=['umi', 'seq'],
-        condis=['umi', 'custom', 'seq', 'custom_1'],
+        condis=['umi', 'seq'],
+        # condis=['umi', 'custom', 'seq', 'custom_1'],
         # condis=['umi', 'primer', 'primer_1', 'spacer', 'spacer_1', 'adapter', 'adapter_1', 'seq', 'seq_2', 'umi_1'],
         sim_thres=3,
         permutation=0,
+
+        bead_mutation=True,  # True False
+        bead_mut_rate=2.4e-1,  # 0.016 0.00004
+        bead_deletion=True,  # True False
+        bead_insertion=True,
+        bead_del_rate=2.4e-7,  # 0.016 0.00004
+        bead_ins_rate=7.1e-1,  # 0.011 0.00001
 
         mode='short_read',  # long_read short_read
 

@@ -182,9 +182,9 @@ class Gene:
             #  ['420*s*0*g*5*' 'init']
             #  ['421*s*0*g*5*' 'init']
             #  ['422*s*0*g*5*' 'init']]
-            if pcr_ampl_params['err_route'] == 'tree':
+            if pcr_ampl_params['err_route'] == 'bftree':
                 pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-            if pcr_ampl_params['err_route'] == 'minnow':
+            if pcr_ampl_params['err_route'] == 'sptree':
                 pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
             if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
                 # print(pcr_ampl_params['data'][:, 0])
@@ -224,8 +224,8 @@ class Gene:
             self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
             ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
-            if pcr_ampl_params['err_route'] == 'tree':
-                pcr['data'] = self.subsampling.pcrtree(pcr_dict=pcr)
+            if pcr_ampl_params['err_route'] == 'bftree':
+                pcr['data'] = self.subsampling.bftree(pcr_dict=pcr)
 
             # pcr['data']
             # [['68*s*0*g*3*_1_3_9' 'pcr-9']
@@ -237,8 +237,8 @@ class Gene:
             #  ['8*s*0*g*5*_2_6_7_10' 'pcr-10']]
             # pcr['data'].shape
             # 396201, 2
-            if pcr_ampl_params['err_route'] == 'minnow':
-                pcr['data'] = self.subsampling.minnow(pcr_dict=pcr)
+            if pcr_ampl_params['err_route'] == 'sptree':
+                pcr['data'] = self.subsampling.sptree(pcr_dict=pcr)
             # pcr['data']
             # [['TTTTTTTTTCCCGGGGGGCCCGGGAAAGGGAAAGGG' '261*s*0*g*4*_1_3_5_7_8_9' 'pcr-9']
             #  ['AAAGGGTTTGGGCCCTTTAAAGGGGGGGGGAAAAAA' '175*s*0*g*4*_1_4_7' 'pcr-7']
@@ -347,7 +347,7 @@ if __name__ == "__main__":
 
         # PCR amplification
         ampl_rate=0.85,
-        err_route='minnow', # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+        err_route='sptree', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
         pcr_num=10,
         err_num_met='nbinomial',

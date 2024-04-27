@@ -1032,7 +1032,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-5,
     #         pcr_num=8,
     #         err_num_met='nbinomial',
@@ -1115,7 +1115,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
     #                     0.01, 0.05],
     #         pcr_num=8,
@@ -1176,7 +1176,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-4,
     #         pcr_nums=np.arange(1, 16 + 1, 1),
     #         err_num_met='nbinomial',
@@ -1239,7 +1239,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rates=np.linspace(0.1, 1, 10),
-    #         err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-5,
     #         pcr_num=8,
     #         err_num_met='nbinomial',
@@ -1303,7 +1303,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-5,
     #         pcr_num=8,
     #         err_num_met='nbinomial',
@@ -1366,7 +1366,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-05,
     #         pcr_num=8,
     #         err_num_met='nbinomial',
@@ -1434,7 +1434,7 @@ if __name__ == "__main__":
 
             # PCR amplification
             ampl_rate=0.85,
-            err_route='err2d',  # tree minnow err1d err2d mutation_table_minimum mutation_table_complete
+            err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
             pcr_error=1e-05,
             pcr_num=8,
             err_num_met='nbinomial',

@@ -35,16 +35,16 @@ class Amplify:
                 self.pcr_params = self.flow1D(params=self.pcr_params)
             elif self.pcr_params['err_route'] == 'err2d':
                 self.pcr_params = self.flow2D(params=self.pcr_params)
-            elif self.pcr_params['err_route'] == 'tree':
-                self.pcr_params = self.flow_tree(params=self.pcr_params)
-            elif self.pcr_params['err_route'] == 'minnow':
-                self.pcr_params = self.flow_minnow(params=self.pcr_params)
+            elif self.pcr_params['err_route'] == 'bftree':
+                self.pcr_params = self.flow_bftree(params=self.pcr_params)
+            elif self.pcr_params['err_route'] == 'sptree':
+                self.pcr_params = self.flow_sptree(params=self.pcr_params)
             elif self.pcr_params['err_route'] == 'mutation_table_complete':
                 self.pcr_params = self.flow_mutation_table_complete(params=self.pcr_params)
             elif self.pcr_params['err_route'] == 'mutation_table_minimum':
                 self.pcr_params = self.flow_mutation_table_minimum(params=self.pcr_params)
             else:
-                self.pcr_params = self.flow_tree(params=self.pcr_params)
+                self.pcr_params = self.flow_bftree(params=self.pcr_params)
             # print(std_flow_params.keys())
         return self.pcr_params
 
@@ -76,16 +76,16 @@ class Amplify:
     def flow_mutation_table_minimum(self, params):
         return params
 
-    @pcrerr(method='minnow')
+    @pcrerr(method='sptree')
     @ranspl(method='uniform')
     @rannum(type='binomial')
     @ranord(method='uniform')
-    def flow_minnow(self, params):
+    def flow_sptree(self, params):
         return params
 
-    @pcrerr(method='tree')
+    @pcrerr(method='bftree')
     @ranspl(method='uniform')
     @rannum(type='binomial')
     @ranord(method='uniform')
-    def flow_tree(self, params):
+    def flow_bftree(self, params):
         return params

@@ -9,11 +9,11 @@ __lab__ = "Cribbslab"
 import numpy as np
 from tresor.pcr.Amplify import Amplify as pcr
 from tresor.sequencing.Calling import Calling as seq
+from tresor.read.error.Library import Library as errlib
 from tresor.util.sequence.fastq.Write import write as wfastq
 from tresor.util.file.Reader import Reader as pfreader
 from tresor.util.random.Number import Number as rannum
 from tresor.util.random.Sampling import Sampling as ranspl
-from tresor.util.sequence.symbol.Single import Single as dnasgl
 from tresor.util.Console import Console
 from tresor.util.Kit import tactic6
 
@@ -29,10 +29,25 @@ class Subsampling:
         self.wfastq = wfastq
         self.rannum = rannum
         self.ranspl = ranspl
+        self.errlib = errlib()
         self.console = Console()
         self.console.verbose = verbose
 
-    def mutation_table_minimum(self, pcr_dict):
+    def mutation_table_minimum(
+            self,
+            pcr_dict,
+            replace=False,
+    ):
+        """
+
+        Parameters
+        ----------
+        pcr_dict
+
+        Returns
+        -------
+
+        """
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_minimum')
         self.console.print('======>Read PCR amplified reads')
@@ -41,24 +56,40 @@ class Subsampling:
         import pandas as pd
         umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
         # print(umi_map)
-        num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
-        self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
 
+        self.console.print('======>Sampling reads to be sequenced')
+        num_all_pcr_ampl_reads = pcr_dict['mut_info'].shape[0]
+        self.console.print(
+            '=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
+        # print(num_all_pcr_ampl_reads)
+        # print(pcr_dict.keys())
+        if pcr_dict['seq_sub_spl_number'] is not None:
+            num_reads_for_sequencing = pcr_dict['seq_sub_spl_number']
+        else:
+            num_reads_for_sequencing = pcr_dict['seq_sub_spl_rate'] * num_all_pcr_ampl_reads
+        # spl_ids = rannum().choice(
+        #     # low=0,
+        #     high=num_all_pcr_ampl_reads,
+        #     num=num_reads_for_sequencing,
+        #     use_seed=pcr_dict['use_seed'],
+        #     seed=pcr_dict['seed'],
+        #     replace=replace,
+        # )
         spl_ids = rannum().uniform(
-            low=0, high=num_all_pcr_ampl_reads, num=9000, use_seed=False, seed=1
+            low=0, high=num_all_pcr_ampl_reads, num=num_reads_for_sequencing, use_seed=False, seed=1
         )
-        # print(spl_ids)
+        print(spl_ids)
         # print(pcr_dict['data'])
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
         # print(pcr_dict['data'])
         # print(spl_id_map)
         # print(len(spl_id_map))
-        spl_mut_info = pcr_dict['mut_info']
+        spl_mut_info = pcr_dict['mut_info'][spl_ids]
         # print(pcr_dict['mut_info'].shape)
         # print(spl_mut_info)
         # print(len(spl_mut_info))
-        # keys = spl_mut_info[:, 2]
-        keys = pcr_dict['data'][spl_ids][:, 1]
+        keys = spl_mut_info[:, 2]
+        # keys = pcr_dict['data'][spl_ids][:, 1]
         # print(keys)
         # print(np.sort(keys) == np.sort(spl_mut_info[:, 2]))
         # print(len(keys))
@@ -76,11 +107,11 @@ class Subsampling:
             # print(read)
             for i in range(len(k)):
                 # print('id', i)
-                sub_k = mol_id + '_' + '_'.join(k[: i+1]) if k != [] else mol_id
+                sub_k = mol_id + '_' + '_'.join(k[: i + 1]) if k != [] else mol_id
                 # print(sub_k)
                 # print(pos_dict[sub_k], base_dict[sub_k])
                 if sub_k in pos_dict.keys():
-                    read = self.change(read, pos_list=pos_dict[sub_k], base_list=base_dict[sub_k])
+                    read = self.errlib.change(read, pos_list=pos_dict[sub_k], base_list=base_dict[sub_k])
             #     print(read)
             # print(read)
             res_data.append([
@@ -92,7 +123,11 @@ class Subsampling:
         # print(np.array(res_data).shape)
         return np.array(res_data)
 
-    def mutation_table_complete(self, pcr_dict):
+    def mutation_table_complete(
+            self,
+            pcr_dict,
+            replace=False,
+    ):
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_complete')
         self.console.print('======>Read PCR amplified reads')
@@ -101,12 +136,29 @@ class Subsampling:
         import pandas as pd
         umi_map = pd.Series(df_seq_lib[0].values, index=df_seq_lib[1].astype(str)).to_dict()
         # print(umi_map)
+        # num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
+        # self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
+        # spl_ids = rannum().uniform(
+        #     low=0, high=num_all_pcr_ampl_reads, num=9000, use_seed=False, seed=1
+        # )
+        self.console.print('======>Sampling reads to be sequenced')
         num_all_pcr_ampl_reads = pcr_dict['data'].shape[0]
         self.console.print('=========>There are a total number of {} PCR amplified reads'.format(num_all_pcr_ampl_reads))
-
-        spl_ids = rannum().uniform(
-            low=0, high=num_all_pcr_ampl_reads, num=9000, use_seed=False, seed=1
+        # print(num_all_pcr_ampl_reads)
+        # print(pcr_dict.keys())
+        if pcr_dict['seq_sub_spl_number'] is not None:
+            num_reads_for_sequencing = pcr_dict['seq_sub_spl_number']
+        else:
+            num_reads_for_sequencing = pcr_dict['seq_sub_spl_rate'] * num_all_pcr_ampl_reads
+        spl_ids = rannum().choice(
+            # low=0,
+            high=num_all_pcr_ampl_reads,
+            num=num_reads_for_sequencing,
+            use_seed=pcr_dict['use_seed'],
+            seed=pcr_dict['seed'],
+            replace=replace,
         )
+
         # print(spl_ids)
         # print(pcr_dict['data'])
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
@@ -135,7 +187,7 @@ class Subsampling:
                 sub_k = mol_id + '_' + '_'.join(k[: i+1]) if k != [] else mol_id
                 # print(sub_k)
                 # print(pos_dict[sub_k], base_dict[sub_k])
-                read = self.change(read, pos_list=pos_dict[sub_k], base_list=base_dict[sub_k])
+                read = self.errlib.change(read, pos_list=pos_dict[sub_k], base_list=base_dict[sub_k])
             #     print(read)
             # print(read)
             res_data.append([
@@ -147,7 +199,21 @@ class Subsampling:
         # print(np.array(res_data).shape)
         return np.array(res_data)
 
-    def minnow(self, pcr_dict):
+    def sptree(
+            self,
+            pcr_dict,
+            replace=False,
+    ):
+        """
+        short path tree method
+        Parameters
+        ----------
+        pcr_dict
+
+        Returns
+        -------
+
+        """
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using the PCR tree')
         self.console.print('======>Read PCR amplified reads')
@@ -188,7 +254,7 @@ class Subsampling:
             num=num_reads_for_sequencing,
             use_seed=pcr_dict['use_seed'],
             seed=pcr_dict['seed'],
-            replace=False,
+            replace=replace,
         )
         ### spl_ids
         #@@ single locus
@@ -459,14 +525,14 @@ class Subsampling:
                     if k_ in read_cache.keys():
                         read = read_cache[k_]
                     else:
-                        read = self.mutated(
+                        read = self.errlib.mutated(
                             read=read,
                             pcr_error=pcr_dict['pcr_error'],
                         )
                     if pcr_dict['pcr_deletion']:
-                        read = self.deletion(read=read, del_rate=pcr_dict['pcr_del_rate'])
+                        read = self.errlib.deletion(read=read, del_rate=pcr_dict['pcr_del_rate'])
                     if pcr_dict['pcr_insertion']:
-                        read = self.insertion(read=read, ins_rate=pcr_dict['pcr_ins_rate'])
+                        read = self.errlib.insertion(read=read, ins_rate=pcr_dict['pcr_ins_rate'])
                     read_cache[k_] = read
                 # print(read_cache)
                 res_data.append([
@@ -478,8 +544,13 @@ class Subsampling:
         # print(len(res_data))
         return np.array(res_data)
 
-    def pcrtree(self, pcr_dict):
+    def bftree(
+            self,
+            pcr_dict,
+            replace=False,
+    ):
         """
+        boolean flag tree method
 
         Notes
         -----
@@ -551,7 +622,7 @@ class Subsampling:
             num=num_reads_for_sequencing,
             use_seed=pcr_dict['use_seed'],
             seed=pcr_dict['seed'],
-            replace=False,
+            replace=replace,
         )
         ### spl_ids
         # [ 5221 12317 12284 ...  3697  7994  7549]
@@ -582,7 +653,6 @@ class Subsampling:
         ### len(trees)
         # num_reads_for_sequencing
         self.console.print('=========>Sampled reads contain {} unrepeated PCR amplified molecules'.format(np.unique(trees).size))
-
 
         res_data = []
         mol_map_to_all_its_pcr_trees = {}
@@ -714,6 +784,7 @@ class Subsampling:
                             bool_flag_table[id_vert_across_trees].append(False)
                             # realvalued_flag_table[id_vert_across_trees].append(-1)
                         else:
+                            # @@ any positions that is overlay
                             # print('non-repeated ele: {}'.format(ele_in_a_col))
                             inspector_flags = [1 if bool_flag_table[i][id_horiz_in_a_tree] is True else 0 for i in ids_repeat_in_a_col]
                             # print('inspector_flags {}'.format(inspector_flags))
@@ -779,53 +850,53 @@ class Subsampling:
                             # print(val_in_a_col, bool_flag_table[ii][jj])
                             if bool_flag_table[ii][jj] == True:
                                 if val_in_a_col not in [*read_for_repeat_tmp_per_col.keys()]:
-                                    r1 = self.mutated(
+                                    r1 = self.errlib.mutated(
                                         read=read,
                                         pcr_error=pcr_dict['pcr_error'],
                                     )
                                     if pcr_dict['pcr_deletion']:
-                                        r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                        r1 = self.errlib.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
                                     if pcr_dict['pcr_insertion']:
-                                        r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
+                                        r1 = self.errlib.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                     read_for_repeat_tmp_per_col[val_in_a_col] = r1
                                     read_cache_table[ii].append(r1)
                                 else:
                                     read_cache_table[ii].append(read_for_repeat_tmp_per_col[val_in_a_col])
                             else:
-                                r1 = self.mutated(
+                                r1 = self.errlib.mutated(
                                     read=read,
                                     pcr_error=pcr_dict['pcr_error'],
                                 )
                                 if pcr_dict['pcr_deletion']:
-                                    r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                    r1 = self.errlib.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
                                 if pcr_dict['pcr_insertion']:
-                                    r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
+                                    r1 = self.errlib.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                 read_cache_table[ii].append(r1)
                         if jj > 0:
                             if bool_flag_table[ii][jj] == True:
                                 if val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj])) not in [*read_for_repeat_tmp_per_col.keys()]:
-                                    r1 = self.mutated(
+                                    r1 = self.errlib.mutated(
                                         read=read_cache_table[ii][jj - 1],
                                         pcr_error=pcr_dict['pcr_error'],
                                     )
                                     if pcr_dict['pcr_deletion']:
-                                        r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                        r1 = self.errlib.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
                                     if pcr_dict['pcr_insertion']:
-                                        r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
+                                        r1 = self.errlib.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                     read_for_repeat_tmp_per_col[val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj]))] = r1
                                     read_cache_table[ii].append(r1)
                                 else:
                                     read_cache_table[ii].append(read_for_repeat_tmp_per_col[val_in_a_col + '_' + '_'.join(list(trees_np[ii][:jj]))])
                                 # print('id', [i for i, value in enumerate(trees_np[:, jj]) if value == val_in_a_col])
                             else:
-                                r1 = self.mutated(
+                                r1 = self.errlib.mutated(
                                     read=read_cache_table[ii][jj - 1],
                                     pcr_error=pcr_dict['pcr_error'],
                                 )
                                 if pcr_dict['pcr_deletion']:
-                                    r1 = self.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
+                                    r1 = self.errlib.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
                                 if pcr_dict['pcr_insertion']:
-                                    r1 = self.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
+                                    r1 = self.errlib.insertion(read=r1, ins_rate=pcr_dict['pcr_ins_rate'])
                                 read_cache_table[ii].append(r1)
             ### k, read_cache_table
             # 23 [['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC'], ['CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC', 'CCCCCCGGGGGGAAAAAATTTCCCTTTGGGAAACCC']]
@@ -858,94 +929,10 @@ class Subsampling:
         # print(len(res_data))
         return np.array(res_data)
 
-    def change(self, read, pos_list, base_list):
-        read_l = list(read)
-        # print(read_l)
-        for i, pos in enumerate(pos_list):
-            dna_map = dnasgl().todict(
-                nucleotides=dnasgl().getEleTrimmed(
-                    ele_loo=read_l[pos],
-                    universal=True,
-                ),
-                reverse=True,
-            )
-            read_l[pos] = dna_map[base_list[i]]
-        return ''.join(read_l)
-
-    def deletion(self, read, del_rate):
-        num_err_per_read = rannum().binomial(
-            n=len(read), p=del_rate, use_seed=False, seed=False
-        )
-        pos_list = rannum().choice(
-            high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
-        )
-        for _, pos in enumerate(pos_list):
-            read = read[:pos] + read[pos + 1:]
-        return read
-
-    def insertion(self, read, ins_rate):
-        num_err_per_read = rannum().binomial(
-            n=len(read), p=ins_rate, use_seed=False, seed=False
-        )
-        pos_list = rannum().choice(
-            high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
-        )
-        base_list = rannum().uniform(
-            low=0, high=4, num=num_err_per_read, use_seed=False
-        )
-        for i, pos in enumerate(pos_list):
-            dna_map = dnasgl().todict(
-                nucleotides=dnasgl().get(
-                    universal=True,
-                ),
-                reverse=True,
-            )
-            read = read[:pos] + dna_map[base_list[i]] + read[pos:]
-            ### read
-            ### pos, base_list[i], dna_map[base_list[i]], dna_map
-            ### read
-            # 5 3 G {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
-            # TTTTTTTTTGGGCCCGGGAAAAAACCCAAAGGGGGG
-            # TTTTTGTTTTGGGCCCGGGAAAAAACCCAAAGGGGGG
-            # 9 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
-            # CCCTTTCCCTTTGGGTTTGGGTTTCCCGGGAAACCC
-            # CCCTTTCCCATTTGGGTTTGGGTTTCCCGGGAAACCC
-            # 3 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
-            # AAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
-            # AAAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
-        return read
-
-    def mutated(self, read, pcr_error):
-        num_err_per_read = rannum().binomial(
-            n=len(read), p=pcr_error, use_seed=False, seed=False
-        )
-        # pos_list = rannum().uniform(
-        #     low=0, high=len(read), num=num_err_per_read, use_seed=False, seed=False
-        # )
-        pos_list = rannum().choice(
-            high=len(read), num=num_err_per_read, use_seed=False, seed=False, replace=False,
-        )
-        base_list = rannum().uniform(
-            low=0, high=3, num=num_err_per_read, use_seed=False
-        )
-        read_l = list(read)
-        for i, pos in enumerate(pos_list):
-            dna_map = dnasgl().todict(
-                nucleotides=dnasgl().getEleTrimmed(
-                    ele_loo=read_l[pos],
-                    universal=True,
-                ),
-                reverse=True,
-            )
-            ### dna_map, base_list[i], dna_map[base_list[i]]
-            # {0: 'A', 1: 'C', 2: 'G'} 0 A
-            # {0: 'T', 1: 'C', 2: 'G'} 1 C
-            # {0: 'A', 1: 'T', 2: 'C'} 1 T
-            # {0: 'A', 1: 'T', 2: 'C'} 0 A
-            read_l[pos] = dna_map[base_list[i]]
-        return ''.join(read_l)
-
-    def findListDuplicates(self, l):
+    def findListDuplicates(
+            self,
+            l
+    ):
         seen = set()
         seen_add = seen.add
         seen_twice = set(x for x in l if x in seen or seen_add(x))

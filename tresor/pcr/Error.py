@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from tresor.util.random.Number import Number as rannum
 from tresor.util.sequence.symbol.Single import Single as dnasgl
+from tresor.read.error.Library import Library as errlib
 from tresor.util.Console import Console
 
 
@@ -21,6 +22,7 @@ class Error:
             method,
     ):
         self.method = method
+        self.errlib = errlib()
         self.console = Console()
 
     def __call__(self, deal):
@@ -43,11 +45,11 @@ class Error:
             elif self.method == 'err2d':
                 self.console.print('=========>The error 2D method is being used')
                 func = self.table2D
-            elif self.method == 'tree':
-                self.console.print('=========>The PCR tree method is being used')
+            elif self.method == 'bftree':
+                self.console.print('=========>The boolean flag tree method is being used')
                 func = self.table_tree
-            elif self.method == 'minnow':
-                self.console.print('=========>The Minnow method is being used')
+            elif self.method == 'sptree':
+                self.console.print('=========>The ShortPath method is being used')
                 func = self.table_tree
             elif self.method == 'mutation_table_minimum':
                 self.console.print('=========>The mutation_table_minimum method is being used')
@@ -173,8 +175,15 @@ class Error:
         pcr_merge_stime = time.time()
         data_pcr['read'] = data_pcr.apply(lambda x: ''.join(x['read']), axis=1)
         data_pcr['source'] = 'pcr-' + str(res2p['ipcr'] + 1)
-        # print(data_pcr.values)
+        print(data_pcr)
+        print(res2p)
+        data_pcr['read'] = data_pcr['read'].apply(lambda x: self.errlib.insertion(read=x, ins_rate=res2p['pcr_ins_rate']))
+        data_pcr['read'] = data_pcr['read'].apply(lambda x: self.errlib.deletion(read=x, del_rate=res2p['pcr_del_rate']))
+
         data_pcr = np.array(data_pcr)
+        # print(data_pcr)
+        # print(data_pcr.shape)
+
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
         # print(res2p['recorder_pcr_err_num'])
@@ -222,6 +231,13 @@ class Error:
         # 8692  GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAA...  ...  GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAA...
         # 8693  CGCGTTAGTAATTCATTTTGGGGGGAAACCCAAACCCCCCCCCGGG...  ...  CGCGTTAGTAATTCATTTTGGGGGGAAACCCAAACCCCCCCCCGGG...
         # [8694 rows x 8 columns]
+        print(data_pcr)
+        print(res2p)
+        data_pcr['read'] = data_pcr['read'].apply(
+            lambda x: self.errlib.insertion(read=x, ins_rate=res2p['pcr_ins_rate']))
+        data_pcr['read'] = data_pcr['read'].apply(
+            lambda x: self.errlib.deletion(read=x, del_rate=res2p['pcr_del_rate']))
+
         data_pcr = np.array(data_pcr[['read_pcr', 'sam_id', 'source']])
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
