@@ -26,7 +26,6 @@ setup(
         "tables",
         "pyyaml",
         # "rpy2", # 3.4.5
-        
         "pyfiglet==0.8.post1",
     ],
     entry_points={
