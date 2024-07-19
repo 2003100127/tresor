@@ -175,8 +175,8 @@ class Error:
         pcr_merge_stime = time.time()
         data_pcr['read'] = data_pcr.apply(lambda x: ''.join(x['read']), axis=1)
         data_pcr['source'] = 'pcr-' + str(res2p['ipcr'] + 1)
-        print(data_pcr)
-        print(res2p)
+        # print(data_pcr)
+        # print(res2p)
         data_pcr['read'] = data_pcr['read'].apply(lambda x: self.errlib.insertion(read=x, ins_rate=res2p['pcr_ins_rate']))
         data_pcr['read'] = data_pcr['read'].apply(lambda x: self.errlib.deletion(read=x, del_rate=res2p['pcr_del_rate']))
 
@@ -209,7 +209,7 @@ class Error:
         data_pcr['base_roll_per_read'] = data_pcr['num_err_per_read'].apply(lambda x: rannum().uniform(
             low=0, high=3, num=x, use_seed=False
         ))
-        data_pcr['read_pcr'] = data_pcr.apply(lambda x: self.change(
+        data_pcr['read_pcr'] = data_pcr.apply(lambda x: self.errlib.change(
             read=x['read'],
             pos_list=x['pos_err_per_read'],
             base_list=x['base_roll_per_read'],
@@ -231,8 +231,8 @@ class Error:
         # 8692  GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAA...  ...  GAAATCATGTAGTTCGCCCCCCAAATTTAAACCCAAATTTCCCAAA...
         # 8693  CGCGTTAGTAATTCATTTTGGGGGGAAACCCAAACCCCCCCCCGGG...  ...  CGCGTTAGTAATTCATTTTGGGGGGAAACCCAAACCCCCCCCCGGG...
         # [8694 rows x 8 columns]
-        print(data_pcr)
-        print(res2p)
+        # print(data_pcr)
+        # print(res2p)
         data_pcr['read'] = data_pcr['read'].apply(
             lambda x: self.errlib.insertion(read=x, ins_rate=res2p['pcr_ins_rate']))
         data_pcr['read'] = data_pcr['read'].apply(
@@ -354,12 +354,15 @@ class Error:
             'bead_mut',
             'bead_del',
             'bead_ins',
+            'pcr_err_mark',
         ])
         # print(data_pcr)
         data_pcr['num_err_per_read'] = data_pcr['read_len'].apply(lambda x: rannum().binomial(
             n=int(x), p=res2p['pcr_error'], use_seed=False, seed=res2p['ipcr'] + 1
         ))
-        ### data_pcr['num_err_per_read']
+        data_pcr['pcr_err_mark'] = data_pcr['num_err_per_read'].apply(lambda x: False if x == 0 else True)
+        # print(data_pcr['pcr_err_mark'])
+        # @@ data_pcr['num_err_per_read']
         # index num_err_per_read
         # 0     0
         # 1     0
@@ -398,6 +401,7 @@ class Error:
         df_mut_info['bead_mut'] = data_pcr['bead_mut'].copy()
         df_mut_info['bead_del'] = data_pcr['bead_del'].copy()
         df_mut_info['bead_ins'] = data_pcr['bead_ins'].copy()
+        df_mut_info['pcr_err_mark'] = data_pcr['pcr_err_mark'].copy()
 
         data_pcr = np.array(data_pcr[[
             'read_len',
@@ -406,6 +410,7 @@ class Error:
             'bead_mut',
             'bead_del',
             'bead_ins',
+            'pcr_err_mark',
         ]])
         # print(data_pcr)
         # print(res2p['data'])
@@ -447,19 +452,6 @@ class Error:
         self.console.print('=========>Number of reads at this PCR: {}'.format(res2p['data'].shape))
         self.console.print('=========>Time for PCR tree construction: {time:.2f}s'.format(time=time.time() - pcr_stime))
         return res2p
-
-    def change(self, read, pos_list, base_list):
-        read_l = list(read)
-        for i, pos in enumerate(pos_list):
-            dna_map = dnasgl().todict(
-                nucleotides=dnasgl().getEleTrimmed(
-                    ele_loo=read_l[pos],
-                    universal=True,
-                ),
-                reverse=True,
-            )
-            read_l[pos] = dna_map[base_list[i]]
-        return ''.join(read_l)
 
     def postableIndexBySameLen(self, seq_len, num_seq):
         """

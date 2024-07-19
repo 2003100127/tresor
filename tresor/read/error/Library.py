@@ -19,6 +19,7 @@ class Library:
             self,
             read,
             del_rate,
+            mode='normal',
     ):
         num_err_per_read = rannum().binomial(
             n=len(read), p=del_rate, use_seed=False, seed=False
@@ -32,14 +33,18 @@ class Library:
         )
         for _, pos in enumerate(pos_list):
             read = read[:pos] + read[pos + 1:]
-        return read, {
-            'mark': mark,
-        }
+        if mode == 'bead_synthesis':
+            return read, {
+                'mark': mark,
+            }
+        else:
+            return read
 
     def insertion(
             self,
             read,
             ins_rate,
+            mode='normal',
     ):
         num_err_per_read = rannum().binomial(
             n=len(read), p=ins_rate, use_seed=False, seed=False
@@ -75,14 +80,18 @@ class Library:
             # 3 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
             # AAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
             # AAAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
-        return read, {
-            'mark': mark,
-        }
+        if mode == 'bead_synthesis':
+            return read, {
+                'mark': mark,
+            }
+        else:
+            return read
 
     def mutated(
             self,
             read,
             pcr_error,
+            mode='normal',
     ):
 
         num_err_per_read = rannum().binomial(
@@ -116,9 +125,12 @@ class Library:
             # {0: 'A', 1: 'T', 2: 'C'} 1 T
             # {0: 'A', 1: 'T', 2: 'C'} 0 A
             read_l[pos] = dna_map[base_list[i]]
-        return ''.join(read_l), {
-            'mark': mark,
-        }
+        if mode == 'bead_synthesis':
+            return ''.join(read_l), {
+                'mark': mark,
+            }
+        else:
+            return ''.join(read_l)
 
     def change(
             self,
@@ -127,7 +139,6 @@ class Library:
             base_list,
     ):
         read_l = list(read)
-        # print(read_l)
         for i, pos in enumerate(pos_list):
             dna_map = dnasgl().todict(
                 nucleotides=dnasgl().getEleTrimmed(

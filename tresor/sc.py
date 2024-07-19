@@ -919,7 +919,7 @@ if __name__ == "__main__":
     #     },
     #     is_seed=True,
     #
-    #     working_dir=to('data/simu/'),
+    #     working_dir=to('data/simu/docs/'),
     #     gmat_h5_fpn=None,
     #
     #     # condis=['umi'],
@@ -967,7 +967,7 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     working_dir=to('data/simu/'),
+    #     working_dir=to('data/simu/docs/'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -976,13 +976,13 @@ if __name__ == "__main__":
     #     is_sv_spacer_lib=True,
     #     # condis=['umi'],
     #     # condis=['umi', 'seq'],
-    #     condis=['barcode', 'umi'],
+    #     condis=['barcode', 'umi', 'seq'],
     #     # condis=['barcode', 'custom', 'umi', 'custom_1'],
     #     sim_thres=3,
     #     permutation=0,
     #
     #     # PCR amplification
-    #     ampl_rate=0.85,
+    #     ampl_rate=0.9,
     #     err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #     pcr_error=1e-4,
     #     pcr_num=10,
@@ -994,77 +994,76 @@ if __name__ == "__main__":
     #     use_seed=True,
     #     seed=1,
     #
-    #     verbose=True,  # True False
-    #
-    #     mode='short_read',  # long_read short_read
-    #
-    #     sv_fastq_fp=to('data/simu/'),
-    # )
-
-    # simu_pcr_err(
-    #     # initial sequence generation
-    #     gmat=gmat,
-    #
-    #     len_params={
-    #         'umi': {
-    #             'umi_unit_pattern': 3,
-    #             'umi_unit_len': 12,
-    #         },
-    #         'umi_1': {
-    #             'umi_unit_pattern': 3,
-    #             'umi_unit_len': 12,
-    #         },
-    #         'barcode': 16,
-    #         'seq': 100,
-    #         'seq_2': 100,
-    #         'adapter': 10,
-    #         'adapter_1': 10,
-    #         'primer': 10,
-    #         'primer_1': 10,
-    #         'spacer': 10,
-    #         'spacer_1': 10,
-    #     },
-    #     seq_params={
-    #         'custom': 'AAGC',
-    #         'custom_1': 'A',
-    #     },
-    #     material_params={
-    #         'bc_lib_fpn': to('data/3M-february-2018.txt'), # None
-    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-    #     },
-    #     seq_num=50,
-    #     working_dir=to('data/simu/'),
-    #
-    #     is_sv_umi_lib=True,
-    #     is_sv_seq_lib=True,
-    #     is_sv_primer_lib=True,
-    #     is_sv_adapter_lib=True,
-    #     is_sv_spacer_lib=True,
-    #     condis=['umi'],
-    #     # condis=['umi', 'seq'],
-    #     # condis=['umi', 'custom', 'seq', 'custom_1'],
-    #     sim_thres=3,
-    #     permutation=0,
-    #
-    #     # PCR amplification
-    #     ampl_rate=0.9,
-    #     err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
-    #     pcr_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
-    #                 0.01],
-    #     pcr_num=10,
-    #     err_num_met='nbinomial',
-    #     seq_error=0.01,
-    #     seq_sub_spl_number=200,  # None
-    #     # seq_sub_spl_rate=0.333,
-    #     use_seed=True,
-    #     seed=1,
-    #
     #     verbose=False,  # True False
-
+    #
     #     mode='short_read',  # long_read short_read
     #
-    #     sv_fastq_fp=to('data/simu/'),
+    #     sv_fastq_fp=to('data/simu/docs/'),
     # )
+
+    simu_pcr_err(
+        # initial sequence generation
+        gmat=gmat,
+
+        len_params={
+            'umi': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'umi_1': {
+                'umi_unit_pattern': 3,
+                'umi_unit_len': 12,
+            },
+            'barcode': 16,
+            'seq': 100,
+            'seq_2': 100,
+            'adapter': 10,
+            'adapter_1': 10,
+            'primer': 10,
+            'primer_1': 10,
+            'spacer': 10,
+            'spacer_1': 10,
+        },
+        seq_params={
+            'custom': 'AAGC',
+            'custom_1': 'A',
+        },
+        material_params={
+            'bc_lib_fpn': to('data/3M-february-2018.txt'), # None
+            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+        },
+        seq_num=50,
+        working_dir=to('data/simu/docs/'),
+
+        is_sv_umi_lib=True,
+        is_sv_seq_lib=True,
+        is_sv_primer_lib=True,
+        is_sv_adapter_lib=True,
+        is_sv_spacer_lib=True,
+        # condis=['umi'],
+        condis=['barcode', 'umi', 'seq'],
+        # condis=['umi', 'custom', 'seq', 'custom_1'],
+        sim_thres=3,
+        permutation=0,
+
+        # PCR amplification
+        ampl_rate=0.9,
+        err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+        pcr_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075, 0.01],
+        pcr_num=10,
+        err_num_met='nbinomial',
+        seq_error=0.01,
+        seq_sub_spl_number=200,  # None
+        # seq_sub_spl_rate=0.333,
+        use_seed=True,
+        seed=1,
+
+        verbose=False,  # True False
+
+        mode='short_read',  # long_read short_read
+
+        sv_fastq_fp=to('data/simu/docs/'),
+    )
 
     # simu_pcr_num(
     #     gmat=gmat,
@@ -1096,7 +1095,7 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     working_dir=to('data/simu/'),
+    #     working_dir=to('data/simu/docs/'),
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
     #     is_sv_primer_lib=True,
@@ -1121,10 +1120,10 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-
+    #
     #     mode='short_read',  # long_read short_read
     #
-    #     sv_fastq_fp=to('data/simu/'),
+    #     sv_fastq_fp=to('data/simu/docs/'),
     # )
 
     # simu_ampl_rate(
@@ -1159,7 +1158,7 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     working_dir=to('data/simu/'),
+    #     working_dir=to('data/simu/docs/'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -1185,10 +1184,10 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-
+    #
     #     mode='short_read',  # long_read short_read
     #
-    #     sv_fastq_fp=to('data/simu/'),
+    #     sv_fastq_fp=to('data/simu/docs/'),
     # )
 
     # simu_umi_len(
@@ -1198,7 +1197,7 @@ if __name__ == "__main__":
     #     len_params={
     #         'umi': {
     #             'umi_unit_pattern': 3,
-    #             'umi_unit_lens': np.arange(7, 36 + 1, 1),
+    #             'umi_unit_lens': np.arange(7, 18 + 1, 1),
     #         },
     #         'umi_1': {
     #             'umi_unit_pattern': 3,
@@ -1223,7 +1222,7 @@ if __name__ == "__main__":
     #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     seq_num=50,
-    #     working_dir=to('data/simu/'),
+    #     working_dir=to('data/simu/docs/'),
     #
     #     is_sv_umi_lib=True,
     #     is_sv_seq_lib=True,
@@ -1237,7 +1236,7 @@ if __name__ == "__main__":
     #     permutation=0,
     #
     #     # PCR amplification
-    #     ampl_rate=0.85,
+    #     ampl_rate=0.9,
     #     err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #     pcr_error=1e-4,
     #     pcr_num=10,
@@ -1249,72 +1248,72 @@ if __name__ == "__main__":
     #     seed=1,
     #
     #     verbose=False,  # True False
-
+    #
     #     mode='short_read',  # long_read short_read
     #
-    #     sv_fastq_fp=to('data/simu/'),
+    #     sv_fastq_fp=to('data/simu/docs/'),
     # )
 
-    simu_seq_dep(
-        # initial sequence generation
-        gmat=gmat,
-
-        len_params={
-            'umi': {
-                'umi_unit_pattern': 3,
-                'umi_unit_len': 12,
-            },
-            'umi_1': {
-                'umi_unit_pattern': 3,
-                'umi_unit_len': 12,
-            },
-            'barcode': 16,
-            'seq': 100,
-            'seq_2': 100,
-            'adapter': 10,
-            'adapter_1': 10,
-            'primer': 10,
-            'primer_1': 10,
-            'spacer': 10,
-            'spacer_1': 10,
-        },
-        seq_params={
-            'custom': 'AAGC',
-            'custom_1': 'A',
-        },
-        material_params={
-            'bc_lib_fpn': to('data/3M-february-2018.txt'), # None
-            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-        },
-        seq_num=50,
-        working_dir=to('data/simu/'),
-
-        is_sv_umi_lib=True,
-        is_sv_seq_lib=True,
-        is_sv_primer_lib=True,
-        is_sv_adapter_lib=True,
-        is_sv_spacer_lib=True,
-        condis=['umi'],
-        # condis=['umi', 'seq'],
-        # condis=['umi', 'custom', 'seq', 'custom_1'],
-        sim_thres=3,
-        permutation=0,
-
-        # PCR amplification
-        ampl_rate=0.9,
-        err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
-        pcr_error=1e-04,
-        pcr_num=10,
-        err_num_met='nbinomial',
-        seq_error=0.01,
-        seq_sub_spl_numbers=[100, 500, 1000, 10000],  # None 200
-        # seq_sub_spl_rate=0.333,
-        use_seed=True,
-        seed=1,
-
-        verbose=False,  # True False
-
-        # mode='short_read',  # long_read short_read
-
-        sv_fastq_fp=to('data/simu/'),
-    )
+    # simu_seq_dep(
+    #     # initial sequence generation
+    #     gmat=gmat,
+    #
+    #     len_params={
+    #         'umi': {
+    #             'umi_unit_pattern': 3,
+    #             'umi_unit_len': 12,
+    #         },
+    #         'umi_1': {
+    #             'umi_unit_pattern': 3,
+    #             'umi_unit_len': 12,
+    #         },
+    #         'barcode': 16,
+    #         'seq': 100,
+    #         'seq_2': 100,
+    #         'adapter': 10,
+    #         'adapter_1': 10,
+    #         'primer': 10,
+    #         'primer_1': 10,
+    #         'spacer': 10,
+    #         'spacer_1': 10,
+    #     },
+    #     seq_params={
+    #         'custom': 'AAGC',
+    #         'custom_1': 'A',
+    #     },
+    #     material_params={
+    #         'bc_lib_fpn': to('data/3M-february-2018.txt'), # None
+    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #     },
+    #     seq_num=50,
+    #     working_dir=to('data/simu/docs/'),
+    #
+    #     is_sv_umi_lib=True,
+    #     is_sv_seq_lib=True,
+    #     is_sv_primer_lib=True,
+    #     is_sv_adapter_lib=True,
+    #     is_sv_spacer_lib=True,
+    #     condis=['umi'],
+    #     # condis=['umi', 'seq'],
+    #     # condis=['umi', 'custom', 'seq', 'custom_1'],
+    #     sim_thres=3,
+    #     permutation=0,
+    #
+    #     # PCR amplification
+    #     ampl_rate=0.9,
+    #     err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #     pcr_error=1e-04,
+    #     pcr_num=10,
+    #     err_num_met='nbinomial',
+    #     seq_error=0.01,
+    #     seq_sub_spl_numbers=[100, 500, 1000, 10000],  # None 200
+    #     # seq_sub_spl_rate=0.333,
+    #     use_seed=True,
+    #     seed=1,
+    #
+    #     verbose=False,  # True False
+    #
+    #     # mode='short_read',  # long_read short_read
+    #
+    #     sv_fastq_fp=to('data/simu/docs/'),
+    # )

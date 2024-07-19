@@ -107,6 +107,8 @@ class Gene:
             self.len_params['umi']['umi_unit_len'] = umi_unit_len_i
             working_dir_new = self.working_dir + 'umi_len_' + str(umi_unit_len_i) + '/'
             crtfolder().osmkdir(working_dir_new)
+            satime = time.time()
+
             self.sequencing_library = bulksimulib(
                 gspl=self.gspl,
                 len_params=self.len_params,
@@ -165,7 +167,7 @@ class Gene:
 
                 'verbose': self.verbose,
             }
-            print(pcr_ampl_params['data'][:, 1:3])
+            # print(pcr_ampl_params['data'][:, 1:3])
             # pcr_ampl_params['data']
             # [['GGGGGGCCCTTTTTTTTTTTTAAAAAACCCAAAGGG' '0*s*0*g*3*' 'init']
             #  ['GGGTTTGGGAAAAAAAAAAAATTTTTTGGGCCCGGG' '1*s*0*g*3*' 'init']
@@ -277,6 +279,7 @@ class Gene:
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
             self.console.print('=========>Reads write to files in FastQ format')
+            print('======>simulation completes in {}s'.format(time.time() - satime))
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,

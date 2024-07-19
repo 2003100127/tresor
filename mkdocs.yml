@@ -1,25 +1,31 @@
 site_name: Tresor
 
-repo_url: https://github.com/cribbslab/tresor
-repo_name: cribbslab/tresor
+repo_url: https://github.com/2003100127/tresor
+repo_name: jsun/tresor
 
 
 theme:
   name: material
   features:
-    - content.code.select
     - content.code.copy
+    - content.code.select
     - content.tabs.link
     - content.code.annotate
-#    - navigation.tabs
+    - navigation.tabs
     - navigation.instant
     - navigation.expand
+    - navigation.top
+    - navigation.path
 #    - toc.integrate
+    - content.footnote.tooltips
+
   icon:
     repo: fontawesome/brands/git-alt
 
   palette:
     # Palette toggle for light mode
+#    - accent: pink
+    - primary: purple
     - scheme: default
       toggle:
         icon: material/brightness-7
@@ -34,6 +40,8 @@ theme:
 markdown_extensions:
   # icons
   - attr_list
+  - md_in_html
+  - footnotes
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -51,12 +59,23 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+  # Formatting superscripts
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
 
 extra:
   consent:
     actions:
       - accept
       - manage
+
 
 plugins:
   - tags

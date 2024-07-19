@@ -130,10 +130,10 @@ class Gene:
             csr_.data.tolist(),
         ]).astype(int)
         self.gspl_arr = self.gspl_arr[self.gspl_arr[:, 0] == 0]
-        print(self.gspl_arr)
+        # print(self.gspl_arr)
 
         self.kwargs = kwargs
-        print(self.kwargs)
+        # print(self.kwargs)
 
         if not self.kwargs['material_params']:
             self.kwargs['material_params'] = {}

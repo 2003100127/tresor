@@ -111,6 +111,7 @@ class SingleCell:
             self.len_params['umi']['umi_unit_len'] = umi_unit_len_i
             working_dir_new = self.working_dir + 'umi_len_' + str(umi_unit_len_i) + '/'
             crtfolder().osmkdir(working_dir_new)
+            satime = time.time()
             self.sequencing_library = scsimulib(
                 len_params=self.len_params,
                 gmat=self.gmat,
@@ -181,7 +182,7 @@ class SingleCell:
                 def calc_len(a):
                     return len(a)
                 vfunc = np.vectorize(calc_len)
-                print(vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis])
+                # print(vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis])
                 # [[52] vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis]
                 #  [52]
                 #  [52]
@@ -253,6 +254,8 @@ class SingleCell:
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
             self.console.print('=========>Reads write to files in FastQ format')
+            print('======>simulation completes in {}s'.format(time.time() - satime))
+
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,

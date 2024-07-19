@@ -30,6 +30,13 @@ def library(
         is_sv_adapter_lib=True,
         is_sv_spacer_lib=True,
 
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
+
         len_params=None,
         seq_params=None,
         material_params=None,
@@ -69,6 +76,13 @@ def library(
         is_sv_primer_lib=is_sv_primer_lib,
         is_sv_adapter_lib=is_sv_adapter_lib,
         is_sv_spacer_lib=is_sv_spacer_lib,
+
+        bead_mutation=bead_mutation,
+        bead_mut_rate=bead_mut_rate,
+        bead_deletion=bead_deletion,
+        bead_del_rate=bead_del_rate,
+        bead_insertion=bead_insertion,
+        bead_ins_rate=bead_ins_rate,
 
         is_seed=is_seed,
         verbose=verbose,  # False True
@@ -982,11 +996,11 @@ if __name__ == "__main__":
     #         'custom_1': 'V',
     #     },
     #     material_params={
-    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #         # 'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #     },
     #     is_seed=True,
     #
-    #     working_dir=to('data/simu/'),
+    #     working_dir=to('data/simu/docs/'),
     #
     #     # condis=['umi'],
     #     # condis=['umi', 'seq'],
@@ -995,12 +1009,19 @@ if __name__ == "__main__":
     #     sim_thres=3,
     #     permutation=0,
     #
+    #     bead_mutation=True,  # True False
+    #     bead_mut_rate=1e-4,  # 0.016 0.00004
+    #     bead_deletion=True,  # True False
+    #     bead_insertion=True,
+    #     bead_del_rate=0.016,  # 0.016 0.00004, 2.4e-7
+    #     bead_ins_rate=0.1,  # 0.011 0.00001, 7.1e-7
+    #
     #     mode='short_read',  # long_read short_read
     #
     #     verbose=True,  # False True
     # )
 
-    # for perm_i in range(10):
+    # for perm_i in range(1):
     #     simu_seq_err(
     #         len_params={
     #             'umi': {
@@ -1017,7 +1038,7 @@ if __name__ == "__main__":
     #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #         },
     #         seq_num=50,
-    #         working_dir=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #
     #         is_sv_umi_lib=True,
     #         is_sv_seq_lib=True,
@@ -1032,7 +1053,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-5,
     #         pcr_num=8,
     #         err_num_met='nbinomial',
@@ -1063,12 +1084,12 @@ if __name__ == "__main__":
     #         seed=1,
     #
     #         mode='short_read',  # long_read short_read
-    #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #
     #         verbose=False,  # True
     #     )
 
-    # for perm_i in range(10):
+    # for perm_i in range(1):
     #     print(perm_i)
     #     simu_pcr_err(
     #         # initial sequence generation
@@ -1100,7 +1121,7 @@ if __name__ == "__main__":
     #         },
     #         seq_num=50,
     #         # working_dir=to('data/simu/'),
-    #         working_dir=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #
     #         is_sv_umi_lib=True,
     #         is_sv_seq_lib=True,
@@ -1115,7 +1136,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
     #                     0.01, 0.05],
     #         pcr_num=8,
@@ -1129,10 +1150,10 @@ if __name__ == "__main__":
     #         verbose=False,  # True False
     #         mode='short_read',  # long_read short_read
     #         # sv_fastq_fp=to('data/simu/'),
-    #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #     )
 
-    # for perm_i in range(10):
+    # for perm_i in range(1):
     #     print(perm_i)
     #     simu_pcr_num(
     #         len_params={
@@ -1162,7 +1183,7 @@ if __name__ == "__main__":
     #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
     #         },
     #         seq_num=50,
-    #         working_dir=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #         is_sv_umi_lib=True,
     #         is_sv_seq_lib=True,
     #         is_sv_primer_lib=True,
@@ -1176,7 +1197,7 @@ if __name__ == "__main__":
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-4,
     #         pcr_nums=np.arange(1, 16 + 1, 1),
     #         err_num_met='nbinomial',
@@ -1188,10 +1209,10 @@ if __name__ == "__main__":
     #
     #         verbose=False,  # True False
     #         mode='short_read',  # long_read short_read
-    #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #     )
 
-    # for perm_i in range(10):
+    # for perm_i in range(1):
     #     print(perm_i)
     #     simu_ampl_rate(
     #         # initial sequence generation
@@ -1224,15 +1245,15 @@ if __name__ == "__main__":
     #         },
     #         seq_num=50,
     #         # working_dir=to('data/simu/'),
-    #         working_dir=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #
     #         is_sv_umi_lib=True,
     #         is_sv_seq_lib=True,
     #         is_sv_primer_lib=True,
     #         is_sv_adapter_lib=True,
     #         is_sv_spacer_lib=True,
-    #         condis=['umi'],
-    #         # condis=['umi', 'seq'],
+    #         # condis=['umi'],
+    #         condis=['umi', 'seq'],
     #         # condis=['umi', 'custom', 'seq', 'custom_1'],
     #         sim_thres=3,
     #         permutation=perm_i,
@@ -1242,24 +1263,23 @@ if __name__ == "__main__":
     #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-5,
     #         pcr_num=8,
-    #         err_num_met='nbinomial',
+    #         err_num_met='nbinomial', # nbinomial
     #         seq_error=0.001,
     #         # seq_sub_spl_number=200, # None
     #         seq_sub_spl_rate=1,  # 0.333
     #         use_seed=True,
     #         seed=1,
     #
-    #         verbose=False,  # True False
+    #         verbose=True,  # True False
     #         mode='short_read',  # long_read short_read
     #         # sv_fastq_fp=to('data/simu/'),
-    #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #     )
 
-    # for perm_i in range(10):
+    # for perm_i in range(1):
     #     print(perm_i)
     #     simu_umi_len(
     #         # initial sequence generation
-    #
     #         len_params={
     #             'umi': {
     #                 'umi_unit_pattern': 1,
@@ -1295,15 +1315,15 @@ if __name__ == "__main__":
     #         is_sv_primer_lib=True,
     #         is_sv_adapter_lib=True,
     #         is_sv_spacer_lib=True,
-    #         condis=['umi'],
-    #         # condis=['umi', 'seq'],
+    #         # condis=['umi'],
+    #         condis=['umi', 'seq'],
     #         # condis=['umi', 'custom', 'seq', 'custom_1'],
     #         sim_thres=3,
     #         permutation=perm_i, # 0
     #
     #         # PCR amplification
     #         ampl_rate=0.85,
-    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #         err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
     #         pcr_error=1e-5,
     #         pcr_num=8,
     #         err_num_met='nbinomial',
@@ -1319,7 +1339,7 @@ if __name__ == "__main__":
     #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
     #     )
 
-    # for perm_i in range(10):
+    # for perm_i in range(1):
     #     print(perm_i)
     #     simu_seq_dep(
     #         # initial sequence generation
@@ -1351,7 +1371,7 @@ if __name__ == "__main__":
     #         },
     #         seq_num=50,
     #         # working_dir=to('data/simu/'),
-    #         working_dir=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #
     #         is_sv_umi_lib=True,
     #         is_sv_seq_lib=True,
@@ -1379,16 +1399,17 @@ if __name__ == "__main__":
     #         verbose=False,  # True False
     #         mode='short_read',  # long_read short_read
     #         # sv_fastq_fp=to('data/simu/'),
-    #         sv_fastq_fp=to('data/simu/') + 'permute_' + str(perm_i) + '/',
+    #         sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
     #     )
 
     # @@
     for i, umi_num_i in enumerate([
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-        41, 42, 43, 44, 45,
+        1,
+        # 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        # 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        # 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+        # 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+        # 41, 42, 43, 44, 45,
     ]):
         simu_generic(
             # initial sequence generation

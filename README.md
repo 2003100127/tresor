@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="https://github.com/cribbslab/tresor/blob/main/img/Tresor-logo.png?raw=true" width="276" height="114">
+    <img src="https://github.com/2003100127/tresor/blob/main/img/Tresor-logo.png?raw=true" width="276" height="114">
     <br>
 </h1>
 
@@ -9,7 +9,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/2003100127/tresor)
 [![Anaconda-Server Badge](https://anaconda.org/jianfeng_sun/tresor/badges/version.svg)](https://anaconda.org/jianfeng_sun/tresor)
 ![](https://img.shields.io/docker/automated/2003100127/tresor.svg)
-![](https://img.shields.io/github/stars/cribbslab/tresor?logo=GitHub&color=blue)
+![](https://img.shields.io/github/stars/2003100127/tresor?logo=GitHub&color=blue)
 [![Documentation Status](https://readthedocs.org/projects/tresor/badge/?version=latest)](https://tresor.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](https://pepy.tech/badge/tresor)](https://pepy.tech/project/tresor)
 
@@ -34,7 +34,7 @@ Tresor is a Python toolkit for simulating sequencing reads at the single-locus, 
 
 ## Documentation
 
-Please check how to use the full functionalities of Tresor in the documentation https://cribbslab.github.io/tresor.
+Please check how to use the full functionalities of Tresor in the documentation https://2003100127.github.io/tresor.
 
 ## Installation
 
@@ -58,7 +58,7 @@ Please cite our work if you use Tresor in your research.
 @article{tresor,
     title = {Tresor: high-performance simulation of sequencing reads},
     author = {Jianfeng Sun and Adam P. Cribbs},
-    url = {https://github.com/cribbslab/tresor},
+    url = {https://github.com/2003100127/tresor},
     year = {2023},
 }
 ```

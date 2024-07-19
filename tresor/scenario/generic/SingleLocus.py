@@ -66,12 +66,12 @@ class SingleLocus:
         self.sim_thres = sim_thres
         self.permutation = permutation
 
-        self.bead_mutation = kwargs['bead_mutation']
-        self.bead_mut_rate = kwargs['bead_mut_rate']
-        self.bead_deletion = kwargs['bead_deletion']
-        self.bead_del_rate = kwargs['bead_del_rate']
-        self.bead_insertion = kwargs['bead_insertion']
-        self.bead_ins_rate = kwargs['bead_ins_rate']
+        # self.bead_mutation = kwargs['bead_mutation']
+        # self.bead_mut_rate = kwargs['bead_mut_rate']
+        # self.bead_deletion = kwargs['bead_deletion']
+        # self.bead_del_rate = kwargs['bead_del_rate']
+        # self.bead_insertion = kwargs['bead_insertion']
+        # self.bead_ins_rate = kwargs['bead_ins_rate']
 
         self.err_route = err_route
         self.ampl_rate = ampl_rate
@@ -119,7 +119,7 @@ class SingleLocus:
             bead_deletion=self.kwargs['bead_deletion'] if 'bead_deletion' in self.kwargs.keys() else False,
             bead_del_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
             bead_insertion=self.kwargs['bead_insertion'] if 'bead_insertion' in self.kwargs.keys() else False,
-            bead_ins_rate=self.bead_ins_rate,
+            bead_ins_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
             permutation=self.permutation,
             is_sv_umi_lib=self.is_sv_umi_lib,
             is_sv_seq_lib=self.is_sv_seq_lib,
@@ -131,6 +131,7 @@ class SingleLocus:
             material_params=self.kwargs['material_params'] if 'material_params' in self.kwargs.keys() else None,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
+        self.lib_err_mark['pcr_err_mark'] = False
         self.sequencing_library = pd.concat([pd.DataFrame(self.sequencing_library), self.lib_err_mark], axis=1).values
         # print(self.sequencing_library)
         self.console.print('===>Sequencing library has been generated')
@@ -217,7 +218,7 @@ class SingleLocus:
             #  [36]]
             pcr_ampl_params['data'] = np.hstack((
                 vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
-                pcr_ampl_params['data'][:, 1:6],
+                pcr_ampl_params['data'][:, 1:7],
             ))
             # print(pcr_ampl_params)
             # print(pcr_ampl_params['data'])
@@ -350,11 +351,11 @@ if __name__ == "__main__":
         ampl_rate=0.85,
         err_route='mutation_table_complete', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
         pcr_error=1e-4,
-        pcr_num=15,
+        pcr_num=10,
         err_num_met='nbinodmial',
         seq_error=0.01,
-        seq_sub_spl_number=1000, # None 200
-        seq_sub_spl_rate=None, # 0.333
+        seq_sub_spl_number=500, # None 200
+        seq_sub_spl_rate=False, # 0.333
         use_seed=True,
         seed=1,
 

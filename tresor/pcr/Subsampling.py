@@ -78,7 +78,7 @@ class Subsampling:
         spl_ids = rannum().uniform(
             low=0, high=num_all_pcr_ampl_reads, num=num_reads_for_sequencing, use_seed=False, seed=1
         )
-        print(spl_ids)
+        # print(spl_ids)
         # print(pcr_dict['data'])
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
         # print(pcr_dict['data'])
@@ -161,17 +161,22 @@ class Subsampling:
             replace=replace,
         )
         # print(spl_ids)
-        asd1 = pd.DataFrame(pcr_dict['data'][:, 3:6]).astype(bool)
-        print(asd1)
+        asd1 = pd.DataFrame(pcr_dict['data'][:, 3:7]).astype(bool)
+        c = (asd1[1]) | (asd1[3])
+        print(c[c].shape[0]/c.shape[0])
+
+        # print(asd1)
         print(asd1[asd1[1]].shape[0] / asd1.shape[0])
-        # print(pcr_dict['data'].shape)
+        print(pcr_dict['data'].shape)
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
         # print(spl_id_map)
         # print(len(spl_id_map))
         spl_mut_info = pcr_dict['mut_info'][spl_ids]
         # print(pcr_dict['mut_info'].shape)
-        asd = pd.DataFrame(spl_mut_info)[[3, 4, 5]].astype(bool)
-        print(asd[asd[4]])
+        asd = pd.DataFrame(spl_mut_info)[[3, 4, 5, 6]].astype(bool)
+        # print(asd[asd[4]])
+        c = (asd[4]) | (asd[6])
+        print(c[c].shape[0] / c.shape[0])
         print(asd[asd[4]].shape[0] / asd.shape[0])
 
         # print(pd.DataFrame(spl_mut_info)[[3, 4, 5]].dtypes)
@@ -533,10 +538,12 @@ class Subsampling:
                     if k_ in read_cache.keys():
                         read = read_cache[k_]
                     else:
+                        # print(read)
                         read = self.errlib.mutated(
                             read=read,
                             pcr_error=pcr_dict['pcr_error'],
                         )
+                        # print(read)
                     if pcr_dict['pcr_deletion']:
                         read = self.errlib.deletion(read=read, del_rate=pcr_dict['pcr_del_rate'])
                     if pcr_dict['pcr_insertion']:
@@ -886,7 +893,8 @@ class Subsampling:
                                     r1 = self.errlib.mutated(
                                         read=read_cache_table[ii][jj - 1],
                                         pcr_error=pcr_dict['pcr_error'],
-                                    )
+                                    )[0]
+                                    print(r1)
                                     if pcr_dict['pcr_deletion']:
                                         r1 = self.errlib.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
                                     if pcr_dict['pcr_insertion']:

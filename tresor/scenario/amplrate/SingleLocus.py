@@ -133,7 +133,7 @@ class SingleLocus:
             pcr_ampl_params = {
                 'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
 
-                'data': np.array(self.sequencing_library),
+                'data': np.array(self.sequencing_library[0]),
                 'ampl_rate': ampl_rate_i,
                 'pcr_error': self.pcr_error,
                 'pcr_num': self.pcr_num,

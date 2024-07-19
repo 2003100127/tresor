@@ -80,23 +80,23 @@ class SingleCell:
         # print(self.gmat)
         self.num_genes = len(self.gmat.columns)
         self.num_cells = len(self.gmat.index)
-        print(self.num_genes)
-        print(self.num_cells)
+        # print(self.num_genes)
+        # print(self.num_cells)
         self.cell_map = {k: v for k, v in enumerate(self.gmat.columns)}
         self.gene_map = {k: v for k, v in enumerate(self.gmat.index)}
         # print(self.cell_map)
         # print(self.gene_map)
         csr_ = coo_matrix(self.gmat)
-        print(csr_)
+        # print(csr_)
         self.gbyc_arr = np.transpose([
             csr_.row.tolist(),
             csr_.col.tolist(),
             csr_.data.tolist(),
         ]).astype(int)
-        print(self.gbyc_arr)
+        # print(self.gbyc_arr)
 
         self.kwargs = kwargs
-        print(self.kwargs)
+        # print(self.kwargs)
 
         if not self.kwargs['material_params']:
             self.kwargs['material_params'] = {}

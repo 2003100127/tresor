@@ -127,7 +127,7 @@ class SingleCell:
         self.console.print('===>PCR amplification starts...')
         self.console.print('======>Assign parameters...')
         # print(np.array(self.sequencing_library))
-
+        satime = time.time()
         for i, ampl_rate_i in enumerate(self.ampl_rates):
             self.console.print('======>{}. Amplification rate: {}'.format(i, ampl_rate_i))
             pcr_ampl_params = {
@@ -244,6 +244,7 @@ class SingleCell:
             seq = self.seq(seq_params=seq_params).np()
             self.console.print('=========>Sequencing has completed')
             self.console.print('=========>Reads write to files in FastQ format')
+            print('======>simulation completes in {}s'.format(time.time() - satime))
             self.wfastq().togz(
                 list_2d=seq['data'],
                 sv_fp=self.sv_fastq_fp,

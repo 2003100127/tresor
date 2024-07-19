@@ -73,7 +73,6 @@ class SingleLocus:
         self.crtfolder.osmkdir(working_dir)
 
         self.kwargs = kwargs
-        print(self.kwargs)
 
         if not self.kwargs['material_params']:
             self.kwargs['material_params'] = {}
@@ -81,6 +80,8 @@ class SingleLocus:
 
         self.console = Console()
         self.console.verbose = verbose
+
+        self.console.print('Initialisation and parameters: \n{}'.format(self.kwargs))
 
     def pooling(self, ):
         """
@@ -336,13 +337,16 @@ class SingleLocus:
                     custom_mark = '_' + custom_mark_suffix if custom_mark_suffix != 'alone' else ''
                     self.console.print("============>Custom-designed condition {}: {}".format(custom_mark_id, 'custom' + custom_mark))
                     read_struct_ref['custom' + custom_mark] = self.kwargs['seq_params']['custom' + custom_mark]
+            # print(read_struct_ref)
             read_struct_pfd_order = {condi: read_struct_ref[condi] for condi in self.condis}
             read, read_err_dict = self.paste([*read_struct_pfd_order.values()])
             sequencing_library.append([read, str(id), 'init'])
             # print(read_err_dict['read_mut']['mark'])
-            mut_recorder_arr.append(read_err_dict['read_mut']['mark'])
-            del_recorder_arr.append(read_err_dict['read_del']['mark'])
-            ins_recorder_arr.append(read_err_dict['read_ins']['mark'])
+            # print(read_err_dict)
+            if 'mark' in read_err_dict.keys():
+                mut_recorder_arr.append(read_err_dict['read_mut']['mark'])
+                del_recorder_arr.append(read_err_dict['read_del']['mark'])
+                ins_recorder_arr.append(read_err_dict['read_ins']['mark'])
         # print(umi_cnt)
         # print(umi_pool)
         # print(sequencing_library)
@@ -355,9 +359,9 @@ class SingleLocus:
             'ins': ins_recorder_arr,
         })
         # print(df)
-        print(sum(mut_recorder_arr))
-        print(sum(del_recorder_arr))
-        print(sum(ins_recorder_arr))
+        # print(sum(mut_recorder_arr))
+        # print(sum(del_recorder_arr))
+        # print(sum(ins_recorder_arr))
         self.pfwriter.generic(df=sequencing_library, sv_fpn=self.working_dir + 'sequencing_library.txt')
         etime = time.time()
         self.console.print("===>Time for sequencing library preparation: {:.3f}s".format(etime-stime))
@@ -370,6 +374,7 @@ class SingleLocus:
             # print(read)
             read, read_mut = self.errlib.mutated(read=read, pcr_error=self.kwargs['bead_mut_rate'])
             # print(read)
+            # print(read_mut)
         else:
             read_mut = {}
         if 'bead_deletion' in self.kwargs.keys() and self.kwargs['bead_deletion']:
