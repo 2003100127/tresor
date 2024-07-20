@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="583f3ab5-3a3d-494f-a2dc-b518e2591a09" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/conda.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/conda.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="583f3ab5-3a3d-494f-a2dc-b518e2591a09" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -159,7 +156,7 @@
       <workItem from="1720206680398" duration="279000" />
       <workItem from="1720338928887" duration="30000" />
       <workItem from="1721198691915" duration="41486000" />
-      <workItem from="1721399908831" duration="31677000" />
+      <workItem from="1721399908831" duration="31988000" />
     </task>
     <servers />
   </component>
