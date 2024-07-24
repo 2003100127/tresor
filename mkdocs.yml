@@ -5,6 +5,7 @@ repo_name: jsun/tresor
 
 
 theme:
+#  logo: img/index/Tresor-logo.png
   name: material
   features:
     - content.code.copy
@@ -16,6 +17,7 @@ theme:
     - navigation.expand
     - navigation.top
     - navigation.path
+    - navigation.footer
 #    - toc.integrate
     - content.footnote.tooltips
 
@@ -75,7 +77,17 @@ extra:
     actions:
       - accept
       - manage
-
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/2003100127
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/2003100127
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/jianfeng-sun-2ba9b1132/
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/Jianfeng_Sunny
 
 plugins:
   - tags
+
+copyright: Copyright &copy; 2024 Jianfeng Sun

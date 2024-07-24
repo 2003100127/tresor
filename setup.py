@@ -8,7 +8,7 @@ setup(
     long_description="Simulation tool Tresor",
     license="GNU GENERAL V3.0",
 
-    url="https://github.com/2003100127/tresor, https://github.com/2003100127",
+    url="https://github.com/2003100127/tresor",
     author="Jianfeng Sun",
     author_email="jianfeng.sun@ndorms.ox.ac.uk, adam.cribbs@ndorms.ox.ac.uk",
 

@@ -26,10 +26,6 @@
 
 ## Overview
 
-```angular2html
-
-```
-
 Tresor is a Python toolkit for simulating sequencing reads at the single-locus, bulk RNA-seq, and single-cell levels. It is implemented based on phylogenetic tree-based methods, which allows for ultra-fast simulation read generation. Tresor allows both short-read and long-read sequencing read simulation, and substitution and indel (insertion and deletion) errors added to reads. Tresor implements a very flexible read generation framework, which allows users to design their simulated reads in any forms and structures. Tresor can vastly help both computational and experimental researchers to swiftly test their sequencing method ideas.
 
 ## Documentation
@@ -40,7 +36,9 @@ Please check how to use the full functionalities of Tresor in the documentation 
 
 ### Using pip (recommended)
 
-```sh
+[tresor homepage](https://pypi.org/project/tresor/)
+
+```shell
 # create a conda environment
 conda create --name tresor python=3.11
 
@@ -50,6 +48,59 @@ conda activate tresor
 # the latest version
 pip install tresor --upgrade
 ```
+
+### Conda
+
+[tresor homepage on Anaconda](https://anaconda.org/Jianfeng_Sun/tresor)
+
+```shell
+# create a conda environment
+conda create --name tresor python=3.11
+
+# activate the conda environment
+conda activate tresor
+
+# the latest version
+conda install jianfeng_sun::tresor
+```
+
+### Docker
+
+[tresor homepage on Docker](https://hub.docker.com/r/2003100127/tresor)
+
+```shell
+docker pull 2003100127/tresor
+```
+
+### Github
+
+[tresor homepage on Github](https://github.com/2003100127/tresor)
+
+```shell
+# create a conda environment
+conda create --name tresor python=3.11
+
+# activate the conda environment
+conda activate tresor
+
+# create a folder
+mkdir project
+
+# go to the folder
+cd project
+
+# fetch Tresor repository with the latest version
+git clone https://github.com/2003100127/tresor.git
+
+# enter this repository
+cd tresor
+
+# do the following command
+pip install .
+# or
+python setup.py install
+```
+
 
 ## Citation
 

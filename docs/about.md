@@ -1,3 +1,3 @@
-The **Tresor** tool is developed and supported by [Dr. Jianfeng Sun](https://x.com/Jianfeng_Sunny) at the University of Oxford.
+We are a computational team at the University of Oxford to develop mathematical modelss and artificial intelligent tools to better interpret biology.
 
 
