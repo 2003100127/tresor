@@ -107,10 +107,10 @@ python setup.py install
 Please cite our work if you use Tresor in your research.
 ```angular2html
 @article{tresor,
-    title = {Tresor: high-performance simulation of sequencing reads},
+    title = {Tresor: Transcriptomic Read Simulation with Realistic PCR Error Representation},
     author = {Jianfeng Sun and Adam P. Cribbs},
     url = {https://github.com/2003100127/tresor},
-    year = {2023},
+    year = {2024},
 }
 ```
 
