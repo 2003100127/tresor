@@ -34,7 +34,7 @@ Please check how to use the full functionalities of Tresor in the documentation 
 
 ## Installation
 
-### Using pip (recommended)
+### 1. PyPI (recommended)
 
 [tresor homepage](https://pypi.org/project/tresor/)
 
@@ -49,7 +49,7 @@ conda activate tresor
 pip install tresor --upgrade
 ```
 
-### Conda
+### 2. Conda
 
 [tresor homepage on Anaconda](https://anaconda.org/Jianfeng_Sun/tresor)
 
@@ -64,7 +64,7 @@ conda activate tresor
 conda install jianfeng_sun::tresor
 ```
 
-### Docker
+### 3. Docker
 
 [tresor homepage on Docker](https://hub.docker.com/r/2003100127/tresor)
 
@@ -72,7 +72,7 @@ conda install jianfeng_sun::tresor
 docker pull 2003100127/tresor
 ```
 
-### Github
+### 4. Github
 
 [tresor homepage on Github](https://github.com/2003100127/tresor)
 
