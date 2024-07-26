@@ -89,5 +89,6 @@ extra:
 
 plugins:
   - tags
+  - search
 
 copyright: Copyright &copy; 2024 Jianfeng Sun

@@ -17,7 +17,7 @@ Tresor is designed to simulate either short-reads or long-reads under bulk RNA-s
 
 The software outputs sequencing libraries that include comprehensive annotations, enabling the tracking of both the original and PCR-amplified molecules under complex conditions, such as sample multiplexing with Unique Molecular Identifiers (UMIs) and cell barcodes. These features are instrumental in quantifying changes in the number of PCR duplicates across different experiment settings. By providing these detailed annotations, Tensor supports both the evaluation of existing UMI deduplication tools and the spur of the development of novel methodologies.
 
-- [x] The first tool for simulating errors in flexiblely designed sequencing protocols during bead synthesis
+- [x] The first tool for simulating errors in flexibly designed sequencing protocols during bead synthesis
 - [x] Installation package
     * [x] PyPI
     * [x] Conda
