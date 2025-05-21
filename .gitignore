@@ -2,6 +2,8 @@
 tresor/data/
 tresor/path.py
 
+.idea/
+
 __pycache__/
 *.py[cod]
 *$py.class

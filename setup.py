@@ -2,15 +2,15 @@ from setuptools import find_packages, setup
 
 setup(
     name="tresor",
-    version="0.0.1",
+    version="0.1.1",
     keywords=["conda", "tresor"],
     description="Tresor",
     long_description="Simulation tool Tresor",
-    license="GNU GENERAL V3.0",
+    license="GNU-3.0",
 
     url="https://github.com/2003100127/tresor",
     author="Jianfeng Sun",
-    author_email="jianfeng.sun@ndorms.ox.ac.uk, adam.cribbs@ndorms.ox.ac.uk",
+    author_email="jianfeng.sun@ndorms.ox.ac.uk",
 
     packages=find_packages(),
     include_package_data=True,

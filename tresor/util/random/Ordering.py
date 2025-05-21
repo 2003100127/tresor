@@ -1,7 +1,7 @@
-__version__ = "v1.0"
-__copyright__ = "Copyright 2024"
-__license__ = "MIT"
-__author__ = "Adam Cribbs lab"
+__version__ = "0.0.1"
+__copyright__ = "Copyright 2025"
+__license__ = "GPL-3.0"
+
 
 import time
 import numpy as np

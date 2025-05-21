@@ -108,9 +108,9 @@ Please cite our work if you use Tresor in your research.
 ```angular2html
 @article{tresor,
     title = {Tresor: Transcriptomic Read Simulation with Realistic PCR Error Representation},
-    author = {Jianfeng Sun and Adam P. Cribbs},
+    author = {Jianfeng Sun},
     url = {https://github.com/2003100127/tresor},
-    year = {2024},
+    year = {2025},
 }
 ```
 

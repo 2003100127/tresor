@@ -1,4 +1,8 @@
-# Welcome to the homepage of ![Image title](./img/index/Tresor-logo.png){ width="60" }Tresor.
+<figure markdown="span">
+  ![Image title](./img/index/Tresor-logo.png){ width="200" }
+</figure>
+
+# Welcome to the homepage of Tresor.
 
 > This is where we show how you can use Tresor best.
 
