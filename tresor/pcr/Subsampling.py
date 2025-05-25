@@ -129,7 +129,7 @@ class Subsampling:
             replace=False,
     ):
         # print(pcr_dict)
-        print(pcr_dict['mut_info'])
+        # print(pcr_dict['mut_info'])
         self.console.print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         self.console.print('======>Substitutions of nucleotides by PCR errors using mutation_table_complete')
         self.console.print('======>Read PCR amplified reads')
@@ -161,23 +161,38 @@ class Subsampling:
             replace=replace,
         )
         # print(spl_ids)
-        asd1 = pd.DataFrame(pcr_dict['data'][:, 3:7]).astype(bool)
-        c = (asd1[1]) | (asd1[3])
-        print(c[c].shape[0]/c.shape[0])
-
-        # print(asd1)
-        print(asd1[asd1[1]].shape[0] / asd1.shape[0])
-        print(pcr_dict['data'].shape)
+        df_err_tab = pd.DataFrame(pcr_dict['data'][:, 3:7]).astype(bool)
+        df_err_tab.columns = ['mut', 'del', 'ins', 'pcr_err_mark']
+        self.console.print("======>+++++++++++bead synthsis error profile++++++++++++")
+        self.console.print("======>Before sampling")
+        # self.console.print("=========>\n{}".format(df_err_tab))
+        # Record it if at least one of them is deletion (True) regardless of whether it comes from bead errors or pcr errors.
+        self.console.print("=========>Percentage of reads with deletion errors from bead synthesis: {er}".format(
+            er=df_err_tab[df_err_tab['del']].shape[0] / df_err_tab.shape[0],
+        ))
+        err_union_bead_and_pcr = (df_err_tab['del']) | (df_err_tab['pcr_err_mark'])
+        self.console.print("=========>Percentage of reads with deletion errors from bead synthesis and errors from PCR amplication: {er}".format(
+            er=err_union_bead_and_pcr[err_union_bead_and_pcr].shape[0]/err_union_bead_and_pcr.shape[0],
+        ))
+        # print(pcr_dict['data'].shape)
+        # print(pcr_dict['data'][:, [1, 2]])
         spl_id_map = tactic6(pcr_dict['data'][:, [1, 2]])
         # print(spl_id_map)
         # print(len(spl_id_map))
         spl_mut_info = pcr_dict['mut_info'][spl_ids]
         # print(pcr_dict['mut_info'].shape)
-        asd = pd.DataFrame(spl_mut_info)[[3, 4, 5, 6]].astype(bool)
-        # print(asd[asd[4]])
-        c = (asd[4]) | (asd[6])
-        print(c[c].shape[0] / c.shape[0])
-        print(asd[asd[4]].shape[0] / asd.shape[0])
+        df_err_tab_spl = pd.DataFrame(spl_mut_info)[[3, 4, 5, 6]].astype(bool)
+        df_err_tab_spl.columns = ['mut', 'del', 'ins', 'pcr_err_mark']
+        self.console.print("======>After sampling")
+        # self.console.print("=========>\n{}".format(df_err_tab_spl))
+        err_union_bead_and_pcr_spl = (df_err_tab_spl['del']) | (df_err_tab_spl['pcr_err_mark'])
+        self.console.print("=========>Percentage of reads with deletion errors from bead synthesis: {er}".format(
+            er=err_union_bead_and_pcr_spl[err_union_bead_and_pcr_spl].shape[0] / err_union_bead_and_pcr_spl.shape[0],
+        ))
+        self.console.print("=========>Percentage of reads with deletion errors from bead synthesis and errors from PCR amplication: {er}".format(
+            er=df_err_tab_spl[df_err_tab_spl['del']].shape[0] / df_err_tab_spl.shape[0],
+        ))
+        self.console.print("======>+++++++++++bead synthsis error profile++++++++++++")
 
         # print(pd.DataFrame(spl_mut_info)[[3, 4, 5]].dtypes)
         # print(len(spl_mut_info))

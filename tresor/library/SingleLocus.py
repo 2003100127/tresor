@@ -343,9 +343,12 @@ class SingleLocus:
             sequencing_library.append([read, str(id), 'init'])
             # print(read_err_dict['read_mut']['mark'])
             # print(read_err_dict)
-            if 'mark' in read_err_dict.keys():
+            # print(read_err_dict)
+            if 'read_mut' in read_err_dict.keys():
                 mut_recorder_arr.append(read_err_dict['read_mut']['mark'])
+            if 'read_del' in read_err_dict.keys():
                 del_recorder_arr.append(read_err_dict['read_del']['mark'])
+            if 'read_ins' in read_err_dict.keys():
                 ins_recorder_arr.append(read_err_dict['read_ins']['mark'])
         # print(umi_cnt)
         # print(umi_pool)
@@ -372,7 +375,11 @@ class SingleLocus:
         if 'bead_mutation' in self.kwargs.keys() and self.kwargs['bead_mutation']:
             # print('bead_mutation')
             # print(read)
-            read, read_mut = self.errlib.mutated(read=read, pcr_error=self.kwargs['bead_mut_rate'])
+            read, read_mut = self.errlib.mutated(
+                read=read,
+                pcr_error=self.kwargs['bead_mut_rate'],
+                mode='bead_mutation',
+            )
             # print(read)
             # print(read_mut)
         else:
@@ -380,14 +387,22 @@ class SingleLocus:
         if 'bead_deletion' in self.kwargs.keys() and self.kwargs['bead_deletion']:
             # print('bead_deletion')
             # print(read)
-            read, read_del = self.errlib.deletion(read=read, del_rate=self.kwargs['bead_del_rate'])
+            read, read_del = self.errlib.deletion(
+                read=read,
+                del_rate=self.kwargs['bead_del_rate'],
+                mode='bead_deletion',
+            )
             # print(read)
         else:
             read_del = {}
         if 'bead_insertion' in self.kwargs.keys() and self.kwargs['bead_insertion']:
             # print('bead_insertion')
             # print(read)
-            read, read_ins = self.errlib.insertion(read=read, ins_rate=self.kwargs['bead_ins_rate'])
+            read, read_ins = self.errlib.insertion(
+                read=read,
+                ins_rate=self.kwargs['bead_ins_rate'],
+                mode='bead_insertion',
+            )
             # print(read)
         else:
             read_ins = {}
@@ -446,7 +461,7 @@ if __name__ == "__main__":
         bead_del_rate=0.1/112,  # 0.016 0.00004, 2.4e-7
         bead_ins_rate=7.1e-7,  # 0.011 0.00001, 7.1e-7
 
-        mode='short_read',  # long_read short_read
+        mode='short_read',  # long_read short_read bead_synthesis
 
         verbose=True, # False True
     )

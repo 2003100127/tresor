@@ -33,7 +33,7 @@ class Library:
         )
         for _, pos in enumerate(pos_list):
             read = read[:pos] + read[pos + 1:]
-        if mode == 'bead_synthesis':
+        if mode == 'bead_deletion':
             return read, {
                 'mark': mark,
             }
@@ -80,7 +80,7 @@ class Library:
             # 3 0 A {0: 'A', 1: 'T', 2: 'C', 3: 'G'}
             # AAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
             # AAAATTTTTTAAACCCAAAAAAAAAAAATTTTTTCCC
-        if mode == 'bead_synthesis':
+        if mode == 'bead_insertion':
             return read, {
                 'mark': mark,
             }
@@ -93,7 +93,6 @@ class Library:
             pcr_error,
             mode='normal',
     ):
-
         num_err_per_read = rannum().binomial(
             n=len(read), p=pcr_error, use_seed=False, seed=False
         )
@@ -125,7 +124,7 @@ class Library:
             # {0: 'A', 1: 'T', 2: 'C'} 1 T
             # {0: 'A', 1: 'T', 2: 'C'} 0 A
             read_l[pos] = dna_map[base_list[i]]
-        if mode == 'bead_synthesis':
+        if mode == 'bead_mutation':
             return ''.join(read_l), {
                 'mark': mark,
             }

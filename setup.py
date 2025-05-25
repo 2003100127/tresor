@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="tresor",
-    version="0.1.1",
+    version="0.1.2",
     keywords=["conda", "tresor"],
     description="Tresor",
     long_description="Simulation tool Tresor",

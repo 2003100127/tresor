@@ -858,6 +858,13 @@ def simu_generic(
         use_seed=True,
         seed=1,
 
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
+
         pcr_deletion=False,
         pcr_insertion=False,
         pcr_del_rate=0,
@@ -903,6 +910,18 @@ def simu_generic(
         seq_sub_spl_number = configs['seq_sub_spl_number']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
         sv_fastq_fn = configs['sv_fastq_fn']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -941,6 +960,13 @@ def simu_generic(
         seq_error=seq_error,
         pcr_num=pcr_num,
         err_num_met=err_num_met,
+
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
 
         # indels
         pcr_deletion=pcr_deletion,

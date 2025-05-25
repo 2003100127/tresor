@@ -90,7 +90,7 @@ class SingleLocus:
         self.pcr = pcr
         self.seq = seq
         self.wfastq = wfastq
-        self.subsampling = Subsampling()
+        self.subsampling = Subsampling(verbose=verbose)
         self.fwriter = fwriter()
 
         self.kwargs = kwargs
@@ -132,6 +132,7 @@ class SingleLocus:
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
         self.lib_err_mark['pcr_err_mark'] = False
+        # print(self.lib_err_mark)
         self.sequencing_library = pd.concat([pd.DataFrame(self.sequencing_library), self.lib_err_mark], axis=1).values
         # print(self.sequencing_library)
         self.console.print('===>Sequencing library has been generated')
@@ -190,7 +191,15 @@ class SingleLocus:
 
             'verbose': self.verbose,
         }
-        print(pcr_ampl_params['data'])
+        # print(pcr_ampl_params['data'])
+        # if checking bead synthesis errors, you will get the pcr_ampl_params['data'] like this
+        # [['GAT...A' '0' 'init' False False False False]
+        #  ['GTA...G' '1' 'init' False False False False]
+        #  ['ATG...T' '2' 'init' False False True False]
+        #  ['CAA...T' '3' 'init' False False False False]
+        # ...
+        #  ['TTA...C' '49' 'init' False False False False]]
+        # in the normal state, pcr_ampl_params['data'] looks like:
         # pcr_ampl_params['data']
         # [['GGGAAATTTAAACCCTTTAAAGGGAAAAAAGGGCCC' '0' 'init']
         #  ['GGGTTTAAACCCCCCCCCGGGAAATTTTTTGGGTTT' '1' 'init']
@@ -284,7 +293,7 @@ class SingleLocus:
             'seq_sub_spl_rate': self.seq_sub_spl_rate,
 
             # 'seq_deletion': False,
-            # 'seq_insertion': False,  # False True
+            # 'seq_insertion': False, # False True
             # 'seq_del_rate': 2.4 * 10e-6,
             # 'seq_ins_rate': 7.1 * 10e-7,
 
@@ -363,7 +372,7 @@ if __name__ == "__main__":
         bead_mut_rate=1e-4,  # 0.016 0.00004
         bead_deletion=True,  # True False
         bead_insertion=True,
-        bead_del_rate=0.1 / 112,  # 0.016 0.00004, 2.4e-7
+        bead_del_rate=0.1/112,  # 0.016 0.00004, 2.4e-7
         bead_ins_rate=7.1e-7,  # 0.011 0.00001, 7.1e-7
 
         pcr_deletion=True,  # True False
@@ -375,7 +384,7 @@ if __name__ == "__main__":
         seq_del_rate=2.4e-6,
         seq_ins_rate=7.1e-7,
 
-        verbose=False, # True
+        verbose=True, # True False
 
         mode='short_read',  # long_read short_read
 
