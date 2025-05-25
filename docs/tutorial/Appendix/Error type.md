@@ -1,10 +1,14 @@
 Errors can be introduced to sequenced molecules in multiple stages during sequencing experiments. Typically, the primary stages where errors typically occur include PCR amplification, sequencing, and bead synthesis. Inaccuracies are
 
-* **Substitution errors**: Incorrectly identifying one nucleotide as another. Mistakes made by DNA polymerase during amplification (PCR). Base calling failure (sequencing)
+* **Substitution errors**:
+    - Incorrectly identifying one nucleotide as another. 
+    - Mistakes made by DNA polymerase during amplification (PCR). 
+    - Base calling failure (sequencing)
+
 * **Insertion errors**: Adding extra nucleotides that are not present in the original sequence. 
 * **Deletion errors**: Deleting nucleotides that are present in the original sequence.
 
-To simulate reads as more genuinely as possible, Tresor implements a powerful function to allow any types of errors to bo added during PCR amplification, sequencing, and bead synthesis. Users can pass certain error rates onto the following attributes. Then, Tresor will dispose of the error-adding process.
+To simulate reads as more genuinely as possible, Tresor contains a function to allow any types of errors to bo added during PCR amplification, sequencing, and bead synthesis. Users can pass certain values on to the following attributes. Then, Tresor will dispose of the error-adding process.
 
 1. Bead synthesis
 ``` py

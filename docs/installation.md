@@ -1,10 +1,12 @@
-# Installation
-
 ## System Requirement
 
-There is no requirement for Tresor, a cross-platform package.
+There is no requirement for Tresor. It is a cross-platform computational package.
 
-## PyPI
+## PyPI (**recommended**)
+
+!!! info "Note"
+
+    Please make sure to use the latest version of tresor, as earlier versions may contain bugs. If you do not include the `--upgrade` flag during installation, you might encounter issues that prevent tresor from functioning properly in your analysis.
 
 [tresor homepage](https://pypi.org/project/tresor/)
 
@@ -39,7 +41,7 @@ conda install jianfeng_sun::tresor
 
 [tresor homepage on Docker](https://hub.docker.com/r/2003100127/tresor)
 
-You can first choose which type of operating system (OS) you would like to install Docker software. Please refer to https://docs.docker.com/engine/install. For example, if your computational work is based on a Windows OS, you can choose to install a Desktop version of Docker. Please refer to https://docs.docker.com/desktop/install/windows-install.
+You can first choose which type of operating system (OS) you would like to install Docker software. Please refer to [https://docs.docker.com/engine/install](https://docs.docker.com/engine/install). For example, if your computational work is based on a Windows OS, you can choose to install a Desktop version of Docker. Please refer to [https://docs.docker.com/desktop/install/windows-install](https://docs.docker.com/desktop/install/windows-install).
 
 ```shell
 docker pull 2003100127/tresor
