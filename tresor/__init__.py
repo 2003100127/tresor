@@ -6,6 +6,7 @@ from . import gene
 from . import gcell
 from . import locus
 from . import sc
+from . import abun
 
 # __all__ = [
 #     "gene",
