@@ -84,6 +84,25 @@ def est_from_fasta(
     }
 
 
+def simplify_target_id(
+        abundance_tsv: str,
+        simplified_tsv: str,
+):
+    """
+    Simplify target_id column in a TSV file by keeping only the transcript ID (with version).
+
+    Args:
+        abundance_tsv (str): Path to input TSV file.
+        simplified_tsv (str): Path to save processed TSV file.
+    """
+    import pandas as pd
+    df = pd.read_csv(abundance_tsv, sep="\t")
+    df["target_id"] = df["target_id"].str.split("|").str[0]
+    df.to_csv(abundance_tsv, sep="\t", index=False)
+    print(f"Processed file saved to {simplified_tsv}")
+    return df
+
+
 def to_tpm(
         counts_tsv,
         out_tsv,
@@ -98,8 +117,6 @@ def to_tpm(
         include_header=include_header,
         float_format=float_format,
     ).convert_from_cnt()
-
-
 
 
 if __name__ == "__main__":
@@ -123,30 +140,35 @@ if __name__ == "__main__":
     # for i in range(min(5, len(res['ids']))):
     #     print(res['ids'][i], res['counts'][i])
 
-    res = est_from_gtf(
-        gtf_fpn="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/gencode.v48.annotation.gtf",
-        num_selected_mols=5,
-        select_mode="random",
-        num_total_mols=10,
-        strip_version=True,
-        dist="dirichlet",
-        alpha=1.0,
-        min_count=0,
-        sort_output_by="count",
-        include_noncoding=False,
-        output_tsv="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.pure.tsv",
-        versioned_out="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.versioned.tsv",
-        subset_ids_txt="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/refs.sub.ids.gtf.txt",
-        seed=1,
-    )
-    print("Top5:")
-    for i in range(min(5, len(res['ids']))):
-        print(res['ids'][i], res['counts'][i])
+    # res = est_from_gtf(
+    #     gtf_fpn="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/gencode.v48.annotation.gtf",
+    #     num_selected_mols=5,
+    #     select_mode="random",
+    #     num_total_mols=10,
+    #     strip_version=True,
+    #     dist="dirichlet",
+    #     alpha=1.0,
+    #     min_count=0,
+    #     sort_output_by="count",
+    #     include_noncoding=False,
+    #     output_tsv="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.pure.tsv",
+    #     versioned_out="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.versioned.tsv",
+    #     subset_ids_txt="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/refs.sub.ids.gtf.txt",
+    #     seed=1,
+    # )
+    # print("Top5:")
+    # for i in range(min(5, len(res['ids']))):
+    #     print(res['ids'][i], res['counts'][i])
 
-    to_tpm(
-        counts_tsv="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.versioned.tsv",
-        out_tsv="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.tpm.tsv",
-        cell_barcode="ATGCATGCATGCATGC",
-        include_header=False,
-        float_format="{:.6f}"
+    simplify_target_id(
+        "D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.tsv",
+        "D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.simplified.tsv",
     )
+
+    # to_tpm(
+    #     counts_tsv="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.versioned.tsv",
+    #     out_tsv="D:/Document/Programming/Python/umiche/umiche/data/r1/cm/tksm/abundance.versioned.tpm.tsv",
+    #     cell_barcode="ATGCATGCATGCATGC",
+    #     include_header=False,
+    #     float_format="{:.6f}"
+    # )
