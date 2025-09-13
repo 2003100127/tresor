@@ -45,6 +45,8 @@ class Gene:
             ampl_rate,
             sv_fastq_fp,
 
+            vis_num_err_per_read=False,
+
             seq_sub_spl_number=None,
             seq_sub_spl_rate=1/3,
 
@@ -64,6 +66,7 @@ class Gene:
         self.condis = condis
         self.sim_thres = sim_thres
         self.permutation = permutation
+        self.vis_num_err_per_read = vis_num_err_per_read
 
         self.gspl = gspl
 
@@ -157,8 +160,12 @@ class Gene:
                 'recorder_pcr_err_num': [],
                 'recorder_pcr_read_num': [],
 
+                'num_err_per_read_dict': {},
+
                 'seq_sub_spl_number': self.seq_sub_spl_number,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
+
+                'vis_num_err_per_read': self.vis_num_err_per_read,
 
                 'pcr_deletion': True,
                 'pcr_insertion': True, # False True
@@ -216,6 +223,31 @@ class Gene:
             pcr_stime = time.time()
             pcr = self.pcr(pcr_params=pcr_ampl_params).np()
             # print(pcr.keys())
+            print(pcr)
+
+            from tresor.pcr.Binomial import plot_binomial_panels
+            from tresor.pcr.NBinomial import plot_nbinom_panels
+
+            if pcr['num_err_per_read_dict']:
+                if pcr['err_num_met'] == 'binomial':
+                    plot_binomial_panels(
+                        pcr['num_err_per_read_dict'],
+                        n_trials=None,
+                        cols=4,
+                        read_len=80, # 10x r1
+                        suptitle="Binomial",
+                    )
+                elif pcr['err_num_met'] == 'nbinomial':
+                    plot_nbinom_panels(
+                        pcr['num_err_per_read_dict'],
+                        cols=4,
+                        read_len=80,
+                        show_poisson=False, # 10x r1
+                        suptitle="Negative binomial",
+                    )
+                import matplotlib.pyplot as plt
+                plt.show()
+
             self.console.print('======>PCR amplification completes in {}s'.format(time.time() - pcr_stime))
 
             ### +++++++++++++++ block: Subsampling: sequencing depth or rate +++++++++++++++
@@ -261,8 +293,12 @@ class Gene:
                 'seed': self.seed,
                 'verbose': self.verbose,
 
+                'num_err_per_read_dict': {},
+
                 'seq_sub_spl_number': self.seq_sub_spl_number,
                 'seq_sub_spl_rate': self.seq_sub_spl_rate,
+
+                'vis_num_err_per_read': self.vis_num_err_per_read,
 
                 'seq_deletion': True,
                 'seq_insertion': True,  # False True
@@ -273,6 +309,26 @@ class Gene:
             self.console.print('=========>Sequencing has completed')
             self.console.print('=========>Reads write to files in FastQ format')
             print('======>simulation completes in {}s'.format(time.time() - satime))
+
+            if seq['num_err_per_read_dict']:
+                if seq['err_num_met'] == 'binomial':
+                    plot_binomial_panels(
+                        seq['num_err_per_read_dict'],
+                        n_trials=None,
+                        cols=1,
+                        read_len=80, # 10x r1
+                        suptitle="Binomial",
+                    )
+                elif seq['err_num_met'] == 'nbinomial':
+                    plot_nbinom_panels(
+                        seq['num_err_per_read_dict'],
+                        cols=1,
+                        read_len=80, # 10x r1
+                        show_poisson=False,
+                        suptitle="Negative binomial",
+                    )
+                import matplotlib.pyplot as plt
+                plt.show()
 
             self.wfastq().togz(
                 list_2d=seq['data'],
