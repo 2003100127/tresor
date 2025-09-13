@@ -200,9 +200,41 @@ class Error:
         pcr_stime = time.time()
         data_pcr = pd.DataFrame(res2p['data_spl'], columns=['read', 'sam_id', 'source'])
         data_pcr['read_len'] = data_pcr['read'].apply(lambda x: len(x))
-        data_pcr['num_err_per_read'] = data_pcr['read_len'].apply(lambda x: rannum().binomial(
-            n=x, p=res2p['pcr_error'], use_seed=False, seed=res2p['ipcr'] + 1
-        ))
+        if res2p['err_num_met'] == 'binomial':
+            data_pcr['num_err_per_read'] = data_pcr['read_len'].apply(lambda x: rannum().binomial(
+                n=x, p=res2p['pcr_error'], use_seed=False, seed=res2p['ipcr'] + 1
+            ))
+            res2p['num_err_per_read_dict'][res2p['ipcr'] + 1] = data_pcr['num_err_per_read']
+            if res2p['vis_num_err_per_read']:
+                from tresor.pcr.Binomial import validate_binomial_and_plot
+                results = validate_binomial_and_plot(
+                    data_pcr['num_err_per_read'],
+                    n_trials=None, p_true=None,
+                    title="PCR per-read error counts (Binomial)"
+                )
+                for k, v in results.items():
+                    print(
+                        f"{v.model}: n={v.n}, params={v.params}, loglik={v.loglik:.2f}, "
+                        f"AIC={v.aic:.2f}, BIC={v.bic:.2f}, chi2={v.chi2:.2f}, df={v.df}, p={v.p_value:.3g}, bins={v.n_bins_used}. {v.notes}"
+                    )
+        elif res2p['err_num_met'] == 'nbinomial':
+            data_pcr['num_err_per_read'] = data_pcr['read_len'].apply(lambda x: rannum().nbinomial(
+                n=x*(1-res2p['pcr_error']), p=1-res2p['pcr_error'], use_seed=False, seed=res2p['ipcr'] + 1
+            ))
+            res2p['num_err_per_read_dict'][res2p['ipcr'] + 1] = data_pcr['num_err_per_read']
+            if res2p['vis_num_err_per_read']:
+                from tresor.pcr.NBinomial import validate_nbinom_and_plot
+                results = validate_nbinom_and_plot(
+                    data_pcr['num_err_per_read'],
+                    fit_poisson=False,
+                    title="PCR per-read error counts (NBinomial)"
+                )
+                for k, v in results.items():
+                    print(
+                        f"{v.model}: {v.params}, loglik={v.loglik:.2f}, AIC={v.aic:.2f}, BIC={v.bic:.2f}, "
+                        f"chi2={v.chi2:.2f}, df={v.df}, p={v.p_value:.3g}, bins={v.n_bins_used}. {v.notes}"
+                    )
+
         data_pcr['pos_err_per_read'] = data_pcr.apply(lambda x: rannum().uniform(
             low=0, high=x['read_len'], num=x['num_err_per_read'], use_seed=False, seed=res2p['ipcr'] + 1
         ), axis=1)
@@ -241,6 +273,8 @@ class Error:
         data_pcr = np.array(data_pcr[['read_pcr', 'sam_id', 'source']])
         res2p['data'] = np.concatenate((res2p['data'], data_pcr), axis=0)
         del data_pcr
+        # print(res2p)
+        print(res2p['recorder_pcr_read_num'])
         self.console.print('======>time for merging sequences {time:.2f}s'.format(time=time.time() - pcr_merge_stime))
         self.console.print('======>Summary report:')
         self.console.print('=========>PCR time: {time:.2f}s'.format(time=time.time() - pcr_stime))
