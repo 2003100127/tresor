@@ -9,7 +9,6 @@ __email__ = "jianfeng.sunmt@gmail.com"
 import time
 import numpy as np
 import pandas as pd
-
 from tresor.library.SingleLocus import SingleLocus as simuip
 from tresor.pcr.Amplify import Amplify as pcr
 from tresor.sequencing.Calling import Calling as seq
@@ -133,7 +132,10 @@ class SingleLocus:
         ).pooling()
         self.lib_err_mark['pcr_err_mark'] = False
         # print(self.lib_err_mark)
-        self.sequencing_library = pd.concat([pd.DataFrame(self.sequencing_library), self.lib_err_mark], axis=1).values
+        self.sequencing_library = pd.concat([
+            pd.DataFrame(self.sequencing_library),
+            self.lib_err_mark,
+        ], axis=1).values
         # print(self.sequencing_library)
         self.console.print('===>Sequencing library has been generated')
         # print(self.lib_err_mark)
@@ -209,6 +211,10 @@ class SingleLocus:
         #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
         # print(pcr_ampl_params['data'][:, 1:3])
         # print(pcr_ampl_params)
+        if pcr_ampl_params['err_route'] == 'err1d':
+            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
+        if pcr_ampl_params['err_route'] == 'err2d':
+            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'bftree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'sptree':
@@ -217,7 +223,6 @@ class SingleLocus:
             # print(pcr_ampl_params['data'][:, 0])
             def calc_len(a):
                 return len(a)
-
             vfunc = np.vectorize(calc_len)
             # [[36] vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis]
             #  [36]
@@ -227,7 +232,7 @@ class SingleLocus:
             #  [36]]
             pcr_ampl_params['data'] = np.hstack((
                 vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
-                pcr_ampl_params['data'][:, 1:7],
+                pcr_ampl_params['data'][:, 1:3],
             ))
             # print(pcr_ampl_params)
             # print(pcr_ampl_params['data'])
@@ -242,14 +247,25 @@ class SingleLocus:
             mut_info_table = np.hstack((col_0, col_0))
             col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
             mut_info_table = np.hstack((mut_info_table, col_2))
-
-            mut_info_table = pd.concat([pd.DataFrame(mut_info_table), self.lib_err_mark], axis=1).values
-
             pcr_ampl_params['mut_info'] = mut_info_table
             # print(mut_info_table)
             # print(self.lib_err_mark.values)
             # pcr_ampl_params['mut_info'] = np.empty(shape=[0, 3])
             # print(pcr_ampl_params['mut_info'])
+        if pcr_ampl_params['err_route'] == 'mutation_table_complete':
+            def calc_len(a):
+                return len(a)
+            vfunc = np.vectorize(calc_len)
+            pcr_ampl_params['data'] = np.hstack((
+                vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
+                pcr_ampl_params['data'][:, 1:7],
+            ))
+            col_0 = np.array([[1] for _ in range(pcr_ampl_params['data'].shape[0])])
+            mut_info_table = np.hstack((col_0, col_0))
+            col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
+            mut_info_table = np.hstack((mut_info_table, col_2))
+            mut_info_table = pd.concat([pd.DataFrame(mut_info_table), self.lib_err_mark], axis=1).values
+            pcr_ampl_params['mut_info'] = mut_info_table
 
         ### +++++++++++++++ block: PCR amplification: simulation +++++++++++++++
         pcr_stime = time.time()
@@ -266,7 +282,6 @@ class SingleLocus:
             pcr['data'] = self.subsampling.bftree(pcr_dict=pcr)
         # print(pcr['data'])
         # print(pcr['data'].shape)
-
         if pcr_ampl_params['err_route'] == 'sptree':
             pcr['data'] = self.subsampling.sptree(pcr_dict=pcr)
 

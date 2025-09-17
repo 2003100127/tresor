@@ -111,13 +111,24 @@ class SingleLocus:
             self.len_params['umi']['umi_unit_len'] = umi_unit_len_i
             working_dir_new = self.working_dir + 'umi_len_' + str(umi_unit_len_i) + '/'
             crtfolder().osmkdir(working_dir_new)
-            self.sequencing_library = simuip(
+            self.sequencing_library, self.lib_err_mark = simuip(
                 len_params=self.len_params,
                 seq_num=self.seq_num,
                 is_seed=self.use_seed,
                 working_dir=working_dir_new,
                 condis=self.condis,
                 sim_thres=self.sim_thres,
+                # bead_mutation=self.bead_mutation,
+                # bead_mut_rate=self.bead_mut_rate,
+                # bead_deletion=self.bead_deletion,
+                # bead_del_rate=self.bead_del_rate,
+                # bead_insertion=self.bead_insertion,
+                bead_mutation=self.kwargs['bead_mutation'] if 'bead_mutation' in self.kwargs.keys() else False,
+                bead_mut_rate=self.kwargs['bead_mut_rate'] if 'bead_mut_rate' in self.kwargs.keys() else False,
+                bead_deletion=self.kwargs['bead_deletion'] if 'bead_deletion' in self.kwargs.keys() else False,
+                bead_del_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
+                bead_insertion=self.kwargs['bead_insertion'] if 'bead_insertion' in self.kwargs.keys() else False,
+                bead_ins_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
                 permutation=self.permutation,
                 is_sv_umi_lib=self.is_sv_umi_lib,
                 is_sv_seq_lib=self.is_sv_seq_lib,
@@ -138,7 +149,7 @@ class SingleLocus:
             pcr_ampl_params = {
                 'read_lib_fpn': working_dir_new + 'sequencing_library.txt',
 
-                'data': np.array(self.sequencing_library[0]),
+                'data': np.array(self.sequencing_library),
                 'ampl_rate': self.ampl_rate,
                 'pcr_error': self.pcr_error,
                 'pcr_num': self.pcr_num,

@@ -8,6 +8,7 @@ __email__ = "jianfeng.sunmt@gmail.com"
 
 import time
 import numpy as np
+import pandas as pd
 from tresor.library.SingleLocus import SingleLocus as simuip
 from tresor.pcr.Amplify import Amplify as pcr
 from tresor.sequencing.Calling import Calling as seq
@@ -88,13 +89,24 @@ class SingleLocus:
 
         ### +++++++++++++++ block: generate sequencing library +++++++++++++++
         self.console.print('===>Sequencing library generation starts')
-        self.sequencing_library = simuip(
+        self.sequencing_library, self.lib_err_mark = simuip(
             len_params=self.len_params,
             seq_num=self.seq_num,
             is_seed=self.use_seed,
             working_dir=self.working_dir,
             condis=self.condis,
             sim_thres=self.sim_thres,
+            # bead_mutation=self.bead_mutation,
+            # bead_mut_rate=self.bead_mut_rate,
+            # bead_deletion=self.bead_deletion,
+            # bead_del_rate=self.bead_del_rate,
+            # bead_insertion=self.bead_insertion,
+            bead_mutation=self.kwargs['bead_mutation'] if 'bead_mutation' in self.kwargs.keys() else False,
+            bead_mut_rate=self.kwargs['bead_mut_rate'] if 'bead_mut_rate' in self.kwargs.keys() else False,
+            bead_deletion=self.kwargs['bead_deletion'] if 'bead_deletion' in self.kwargs.keys() else False,
+            bead_del_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
+            bead_insertion=self.kwargs['bead_insertion'] if 'bead_insertion' in self.kwargs.keys() else False,
+            bead_ins_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
             permutation=self.permutation,
             is_sv_umi_lib=self.is_sv_umi_lib,
             is_sv_seq_lib=self.is_sv_seq_lib,
@@ -106,7 +118,15 @@ class SingleLocus:
             material_params=self.kwargs['material_params'] if 'material_params' in self.kwargs.keys() else None,
             seq_params=self.kwargs['seq_params'] if 'seq_params' in self.kwargs.keys() else None,
         ).pooling()
+        self.lib_err_mark['pcr_err_mark'] = False
+        # print(self.lib_err_mark)
+        self.sequencing_library = pd.concat([
+            pd.DataFrame(self.sequencing_library),
+            self.lib_err_mark,
+        ], axis=1).values
+        # print(self.sequencing_library)
         self.console.print('===>Sequencing library has been generated')
+        # print(self.lib_err_mark)
 
     def generate(self, ):
         """
@@ -130,7 +150,7 @@ class SingleLocus:
         pcr_ampl_params = {
             'read_lib_fpn': self.working_dir + 'sequencing_library.txt',
 
-            'data': np.array(self.sequencing_library[0]),
+            'data': np.array(self.sequencing_library),
             'ampl_rate': self.ampl_rate,
             'pcr_error': self.pcr_error,
             'pcr_num': self.pcr_num,
@@ -167,11 +187,15 @@ class SingleLocus:
         #  ['TTTTTTAAATTTAAAAAAGGGAAAGGGGGGGGGCCC' '49' 'init']]
         # print(pcr_ampl_params['data'][:, 1:3])
         # print(pcr_ampl_params)
+        if pcr_ampl_params['err_route'] == 'err1d':
+            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
+        if pcr_ampl_params['err_route'] == 'err2d':
+            pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'bftree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
         if pcr_ampl_params['err_route'] == 'sptree':
             pcr_ampl_params['data'] = pcr_ampl_params['data'][:, 1:3]
-        if pcr_ampl_params['err_route'] == 'mutation_table_minimum' or pcr_ampl_params['err_route'] == 'mutation_table_complete':
+        if pcr_ampl_params['err_route'] == 'mutation_table_minimum':
             # print(pcr_ampl_params['data'][:, 0])
             def calc_len(a):
                 return len(a)
@@ -202,6 +226,21 @@ class SingleLocus:
             # print(mut_info_table)
             # pcr_ampl_params['mut_info'] = np.empty(shape=[0, 3])
             # print(pcr_ampl_params['mut_info'])
+        if pcr_ampl_params['err_route'] == 'mutation_table_complete':
+            def calc_len(a):
+                return len(a)
+
+            vfunc = np.vectorize(calc_len)
+            pcr_ampl_params['data'] = np.hstack((
+                vfunc(pcr_ampl_params['data'][:, 0])[:, np.newaxis],
+                pcr_ampl_params['data'][:, 1:7],
+            ))
+            col_0 = np.array([[1] for _ in range(pcr_ampl_params['data'].shape[0])])
+            mut_info_table = np.hstack((col_0, col_0))
+            col_2 = pcr_ampl_params['data'][:, 1].astype(str)[:, np.newaxis]
+            mut_info_table = np.hstack((mut_info_table, col_2))
+            mut_info_table = pd.concat([pd.DataFrame(mut_info_table), self.lib_err_mark], axis=1).values
+            pcr_ampl_params['mut_info'] = mut_info_table
 
         ### +++++++++++++++ block: PCR amplification: simulation +++++++++++++++
         pcr_stime = time.time()

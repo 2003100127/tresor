@@ -8,7 +8,15 @@
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/tresor.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tresor.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tresor/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/gene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/gmat.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/gmat.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/library/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/library/Gene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/library/SingleCell.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/library/SingleCell.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/pcr/Error.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/pcr/Error.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/pcrerr/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/pcrerr/Gene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/scenario/seqdep/Gene.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/scenario/seqdep/Gene.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/sequencing/Error.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/sequencing/Error.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tresor/util/Console.py" beforeDir="false" afterPath="$PROJECT_DIR$/tresor/util/Console.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,32 +44,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.Abundance.executor&quot;: &quot;Run&quot;,
-    &quot;Python.SingleLocus (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.SingleLocus.executor&quot;: &quot;Run&quot;,
-    &quot;Python.Subsampling.executor&quot;: &quot;Run&quot;,
-    &quot;Python.TPM.executor&quot;: &quot;Run&quot;,
-    &quot;Python.gene.executor&quot;: &quot;Run&quot;,
-    &quot;Python.locus.executor&quot;: &quot;Run&quot;,
-    &quot;Python.sc.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Document/Programming/Python/dms-sim&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.Abundance.executor": "Run",
+    "Python.Binomial.executor": "Run",
+    "Python.CMI.executor": "Run",
+    "Python.Error.executor": "Run",
+    "Python.NBinomial.executor": "Run",
+    "Python.SingleLocus (1).executor": "Run",
+    "Python.SingleLocus.executor": "Run",
+    "Python.Subsampling.executor": "Run",
+    "Python.TPM.executor": "Run",
+    "Python.abun.executor": "Run",
+    "Python.gene.executor": "Run",
+    "Python.locus.executor": "Run",
+    "Python.sc.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Document/Programming/Python/dms-sim",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="Python.TPM">
-    <configuration name="Abundance" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Document\Programming\Python\tresor\docs\tutorial" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.Error">
+    <configuration name="Binomial" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tresor" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -70,12 +88,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/tool" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/pcr" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/tool/Abundance.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/pcr/Binomial.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -84,7 +102,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="SingleLocus" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="CMI" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tresor" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -93,12 +111,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/library" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/pcr" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/library/SingleLocus.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/pcr/CMI.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -107,7 +125,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="TPM" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="Error" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tresor" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -116,12 +134,58 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/tool" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/sequencing" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/tool/TPM.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/sequencing/Error.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="NBinomial" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="tresor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor/pcr" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/pcr/NBinomial.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="abun" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="tresor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tresor" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tresor/abun.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -132,9 +196,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.TPM" />
-        <item itemvalue="Python.Abundance" />
-        <item itemvalue="Python.SingleLocus" />
+        <item itemvalue="Python.Error" />
+        <item itemvalue="Python.CMI" />
+        <item itemvalue="Python.NBinomial" />
+        <item itemvalue="Python.Binomial" />
+        <item itemvalue="Python.abun" />
       </list>
     </recent_temporary>
   </component>
@@ -200,7 +266,17 @@
       <workItem from="1755784915446" duration="4774000" />
       <workItem from="1756039261891" duration="12998000" />
       <workItem from="1756114210074" duration="2182000" />
-      <workItem from="1756200213102" duration="5522000" />
+      <workItem from="1756200213102" duration="11232000" />
+      <workItem from="1756313526029" duration="4579000" />
+      <workItem from="1756408802917" duration="858000" />
+      <workItem from="1756842513550" duration="673000" />
+      <workItem from="1756898826910" duration="1219000" />
+      <workItem from="1756971750151" duration="2564000" />
+      <workItem from="1757289287475" duration="341000" />
+      <workItem from="1757316683864" duration="2492000" />
+      <workItem from="1757409403399" duration="1252000" />
+      <workItem from="1757496609125" duration="23001000" />
+      <workItem from="1757746563877" duration="2384000" />
     </task>
     <servers />
   </component>
@@ -219,11 +295,16 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/tresor$abun.coverage" NAME="abun Coverage Results" MODIFIED="1757540562893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor" />
+    <SUITE FILE_PATH="coverage/tresor$CMI.coverage" NAME="CMI Coverage Results" MODIFIED="1757560782773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/pcr" />
+    <SUITE FILE_PATH="coverage/tresor$Error.coverage" NAME="Error Coverage Results" MODIFIED="1757771319626" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/sequencing" />
+    <SUITE FILE_PATH="coverage/tresor$Binomial.coverage" NAME="Binomial Coverage Results" MODIFIED="1757541549998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/pcr" />
     <SUITE FILE_PATH="coverage/tresor$TPM.coverage" NAME="TPM Coverage Results" MODIFIED="1756216276162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/tool" />
     <SUITE FILE_PATH="coverage/tresor$SingleLocus__1_.coverage" NAME="SingleLocus (1) Coverage Results" MODIFIED="1748200902793" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/scenario/generic" />
     <SUITE FILE_PATH="coverage/tresor$Abundance.coverage" NAME="Abundance Coverage Results" MODIFIED="1756216248647" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/tool" />
     <SUITE FILE_PATH="coverage/tresor$Subsampling.coverage" NAME="Subsampling Coverage Results" MODIFIED="1713492276210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/pcr" />
     <SUITE FILE_PATH="coverage/tresor$gene.coverage" NAME="gene Coverage Results" MODIFIED="1721420205677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor" />
+    <SUITE FILE_PATH="coverage/tresor$NBinomial.coverage" NAME="NBinomial Coverage Results" MODIFIED="1757554856254" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/pcr" />
     <SUITE FILE_PATH="coverage/tresor$sc.coverage" NAME="sc Coverage Results" MODIFIED="1748131446892" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor" />
     <SUITE FILE_PATH="coverage/tresor$SingleLocus.coverage" NAME="SingleLocus Coverage Results" MODIFIED="1755375490774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor/library" />
     <SUITE FILE_PATH="coverage/tresor$locus.coverage" NAME="locus Coverage Results" MODIFIED="1721427180826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tresor" />
