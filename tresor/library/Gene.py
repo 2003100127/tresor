@@ -120,7 +120,6 @@ class Gene:
         self.dna_map = self.dnasgl.todict(nucleotides=self.dnasgl.get(universal=True), reverse=True)
         self.crtfolder.osmkdir(working_dir)
 
-
         self.gene_map = {k: v for k, v in enumerate(self.gspl.index)}
         # print(self.gene_map)
         csr_ = coo_matrix(self.gspl)
@@ -157,7 +156,6 @@ class Gene:
         self.console.print("======>Sequencing library preparation starts")
         stime = time.time()
         sequencing_library = []
-        umi_pool = []
         umi_cnt = 0
 
         ### +++++++++++++++ block: condition map +++++++++++++++
@@ -203,6 +201,8 @@ class Gene:
             sample = gs[0]
             gene = gs[1]
             seq_num = gs[2]
+
+            umi_pool = []
 
             if 'seq' in condi_keys and self.kwargs['material_params']['fasta_cdna_fpn']:
                 cdna_seqs_sel_maps = {}

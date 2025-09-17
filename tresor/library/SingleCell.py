@@ -120,7 +120,6 @@ class SingleCell:
         self.console.print("======>Sequencing library preparation starts")
         stime = time.time()
         sequencing_library = []
-        umi_pool = []
         umi_cnt = 0
 
         ### +++++++++++++++ block: condition map +++++++++++++++
@@ -210,6 +209,8 @@ class SingleCell:
             cell = gc[0]
             gene = gc[1]
             seq_num = gc[2]
+
+            umi_pool = []
 
             if 'seq' in condi_keys and self.kwargs['material_params']['fasta_cdna_fpn']:
                 cdna_seqs_sel_maps = {}
