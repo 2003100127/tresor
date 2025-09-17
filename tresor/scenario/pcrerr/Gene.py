@@ -104,6 +104,17 @@ class Gene:
             working_dir=self.working_dir,
             condis=self.condis,
             sim_thres=self.sim_thres,
+            # bead_mutation=self.bead_mutation,
+            # bead_mut_rate=self.bead_mut_rate,
+            # bead_deletion=self.bead_deletion,
+            # bead_del_rate=self.bead_del_rate,
+            # bead_insertion=self.bead_insertion,
+            bead_mutation=self.kwargs['bead_mutation'] if 'bead_mutation' in self.kwargs.keys() else False,
+            bead_mut_rate=self.kwargs['bead_mut_rate'] if 'bead_mut_rate' in self.kwargs.keys() else False,
+            bead_deletion=self.kwargs['bead_deletion'] if 'bead_deletion' in self.kwargs.keys() else False,
+            bead_del_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
+            bead_insertion=self.kwargs['bead_insertion'] if 'bead_insertion' in self.kwargs.keys() else False,
+            bead_ins_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
             permutation=self.permutation,
             is_sv_umi_lib=self.is_sv_umi_lib,
             is_sv_seq_lib=self.is_sv_seq_lib,
@@ -317,6 +328,8 @@ class Gene:
                         n_trials=None,
                         cols=1,
                         read_len=80, # 10x r1
+                        fs_sub_row=5.2,
+                        fs_sub_col=4.2,
                         suptitle="Binomial",
                     )
                 elif seq['err_num_met'] == 'nbinomial':
@@ -324,6 +337,8 @@ class Gene:
                         seq['num_err_per_read_dict'],
                         cols=1,
                         read_len=80, # 10x r1
+                        fs_sub_row=5.2,
+                        fs_sub_col=4.2,
                         show_poisson=False,
                         suptitle="Negative binomial",
                     )

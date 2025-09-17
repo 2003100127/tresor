@@ -100,6 +100,17 @@ class Gene:
             working_dir=self.working_dir,
             condis=self.condis,
             sim_thres=self.sim_thres,
+            # bead_mutation=self.bead_mutation,
+            # bead_mut_rate=self.bead_mut_rate,
+            # bead_deletion=self.bead_deletion,
+            # bead_del_rate=self.bead_del_rate,
+            # bead_insertion=self.bead_insertion,
+            bead_mutation=self.kwargs['bead_mutation'] if 'bead_mutation' in self.kwargs.keys() else False,
+            bead_mut_rate=self.kwargs['bead_mut_rate'] if 'bead_mut_rate' in self.kwargs.keys() else False,
+            bead_deletion=self.kwargs['bead_deletion'] if 'bead_deletion' in self.kwargs.keys() else False,
+            bead_del_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
+            bead_insertion=self.kwargs['bead_insertion'] if 'bead_insertion' in self.kwargs.keys() else False,
+            bead_ins_rate=self.kwargs['bead_del_rate'] if 'bead_del_rate' in self.kwargs.keys() else False,
             permutation=self.permutation,
             is_sv_umi_lib=self.is_sv_umi_lib,
             is_sv_seq_lib=self.is_sv_seq_lib,
@@ -287,76 +298,82 @@ class Gene:
 
 if __name__ == "__main__":
     from tresor.path import to
+    import rpy2.situation
+
+    print(rpy2.situation.get_r_home())
 
     from tresor.gsample.FromSimulator import fromSimulator
 
     gspl = fromSimulator(
+        # D:/Document/Programming/R/umiche/renv/library/windows/R-4.4/x86_64-w64-mingw32/SPsimSeq
         R_root='D:/Programming/R/R-4.3.2/',
         num_samples=2,
         num_genes=6,
         simulator='spsimseq',
     ).run()
 
-    p = Gene(
-        # initial sequence generation
-        gspl=gspl,
+    print(gspl)
 
-        len_params={
-            'umi': {
-                'umi_unit_pattern': 3,
-                'umi_unit_len': 12,
-            },
-            'umi_1': {
-                'umi_unit_pattern': 3,
-                'umi_unit_len': 12,
-            },
-            'barcode': 16,
-            'seq': 100,
-            'seq_2': 100,
-            'adapter': 10,
-            'adapter_1': 10,
-            'primer': 10,
-            'primer_1': 10,
-            'spacer': 10,
-            'spacer_1': 10,
-        },
-        seq_params={
-            'custom': 'AAGC',
-            'custom_1': 'A',
-        },
-        material_params={
-            'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-        },
-        seq_num=50,
-        working_dir=to('data/simu/'),
-
-        is_sv_umi_lib=True,
-        is_sv_seq_lib=True,
-        is_sv_primer_lib=True,
-        is_sv_adapter_lib=True,
-        is_sv_spacer_lib=True,
-        condis=['umi'],
-        # condis=['umi', 'seq'],
-        # condis=['umi', 'custom', 'seq', 'custom_1'],
-        sim_thres=3,
-        permutation=0,
-
-        # PCR amplification
-        ampl_rate=0.9,
-        err_route='sptree', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
-        pcr_error=1e-04,
-        pcr_num=10,
-        err_num_met='nbinomial',
-        seq_error=0.01,
-        seq_sub_spl_numbers=[100, 500, 1000, 10000], # None 200
-        # seq_sub_spl_rate=0.333,
-        use_seed=True,
-        seed=1,
-
-        verbose=False, # True False
-
-        mode='short_read',  # long_read short_read
-
-        sv_fastq_fp=to('data/simu/'),
-    )
-    print(p.generate())
+    # p = Gene(
+    #     # initial sequence generation
+    #     gspl=gspl,
+    #
+    #     len_params={
+    #         'umi': {
+    #             'umi_unit_pattern': 3,
+    #             'umi_unit_len': 12,
+    #         },
+    #         'umi_1': {
+    #             'umi_unit_pattern': 3,
+    #             'umi_unit_len': 12,
+    #         },
+    #         'barcode': 16,
+    #         'seq': 100,
+    #         'seq_2': 100,
+    #         'adapter': 10,
+    #         'adapter_1': 10,
+    #         'primer': 10,
+    #         'primer_1': 10,
+    #         'spacer': 10,
+    #         'spacer_1': 10,
+    #     },
+    #     seq_params={
+    #         'custom': 'AAGC',
+    #         'custom_1': 'A',
+    #     },
+    #     material_params={
+    #         'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #     },
+    #     seq_num=50,
+    #     working_dir=to('data/simu/'),
+    #
+    #     is_sv_umi_lib=True,
+    #     is_sv_seq_lib=True,
+    #     is_sv_primer_lib=True,
+    #     is_sv_adapter_lib=True,
+    #     is_sv_spacer_lib=True,
+    #     condis=['umi'],
+    #     # condis=['umi', 'seq'],
+    #     # condis=['umi', 'custom', 'seq', 'custom_1'],
+    #     sim_thres=3,
+    #     permutation=0,
+    #
+    #     # PCR amplification
+    #     ampl_rate=0.9,
+    #     err_route='sptree', # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #     pcr_error=1e-04,
+    #     pcr_num=10,
+    #     err_num_met='nbinomial',
+    #     seq_error=0.01,
+    #     seq_sub_spl_numbers=[100, 500, 1000, 10000], # None 200
+    #     # seq_sub_spl_rate=0.333,
+    #     use_seed=True,
+    #     seed=1,
+    #
+    #     verbose=False, # True False
+    #
+    #     mode='short_read',  # long_read short_read
+    #
+    #     sv_fastq_fp=to('data/simu/'),
+    # )
+    # print(p.generate())
