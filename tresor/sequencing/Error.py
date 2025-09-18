@@ -69,7 +69,7 @@ class Error:
                 num_seq=data_seq.shape[0],
             )
         pos_table = {'seq_ids': seq_ids, 'seq_pos_ids': seq_pos_ids}
-        print(pos_table)
+        # print(pos_table)
         # print(len(seq_ids))
         pcr_postable_etime = time.time()
         self.console.print('=========>Time for constructing the position table: {time:.3f}s'.format(time=pcr_postable_etime - pcr_postable_stime))
@@ -86,7 +86,7 @@ class Error:
                 use_seed=True,
                 seed=1,
             )
-            print(seq_err_num)
+            # print(seq_err_num)
         else:
             seq_err_num = rannum().binomial(n=seq_nt_num, p=res2p['seq_error'], use_seed=True, seed=1)
 
