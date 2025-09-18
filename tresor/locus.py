@@ -111,6 +111,13 @@ def simu_seq_err(
         use_seed=True,
         seed=1,
 
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
+
         pcr_deletion=False,
         pcr_insertion=False,
         pcr_del_rate=0,
@@ -151,6 +158,18 @@ def simu_seq_err(
         seq_errors = configs['seq_errors']
         seq_sub_spl_number = configs['seq_sub_spl_number']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -197,6 +216,13 @@ def simu_seq_err(
         seq_sub_spl_number=seq_sub_spl_number,
         seq_sub_spl_rate=seq_sub_spl_rate,
 
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
+
         # indels
         pcr_deletion=pcr_deletion,
         pcr_insertion=pcr_insertion,
@@ -237,6 +263,13 @@ def simu_pcr_err(
 
         use_seed=True,
         seed=1,
+
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
 
         pcr_deletion=False,
         pcr_insertion=False,
@@ -281,6 +314,18 @@ def simu_pcr_err(
         pcr_errors = configs['pcr_errors']
         seq_sub_spl_number = configs['seq_sub_spl_number']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -319,6 +364,13 @@ def simu_pcr_err(
         seq_error=seq_error,
         pcr_num=pcr_num,
         err_num_met=err_num_met,
+
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
 
         # indels
         pcr_deletion=pcr_deletion,
@@ -361,6 +413,13 @@ def simu_pcr_num(
 
         use_seed=True,
         seed=1,
+
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
 
         pcr_deletion=False,
         pcr_insertion=False,
@@ -405,6 +464,18 @@ def simu_pcr_num(
         pcr_error = configs['pcr_error']
         seq_sub_spl_number = configs['seq_sub_spl_number']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -443,6 +514,13 @@ def simu_pcr_num(
         seq_error=seq_error,
         pcr_nums=pcr_nums,
         err_num_met=err_num_met,
+
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
 
         # indels
         pcr_deletion=pcr_deletion,
@@ -485,6 +563,13 @@ def simu_ampl_rate(
 
         use_seed=True,
         seed=1,
+
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
 
         pcr_deletion=False,
         pcr_insertion=False,
@@ -529,6 +614,18 @@ def simu_ampl_rate(
         pcr_error = configs['pcr_error']
         seq_sub_spl_number = configs['seq_sub_spl_number']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -567,6 +664,13 @@ def simu_ampl_rate(
         seq_error=seq_error,
         pcr_num=pcr_num,
         err_num_met=err_num_met,
+
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
 
         # indels
         pcr_deletion=pcr_deletion,
@@ -609,6 +713,13 @@ def simu_umi_len(
 
         use_seed=True,
         seed=1,
+
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
 
         pcr_deletion=False,
         pcr_insertion=False,
@@ -653,6 +764,18 @@ def simu_umi_len(
         pcr_error = configs['pcr_error']
         seq_sub_spl_number = configs['seq_sub_spl_number']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -691,6 +814,13 @@ def simu_umi_len(
         pcr_error=pcr_error,
         seq_error=seq_error,
         pcr_num=pcr_num,
+
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
 
         # indels
         pcr_deletion=pcr_deletion,
@@ -733,6 +863,13 @@ def simu_seq_dep(
 
         use_seed=True,
         seed=1,
+
+        bead_mutation=False,
+        bead_mut_rate=1e-4,
+        bead_deletion=False,
+        bead_del_rate=0.016,
+        bead_insertion=False,
+        bead_ins_rate=7.1e-7,
 
         pcr_deletion=False,
         pcr_insertion=False,
@@ -777,6 +914,18 @@ def simu_seq_dep(
         pcr_error = configs['pcr_error']
         seq_sub_spl_numbers = configs['seq_sub_spl_numbers']
         seq_sub_spl_rate = configs['seq_sub_spl_rate']
+        if "bead_mutation" in configs.keys():
+            bead_mutation = configs['bead_mutation']
+        if "bead_deletion" in configs.keys():
+            bead_deletion = configs['bead_deletion']
+        if "bead_insertion" in configs.keys():
+            bead_insertion = configs['bead_insertion']
+        if "bead_mut_rate" in configs.keys():
+            bead_mut_rate = configs['bead_mut_rate']
+        if "bead_del_rate" in configs.keys():
+            bead_del_rate = configs['bead_del_rate']
+        if "bead_ins_rate" in configs.keys():
+            bead_ins_rate = configs['bead_ins_rate']
         if "pcr_deletion" in configs.keys():
             pcr_deletion = configs['pcr_deletion']
         if "pcr_insertion" in configs.keys():
@@ -815,6 +964,13 @@ def simu_seq_dep(
         seq_error=seq_error,
         pcr_num=pcr_num,
         err_num_met=err_num_met,
+
+        bead_mutation=bead_mutation,
+        bead_deletion=bead_deletion,
+        bead_insertion=bead_insertion,
+        bead_mut_rate=bead_mut_rate,
+        bead_del_rate=bead_del_rate,
+        bead_ins_rate=bead_ins_rate,
 
         # indels
         pcr_deletion=pcr_deletion,
@@ -1115,69 +1271,76 @@ if __name__ == "__main__":
     #         verbose=False,  # True
     #     )
 
-    # for perm_i in range(1):
-    #     print(perm_i)
-    #     simu_pcr_err(
-    #         # initial sequence generation
-    #         len_params={
-    #             'umi': {
-    #                 'umi_unit_pattern': 1,
-    #                 'umi_unit_len': 10,
-    #             },
-    #             'umi_1': {
-    #                 'umi_unit_pattern': 3,
-    #                 'umi_unit_len': 12,
-    #             },
-    #             'barcode': 16,
-    #             'seq': 100,
-    #             'seq_2': 100,
-    #             'adapter': 10,
-    #             'adapter_1': 10,
-    #             'primer': 10,
-    #             'primer_1': 10,
-    #             'spacer': 10,
-    #             'spacer_1': 10,
-    #         },
-    #         seq_params={
-    #             'custom': 'AAGC',
-    #             'custom_1': 'A',
-    #         },
-    #         material_params={
-    #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-    #         },
-    #         seq_num=50,
-    #         # working_dir=to('data/simu/'),
-    #         working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
-    #
-    #         is_sv_umi_lib=True,
-    #         is_sv_seq_lib=True,
-    #         is_sv_primer_lib=True,
-    #         is_sv_adapter_lib=True,
-    #         is_sv_spacer_lib=True,
-    #         condis=['umi'],
-    #         # condis=['umi', 'seq'],
-    #         # condis=['umi', 'custom', 'seq', 'custom_1'],
-    #         sim_thres=3,
-    #         permutation=perm_i, # 0
-    #
-    #         # PCR amplification
-    #         ampl_rate=0.85,
-    #         err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
-    #         pcr_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
-    #                     0.01, 0.05],
-    #         pcr_num=8,
-    #         err_num_met='nbinomial',
-    #         seq_error=0.001,
-    #         # seq_sub_spl_number=200,  # None
-    #         seq_sub_spl_rate=1, # 0.333
-    #         use_seed=True,
-    #         seed=1,
-    #
-    #         verbose=False,  # True False
-    #         mode='short_read',  # long_read short_read
-    #         # sv_fastq_fp=to('data/simu/'),
-    #         sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
-    #     )
+    for perm_i in range(1):
+        print(perm_i)
+        simu_pcr_err(
+            # initial sequence generation
+            len_params={
+                'umi': {
+                    'umi_unit_pattern': 1,
+                    'umi_unit_len': 10,
+                },
+                'umi_1': {
+                    'umi_unit_pattern': 3,
+                    'umi_unit_len': 12,
+                },
+                'barcode': 16,
+                'seq': 100,
+                'seq_2': 100,
+                'adapter': 10,
+                'adapter_1': 10,
+                'primer': 10,
+                'primer_1': 10,
+                'spacer': 10,
+                'spacer_1': 10,
+            },
+            seq_params={
+                'custom': 'AAGC',
+                'custom_1': 'A',
+            },
+            material_params={
+                'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+            },
+            seq_num=50,
+            # working_dir=to('data/simu/'),
+            working_dir=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
+
+            is_sv_umi_lib=True,
+            is_sv_seq_lib=True,
+            is_sv_primer_lib=True,
+            is_sv_adapter_lib=True,
+            is_sv_spacer_lib=True,
+            condis=['umi'],
+            # condis=['umi', 'seq'],
+            # condis=['umi', 'custom', 'seq', 'custom_1'],
+            sim_thres=3,
+            permutation=perm_i, # 0
+
+            bead_mutation=False,
+            bead_mut_rate=1e-4,
+            bead_deletion=False,
+            bead_insertion=False,
+            bead_del_rate=0.1 / 112,
+            bead_ins_rate=7.1e-7,
+
+            # PCR amplification
+            ampl_rate=0.85,
+            err_route='sptree',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+            pcr_errors=[1e-05, 2.5e-05, 5e-05, 7.5e-05, 0.0001, 0.00025, 0.0005, 0.00075, 0.001, 0.0025, 0.005, 0.0075,
+                        0.01, 0.05],
+            pcr_num=8,
+            err_num_met='nbinomial',
+            seq_error=0.001,
+            # seq_sub_spl_number=200,  # None
+            seq_sub_spl_rate=1, # 0.333
+            use_seed=True,
+            seed=1,
+
+            verbose=False,  # True False
+            mode='short_read',  # long_read short_read
+            # sv_fastq_fp=to('data/simu/'),
+            sv_fastq_fp=to('data/simu/docs/') + 'permute_' + str(perm_i) + '/',
+        )
 
     # for perm_i in range(1):
     #     print(perm_i)
@@ -1242,7 +1405,6 @@ if __name__ == "__main__":
     #     print(perm_i)
     #     simu_ampl_rate(
     #         # initial sequence generation
-    #
     #         len_params={
     #             'umi': {
     #                 'umi_unit_pattern': 1,
@@ -1429,72 +1591,72 @@ if __name__ == "__main__":
     #     )
 
     # @@
-    for i, umi_num_i in enumerate([
-        1,
-        # 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        # 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-        # 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-        # 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-        # 41, 42, 43, 44, 45,
-    ]):
-        simu_generic(
-            # initial sequence generation
-            len_params={
-                'umi': {
-                    'umi_unit_pattern': 1,
-                    'umi_unit_len': 10,
-                },
-                'umi_1': {
-                    'umi_unit_pattern': 3,
-                    'umi_unit_len': 12,
-                },
-                'barcode': 16,
-                'seq': 100,
-                'seq_2': 100,
-                'adapter': 10,
-                'adapter_1': 10,
-                'primer': 10,
-                'primer_1': 10,
-                'spacer': 10,
-                'spacer_1': 10,
-            },
-            seq_params={
-                'custom': 'AAGC',
-                'custom_1': 'A',
-            },
-            material_params={
-                'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
-            },
-            seq_num=umi_num_i,
-            working_dir=to('data/simu/'),
-
-            is_sv_umi_lib=True,
-            is_sv_seq_lib=True,
-            is_sv_primer_lib=True,
-            is_sv_adapter_lib=True,
-            is_sv_spacer_lib=True,
-            condis=['umi'],
-            # condis=['umi', 'seq'],
-            # condis=['umi', 'custom', 'seq', 'custom_1'],
-            sim_thres=3,
-            permutation=0,
-
-            # PCR amplification
-            ampl_rate=0.85,
-            err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
-            pcr_error=1e-05,
-            pcr_num=8,
-            err_num_met='nbinomial',
-            seq_error=0.05, # 0.005 0.01 0.05 0.1
-            seq_sub_spl_number=None, # None 200 2000
-            seq_sub_spl_rate=1, # 0.333
-            use_seed=True,
-            seed=1,
-
-            verbose=False,  # True False
-
-            mode='short_read',  # long_read short_read
-
-            sv_fastq_fp=to('data/simu/'),
-            sv_fastq_fn='umi_num_' +  str(i),
-        )
+    # for i, umi_num_i in enumerate([
+    #     1,
+    #     # 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    #     # 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    #     # 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+    #     # 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+    #     # 41, 42, 43, 44, 45,
+    # ]):
+    #     simu_generic(
+    #         # initial sequence generation
+    #         len_params={
+    #             'umi': {
+    #                 'umi_unit_pattern': 1,
+    #                 'umi_unit_len': 10,
+    #             },
+    #             'umi_1': {
+    #                 'umi_unit_pattern': 3,
+    #                 'umi_unit_len': 12,
+    #             },
+    #             'barcode': 16,
+    #             'seq': 100,
+    #             'seq_2': 100,
+    #             'adapter': 10,
+    #             'adapter_1': 10,
+    #             'primer': 10,
+    #             'primer_1': 10,
+    #             'spacer': 10,
+    #             'spacer_1': 10,
+    #         },
+    #         seq_params={
+    #             'custom': 'AAGC',
+    #             'custom_1': 'A',
+    #         },
+    #         material_params={
+    #             'fasta_cdna_fpn': to('data/Homo_sapiens.GRCh38.cdna.all.fa.gz'),  # None False
+    #         },
+    #         seq_num=umi_num_i,
+    #         working_dir=to('data/simu/'),
+    #
+    #         is_sv_umi_lib=True,
+    #         is_sv_seq_lib=True,
+    #         is_sv_primer_lib=True,
+    #         is_sv_adapter_lib=True,
+    #         is_sv_spacer_lib=True,
+    #         condis=['umi'],
+    #         # condis=['umi', 'seq'],
+    #         # condis=['umi', 'custom', 'seq', 'custom_1'],
+    #         sim_thres=3,
+    #         permutation=0,
+    #
+    #         # PCR amplification
+    #         ampl_rate=0.85,
+    #         err_route='err2d',  # bftree sptree err1d err2d mutation_table_minimum mutation_table_complete
+    #         pcr_error=1e-05,
+    #         pcr_num=8,
+    #         err_num_met='nbinomial',
+    #         seq_error=0.05, # 0.005 0.01 0.05 0.1
+    #         seq_sub_spl_number=None, # None 200 2000
+    #         seq_sub_spl_rate=1, # 0.333
+    #         use_seed=True,
+    #         seed=1,
+    #
+    #         verbose=False,  # True False
+    #
+    #         mode='short_read',  # long_read short_read
+    #
+    #         sv_fastq_fp=to('data/simu/'),
+    #         sv_fastq_fn='umi_num_' +  str(i),
+    #     )
