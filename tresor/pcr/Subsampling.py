@@ -909,7 +909,7 @@ class Subsampling:
                                         read=read_cache_table[ii][jj - 1],
                                         pcr_error=pcr_dict['pcr_error'],
                                     )[0]
-                                    print(r1)
+                                    # print(r1)
                                     if pcr_dict['pcr_deletion']:
                                         r1 = self.errlib.deletion(read=r1, del_rate=pcr_dict['pcr_del_rate'])
                                     if pcr_dict['pcr_insertion']:
