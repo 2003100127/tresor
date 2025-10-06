@@ -87,6 +87,24 @@ class Number:
                 p,
             )
 
+    def beta_binomial(self, n, p, concentration=20.0, use_seed=True, seed=1):
+        if use_seed:
+            rng = np.random.default_rng(seed)
+        else:
+            rng = np.random.default_rng(None)
+        alpha = p * concentration
+        beta = (1 - p) * concentration
+        p_hat = rng.beta(alpha, beta)
+        return rng.binomial(n, p_hat)
+
+    def poisson(self, n, p, use_seed=True, seed=1):
+        if use_seed:
+            rng = np.random.default_rng(seed)
+        else:
+            rng = np.random.default_rng(None)
+        lam = n * p
+        return rng.poisson(lam)
+
     def uniform(self, low, high, num, use_seed=True, seed=1):
         if use_seed:
             state = np.random.RandomState(seed)

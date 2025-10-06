@@ -236,8 +236,11 @@ class Gene:
             # print(pcr.keys())
             print(pcr)
 
-            from tresor.pcr.Binomial import plot_binomial_panels
-            from tresor.pcr.NBinomial import plot_nbinom_panels
+            from tresor.vis.Binomial import plot_binomial_panels
+            from tresor.vis.NBinomial import plot_nbinom_panels
+            from tresor.vis.BetaBinomial import plot_betabinom_panels
+            from tresor.vis.Poisson import plot_poisson_panels
+            from tresor.vis.PlotError import analyze_tresor_pcr_counts
 
             if pcr['num_err_per_read_dict']:
                 if pcr['err_num_met'] == 'binomial':
@@ -248,13 +251,65 @@ class Gene:
                         read_len=80, # 10x r1
                         suptitle="Binomial",
                     )
+                    # plot_from_error_series(
+                    #     counts_series=pcr['num_err_per_read_dict'],
+                    #     readlen=100,  # 若要与 polyester(100bp) 对比；不清楚就留 None
+                    #     p_theory=None,  # 有理论 p 就填；否则自动用 mean/n 估
+                    #     title="PCR errors"
+                    # )
+                    analyze_tresor_pcr_counts(
+                        num_err_per_read_dict=pcr['num_err_per_read_dict'],
+                        readlen=100,
+                        p_theory=None,
+                        title="PCR"
+                    )
                 elif pcr['err_num_met'] == 'nbinomial':
                     plot_nbinom_panels(
                         pcr['num_err_per_read_dict'],
                         cols=4,
                         read_len=80,
-                        show_poisson=False, # 10x r1
+                        show_poisson=True, # 10x r1
                         suptitle="Negative binomial",
+                    )
+                    # plot_from_error_series(
+                    #     counts_series=pcr['num_err_per_read_dict'],
+                    #     readlen=100,  # 若要与 polyester(100bp) 对比；不清楚就留 None
+                    #     p_theory=None,  # 有理论 p 就填；否则自动用 mean/n 估
+                    #     title="PCR errors"
+                    # )
+                    analyze_tresor_pcr_counts(
+                        num_err_per_read_dict=pcr['num_err_per_read_dict'],
+                        readlen=100,
+                        p_theory=None,
+                        title="PCR"
+                    )
+                elif pcr['err_num_met'] == 'betabinomial':
+                    plot_betabinom_panels(
+                        pcr['num_err_per_read_dict'],
+                        # n_trials=8,
+                        cols=4,
+                        read_len=80,
+                        show_binomial=False,
+                        suptitle="Beta-binomial",
+                    )
+                    analyze_tresor_pcr_counts(
+                        num_err_per_read_dict=pcr['num_err_per_read_dict'],
+                        readlen=100,
+                        p_theory=None,
+                        title="PCR"
+                    )
+                elif pcr['err_num_met'] == 'poisson':
+                    plot_poisson_panels(
+                        pcr['num_err_per_read_dict'],
+                        cols=4,
+                        read_len=80,
+                        suptitle="poisson",
+                    )
+                    analyze_tresor_pcr_counts(
+                        num_err_per_read_dict=pcr['num_err_per_read_dict'],
+                        readlen=100,
+                        p_theory=None,
+                        title="PCR"
                     )
                 import matplotlib.pyplot as plt
                 plt.show()

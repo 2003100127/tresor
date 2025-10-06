@@ -258,6 +258,8 @@ def simu_pcr_err(
         is_sv_spacer_lib=True,
         sv_fastq_fp=True,
 
+        vis_num_err_per_read=False,
+
         seq_sub_spl_number=None,
         seq_sub_spl_rate=1/3,
 
@@ -338,6 +340,8 @@ def simu_pcr_err(
         seq_insertion=seq_insertion,
         seq_del_rate=seq_del_rate,
         seq_ins_rate=seq_ins_rate,
+
+        vis_num_err_per_read=vis_num_err_per_read,
 
         use_seed=use_seed,
         seed=seed,

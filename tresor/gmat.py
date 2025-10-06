@@ -69,6 +69,26 @@ def read(
 
 
 if __name__ == "__main__":
+    import pandas as pd
+    def read(
+            gmat_fpn,
+    ):
+        df_gmat = pd.read_hdf(gmat_fpn, 'df')
+        print(df_gmat.head())
+        print(111)
+        y = df_gmat['Y'].values
+        if 'Y' in df_gmat.columns:
+            df_gmat = df_gmat.drop(columns=['Y'])
+        return df_gmat, y
+
+
+    df, y = read(
+        gmat_fpn='D:/Document/Programming/Python/tresor/tresor/data/spsimseq_bulk.h5',
+    )
+    print(1)
+    print(df)
+
+
     from tresor.path import to
 
     # gbycell, _, _ = spsimseq_sc(
@@ -91,6 +111,6 @@ if __name__ == "__main__":
 
     print(read(
         # gmat_fpn=to('data/gmat_customized.h5'),
-        gmat_fpn=to('data/spsimseq_sc.h5'),
-        # gmat_fpn=to('data/spsimseq_bulk.h5'),
+        # gmat_fpn=to('data/spsimseq_sc.h5'),
+        gmat_fpn=to('data/spsimseq_bulk.h5'),
     ))

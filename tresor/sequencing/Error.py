@@ -148,7 +148,7 @@ class Error:
                 res2p['num_err_per_read_dict']['sequencing'] = data_seq['num_err_per_read']
             if 'vis_num_err_per_read' in res2p.keys():
                 if res2p['vis_num_err_per_read']:
-                    from tresor.pcr.Binomial import validate_binomial_and_plot
+                    from tresor.vis.Binomial import validate_binomial_and_plot
                     results = validate_binomial_and_plot(
                         data_seq['num_err_per_read'],
                         n_trials=None, p_true=None,
@@ -167,11 +167,49 @@ class Error:
                 res2p['num_err_per_read_dict']['sequencing'] = data_seq['num_err_per_read']
             if 'vis_num_err_per_read' in res2p.keys():
                 if res2p['vis_num_err_per_read']:
-                    from tresor.pcr.NBinomial import validate_nbinom_and_plot
+                    from tresor.vis.NBinomial import validate_nbinom_and_plot
                     results = validate_nbinom_and_plot(
                         data_seq['num_err_per_read'],
                         fit_poisson=False,
                         title="sequencing per-read error counts (NBinomial)"
+                    )
+                    for k, v in results.items():
+                        print(
+                            f"{v.model}: {v.params}, loglik={v.loglik:.2f}, AIC={v.aic:.2f}, BIC={v.bic:.2f}, "
+                            f"chi2={v.chi2:.2f}, df={v.df}, p={v.p_value:.3g}, bins={v.n_bins_used}. {v.notes}"
+                        )
+        elif res2p['err_num_met'] == 'betabinomial':
+            data_seq['num_err_per_read'] = data_seq['read_len'].apply(lambda x: rannum().beta_binomial(
+                n=x, p=res2p['seq_error'], use_seed=False, seed=1
+            ))
+            if 'num_err_per_read_dict' in res2p.keys():
+                res2p['num_err_per_read_dict']['sequencing'] = data_seq['num_err_per_read']
+            if 'vis_num_err_per_read' in res2p.keys():
+                if res2p['vis_num_err_per_read']:
+                    from tresor.vis.BetaBinomial import validate_nbinom_and_plot
+                    results = validate_nbinom_and_plot(
+                        data_seq['num_err_per_read'],
+                        fit_poisson=False,
+                        title="sequencing per-read error counts (BetaBinomial)"
+                    )
+                    for k, v in results.items():
+                        print(
+                            f"{v.model}: {v.params}, loglik={v.loglik:.2f}, AIC={v.aic:.2f}, BIC={v.bic:.2f}, "
+                            f"chi2={v.chi2:.2f}, df={v.df}, p={v.p_value:.3g}, bins={v.n_bins_used}. {v.notes}"
+                        )
+        elif res2p['err_num_met'] == 'poisson':
+            data_seq['num_err_per_read'] = data_seq['read_len'].apply(lambda x: rannum().poisson(
+                n=x, p=res2p['seq_error'], use_seed=False, seed=1
+            ))
+            if 'num_err_per_read_dict' in res2p.keys():
+                res2p['num_err_per_read_dict']['sequencing'] = data_seq['num_err_per_read']
+            if 'vis_num_err_per_read' in res2p.keys():
+                if res2p['vis_num_err_per_read']:
+                    from tresor.vis.Poisson import validate_nbinom_and_plot
+                    results = validate_nbinom_and_plot(
+                        data_seq['num_err_per_read'],
+                        fit_poisson=False,
+                        title="sequencing per-read error counts (Poisson)"
                     )
                     for k, v in results.items():
                         print(

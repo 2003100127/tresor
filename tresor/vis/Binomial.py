@@ -272,12 +272,26 @@ def plot_binomial_panels(
         suptitle: str = "Binomial — per PCR cycle"
 ):
     """
+
+    Parameters
+    ----------
+    data_by_cycle
+    n_trials
+    cols
+    read_len
+    fs_sub_row
+    fs_sub_col
+    min_exp
+    suptitle
+
+    Returns
+    -------
+
     """
     keys = sorted(data_by_cycle.keys())
     m = len(keys)
     rows = math.ceil(m / cols)
 
-    # ---------- Page 1: Histogram + PMF ----------
     fig, axes = plt.subplots(rows, cols, figsize=(cols * fs_sub_row, rows * fs_sub_col), squeeze=False)
     for i, k in enumerate(keys):
         r, c = divmod(i, cols)
@@ -296,6 +310,10 @@ def plot_binomial_panels(
         n_hat = int(binres.n)
         p_hat = float(binres.params["p_hat"])
         N = len(s)
+        N_nt = len(s) * read_len
+        n_err_nt = s.sum()
+        pct_err_nt = n_err_nt / N_nt
+        n_err_read = (s != 0).sum()
 
         ks = np.arange(n_hat + 1)
         pmf = stats.binom.pmf(ks, n_hat, p_hat)
@@ -306,14 +324,16 @@ def plot_binomial_panels(
 
         ax.set_xlabel("Errors per read", fontsize=12)
         ax.set_ylabel("Prob.", fontsize=12)
-        ax.set_title(f"PCR cycle {k}  N={N}\nχ² p={binres.p_value:.3g}")
+        # ax.set_title(f"PCR cycle {k}  N={N}\nχ² p={binres.p_value:.3g}")
+        ax.set_title(f"PCR cycle {k}: N-read={N} | N-err-nt={n_err_nt} \n N-err-read={n_err_read} | %-err-nt={pct_err_nt:.2e} \n χ² p={binres.p_value:.3g}")
+
         # 轴样式
         for side in ("top", "right"):
             ax.spines[side].set_visible(False)
         ax.tick_params(axis="both", direction="out")
 
-        if i == 0:
-            ax.legend(loc="upper right", fontsize=10, frameon=False)
+
+        ax.legend(loc="upper right", fontsize=10, frameon=False)
 
     # hide empty subplots
     for j in range(m, rows * cols):
@@ -354,8 +374,8 @@ def plot_binomial_panels(
         for side in ("top", "right"):
             ax.spines[side].set_visible(False)
         ax.tick_params(axis="both", direction="out")
-        if i == 0:
-            ax.legend(loc="lower right", fontsize=10, frameon=False)
+
+        ax.legend(loc="lower right", fontsize=10, frameon=False)
 
     for j in range(m, rows * cols):
         r, c = divmod(j, cols)
